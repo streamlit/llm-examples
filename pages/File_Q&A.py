@@ -12,6 +12,9 @@ question = st.text_input(
     disabled=not uploaded_file,
 )
 
+if uploaded_file and question and not anthropic_api_key:
+    st.info("Please add your Anthropic API key to continue.")
+    
 if uploaded_file and question:
     article = uploaded_file.read().decode()
     prompt = f"""{anthropic.HUMAN_PROMPT} Here's an article:\n\n<article>
