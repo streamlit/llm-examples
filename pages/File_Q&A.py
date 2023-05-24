@@ -15,7 +15,7 @@ question = st.text_input(
 if uploaded_file and question and not anthropic_api_key:
     st.info("Please add your Anthropic API key to continue.")
     
-if uploaded_file and question:
+if uploaded_file and question and anthropic_api_key:
     article = uploaded_file.read().decode()
     prompt = f"""{anthropic.HUMAN_PROMPT} Here's an article:\n\n<article>
     {article}\n\n</article>\n\n{question}{anthropic.AI_PROMPT}"""
