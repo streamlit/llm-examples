@@ -4,11 +4,19 @@ from langchain.chat_models import ChatOpenAI
 from langchain.agents import initialize_agent, Tool
 from langchain.agents import AgentType
 
+with st.sidebar:
+    serper_api_key = st.text_input('Serper API Key')
+    open_ai_api_key = st.text_input('OpenAI API Key')
+
 st.title("🔎 Search with LangChain")
 question = st.text_input("What do you want to know?", placeholder="Who won the Women's U.S. Open in 2018?")
 
+#llm = ChatOpenAI(model_name="gpt-3.5-turbo", openai_api_key=open_ai_api_key)
 llm = ChatOpenAI(model_name="gpt-3.5-turbo", openai_api_key=st.secrets.openai_api_key)
-search = GoogleSerperAPIWrapper(serper_api_key=st.secrets.serper_api_key)
+
+# search = GoogleSerperAPIWrapper(serper_api_key=st.secrets.serper_api_key)
+search = GoogleSerperAPIWrapper(serper_api_key=serper_api_key)
+
 search_tool = Tool(
     name="Intermediate Answer",
     func=search.run,
