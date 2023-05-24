@@ -19,11 +19,11 @@ if question:
     elif not open_ai_api_key:
         st.info("Please add your OpenAI API key to continue.")
     else:
-        #llm = ChatOpenAI(model_name="gpt-3.5-turbo", openai_api_key=open_ai_api_key)
-        llm = ChatOpenAI(model_name="gpt-3.5-turbo", openai_api_key=st.secrets.openai_api_key)
+        llm = ChatOpenAI(model_name="gpt-3.5-turbo", openai_api_key=open_ai_api_key)
+#         llm = ChatOpenAI(model_name="gpt-3.5-turbo", openai_api_key=st.secrets.openai_api_key)
 
-        # search = GoogleSerperAPIWrapper(serper_api_key=st.secrets.serper_api_key)
         search = GoogleSerperAPIWrapper(serper_api_key=serper_api_key)
+#         search = GoogleSerperAPIWrapper(serper_api_key=st.secrets.serper_api_key)
 
         search_tool = Tool(
             name="Intermediate Answer",
