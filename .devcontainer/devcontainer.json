@@ -26,8 +26,10 @@
         8501
     ],
     // Use 'postCreateCommand' to run commands after the container is created.
-    // Install NPM dependencies.
+    // Install app dependencies.
     "postCreateCommand": "pip install -r requirements.txt",
+    // Use 'postStartCommand' to run commands after the container is started.
+    // Start the app.
     "postStartCommand": "streamlit run Chatbot.py",
     // Comment out connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
     "remoteUser": "vscode",
