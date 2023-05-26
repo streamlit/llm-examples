@@ -4,6 +4,14 @@
 LLM examples app built using Langchain and Streamlit
 ```
 
+## Overview of the App
+This app showcases a growing collection of LLM minimum working examples.
+
+Current examples include:
+- Chatbot
+- File Q&A
+- LangChain Search
+
 ## Demo App
 
 [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://llm-examples.streamlit.app/)
