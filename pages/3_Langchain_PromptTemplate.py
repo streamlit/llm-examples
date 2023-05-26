@@ -4,9 +4,6 @@ from langchain import PromptTemplate
 
 st.title('🦜🔗 Langchain - Blog Outline Generator App')
 
-#with st.sidebar:
-#  openai_api_key = st.text_input('OpenAI API Key')
-  
 def blog_outline(topic):
   # Instantiate LLM model
   openai_api_key = st.sidebar.text_input('OpenAI API Key')
@@ -20,7 +17,7 @@ def blog_outline(topic):
   # Print results
   return st.info(response)
 
-with st.form:
+with st.form('my form'):
   topic_text = st.text_input('Enter prompt:', '')
   submitted = st.form_submit_button('Submit')
   if submitted:
