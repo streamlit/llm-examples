@@ -7,6 +7,7 @@ from langchain.agents import AgentType
 with st.sidebar:
     serper_api_key = st.text_input('Serper API Key')
     openai_api_key = st.text_input('OpenAI API Key')
+    "[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/streamlit/llm-examples?quickstart=1)"
 
 st.title("🔎 Search with LangChain")
 question = st.text_input("What do you want to know?", placeholder="Who won the Women's U.S. Open in 2018?")
