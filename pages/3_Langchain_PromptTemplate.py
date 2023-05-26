@@ -7,7 +7,7 @@ st.title('🦜🔗 Langchain - Blog Outline Generator App')
 with st.sidebar:
   openai_api_key = st.text_input('OpenAI API Key')
   
-def blog_outline(topic)
+def blog_outline(topic):
   # Instantiate LLM model
   llm = OpenAI(model_name='text-davinci-003', openai_api_key=openai_api_key)
   # Prompt
