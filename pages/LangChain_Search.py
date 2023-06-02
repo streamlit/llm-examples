@@ -5,8 +5,8 @@ from langchain.agents import initialize_agent, Tool
 from langchain.agents import AgentType
 
 with st.sidebar:
-    serper_api_key = st.text_input(key='langchain_search_api_key_serper','Serper API Key')
-    openai_api_key = st.text_input(key='langchain_search_api_key_openai','OpenAI API Key')
+    serper_api_key = st.text_input('Serper API Key',key='langchain_search_api_key_serper')
+    openai_api_key = st.text_input('OpenAI API Key',key='langchain_search_api_key_openai')
     "[View the source code](https://github.com/streamlit/llm-examples/blob/main/pages/LangChain_Search.py)"
     "[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/streamlit/llm-examples?quickstart=1)"
 
