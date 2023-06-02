@@ -1,40 +1,46 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
 // https://github.com/microsoft/vscode-dev-containers/tree/v0.209.6/containers/python-3
 {
-    "name": "Python 3",
-    "build": {
-        "dockerfile": "Dockerfile",
-        "context": "..",
-        "args": {
-            // Update 'VARIANT' to pick a Python version: 3, 3.10, 3.9, 3.8, 3.7, 3.6
-            // Append -bullseye or -buster to pin to an OS version.
-            // Use -bullseye variants on local on arm64/Apple Silicon.
-            "VARIANT": "3.10",
+    "image": "mcr.microsoft.com/devcontainers/python:0-3.11-bullseye",
+    "customizations": {
+        "codespaces": {
+          "openFiles": [
+            "README.md",
+            "Chatbot.py"
+          ]
+        },
+        "vscode": {
+          "settings": {},
+          "extensions": [
+            "ms-python.python",
+            "ms-python.vscode-pylance"
+          ]
         }
-    },
-    // Set *default* container specific settings.json values on container create.
-    "settings": {
-        "python.defaultInterpreterPath": "/usr/local/bin/python",
-    },
-    // Add the IDs of extensions you want installed when the container is created.
-    "extensions": [
-        "ms-python.python",
-        "ms-python.vscode-pylance"
-    ],
+      },
     // Use 'forwardPorts' to make a list of ports inside the container available locally.
     "forwardPorts": [
         8501
     ],
     // Use 'postCreateCommand' to run commands after the container is created.
     // Install app dependencies.
-    "postCreateCommand": "pip install -r requirements.txt",
-    // Use 'postStartCommand' to run commands after the container is started.
+    "postCreateCommand": "pip3 install --user -r requirements.txt",
+    // Use 'postAttachCommand' to run commands after a tool has attached to the container.
     // Start the app.
-    "postStartCommand": "streamlit run Chatbot.py",
+    "postAttachCommand": {
+        "server": "streamlit run Chatbot.py --server.enableCORS false --server.enableXsrfProtection false"
+    },
+    "portsAttributes": {
+        "8501": {
+            "label": "Application",
+            "onAutoForward": "openPreview"
+        }
+    },
     // Comment out connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
     "remoteUser": "vscode",
     "features": {
-        "git": "latest",
-        "github-cli": "latest"
+        // Optional features for development - increase container boot time!
+        // "ghcr.io/devcontainers-contrib/features/coverage-py:2": {},
+        // "git": "latest",
+        // "github-cli": "latest"
     }
 }
