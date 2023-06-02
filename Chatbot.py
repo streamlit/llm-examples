@@ -28,6 +28,7 @@ if user_input and not openai_api_key:
     st.info("Please add your OpenAI API key to continue.")
     
 if user_input and openai_api_key:
+    openai.api_key = openai_api_key
     st.session_state.messages.append({"role": "user", "content": user_input})
     message(user_input, is_user=True)
     response = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=st.session_state.messages)
