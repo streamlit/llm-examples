@@ -9,7 +9,6 @@ with st.sidebar:
 
 st.title("💬 Streamlit GPT")
 #openai.api_key = st.secrets.openai_api_key
-openai.api_key = openai_api_key
 if "messages" not in st.session_state:
     st.session_state["messages"] = [{"role": "assistant", "content": "How can I help you?"}]
 
