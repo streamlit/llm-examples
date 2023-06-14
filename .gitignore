@@ -1,2 +1,4 @@
+venv
 .venv
 secrets.toml
+.vscode
