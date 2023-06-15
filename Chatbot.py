@@ -29,8 +29,8 @@ if user_input and not api_key:
     st.info("Please add your OpenAI API key to continue.")
 
 if user_input and api_key:
-    # openai.api_base = "https://openrouter.ai/api/v1"
-    openai.api_base = "http://localhost:3000/api/v1"
+    openai.api_base = "https://openrouter.ai/api/v1"
+    # openai.api_base = "http://localhost:3000/api/v1"
     openai.api_key = api_key
     st.session_state.messages.append({"role": "user", "content": user_input})
     message(user_input, is_user=True)
