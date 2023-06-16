@@ -3,7 +3,7 @@ import streamlit as st
 from streamlit_chat import message
 from components.Sidebar import sidebar
 
-sidebar()
+api_key = sidebar()
 
 st.title("💬 Streamlit GPT")
 if "messages" not in st.session_state:
