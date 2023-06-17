@@ -1,13 +1,18 @@
 import streamlit as st
 from langchain import OpenAI
+from components.Sidebar import sidebar
 
 st.title('🦜🔗 Langchain Quickstart App')
 
-with st.sidebar:
-  openai_api_key = st.text_input('OpenAI API Key')
+api_key = sidebar()
 
 def generate_response(input_text):
-  llm = OpenAI(temperature=0.7, openai_api_key=openai_api_key)
+  llm = OpenAI(
+    temperature=0.7, 
+    openai_api_key=api_key,
+    openai_api_base="https://openrouter.ai/api/v1",
+    headers={"HTTP-Referer": "https://yourdomain.streamlit.io"}
+  )
   st.info(llm(input_text))
 
 with st.form('my_form'):
@@ -15,3 +20,4 @@ with st.form('my_form'):
   submitted = st.form_submit_button('Submit')
   if submitted:
     generate_response(text)
+

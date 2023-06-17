@@ -1,14 +1,20 @@
 import streamlit as st
 from langchain.llms import OpenAI
 from langchain import PromptTemplate
+from components.Sidebar import sidebar
 
 st.title('🦜🔗 Langchain - Blog Outline Generator App')
 
-openai_api_key = st.sidebar.text_input('OpenAI API Key')
+api_key = sidebar()
 
 def blog_outline(topic):
   # Instantiate LLM model
-  llm = OpenAI(model_name='text-davinci-003', openai_api_key=openai_api_key)
+  llm = OpenAI(
+    model_name='text-davinci-003',
+    openai_api_key=api_key,
+    openai_api_base="https://openrouter.ai/api/v1",
+    headers={"HTTP-Referer": "https://yourdomain.streamlit.io"}
+  )
   # Prompt
   template = 'As an experienced data scientist and technical writer, generate an outline for a blog about {topic}.'
   prompt = PromptTemplate(input_variables = ['topic'], template = template)
