@@ -4,6 +4,8 @@ from langchain.chat_models import ChatOpenAI
 from langchain.agents import initialize_agent, Tool
 from langchain.agents import AgentType
 
+api_key = sidebar()
+
 with st.sidebar:
     serper_api_key = st.text_input('Serper API Key',key='langchain_search_api_key_serper')
     openai_api_key = st.text_input('OpenAI API Key',key='langchain_search_api_key_openai')
