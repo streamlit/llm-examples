@@ -34,7 +34,7 @@ if user_input and api_key:
     openai.api_key = api_key
     openai.api_base = constants.OPENROUTER_API_BASE
     response = openai.ChatCompletion.create(
-        model="openai/gpt-3.5-turbo",
+        model=constants.OPENROUTER_DEFAULT_CHAT_MODEL,
         messages=st.session_state.messages,
         headers={
             "HTTP-Referer": constants.OPENROUTER_REFERER

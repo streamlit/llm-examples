@@ -11,7 +11,7 @@ api_key = sidebar()
 def blog_outline(topic):
   # Instantiate LLM model
   llm = OpenAI(
-    model_name='text-davinci-003',
+    model_name=constants.OPENROUTER_DEFAULT_INSTRUCT_MODEL,
     openai_api_key=api_key,
     openai_api_base=constants.OPENROUTER_API_BASE,
     headers={"HTTP-Referer": constants.OPENROUTER_REFERER}

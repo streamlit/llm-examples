@@ -23,7 +23,7 @@ if question:
         st.info("Please connect with OpenRouter to continue.")
     elif serper_api_key and api_key:
         llm = ChatOpenAI(
-            model_name="gpt-3.5-turbo",    
+            model_name=constants.OPENROUTER_DEFAULT_CHAT_MODEL,    
             openai_api_key=api_key,
             openai_api_base=constants.OPENROUTER_API_BASE,
             headers={"HTTP-Referer": constants.OPENROUTER_REFERER}
