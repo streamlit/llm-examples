@@ -2,6 +2,7 @@ import streamlit as st
 from langchain.llms import OpenAI
 from langchain import PromptTemplate
 from components.Sidebar import sidebar
+from shared import constants
 
 st.title('🦜🔗 Langchain - Blog Outline Generator App')
 
@@ -12,8 +13,8 @@ def blog_outline(topic):
   llm = OpenAI(
     model_name='text-davinci-003',
     openai_api_key=api_key,
-    openai_api_base="https://openrouter.ai/api/v1",
-    headers={"HTTP-Referer": "https://yourdomain.streamlit.io"}
+    openai_api_base=constants.OPENROUTER_API_BASE,
+    headers={"HTTP-Referer": constants.OPENROUTER_REFERER}
   )
   # Prompt
   template = 'As an experienced data scientist and technical writer, generate an outline for a blog about {topic}.'

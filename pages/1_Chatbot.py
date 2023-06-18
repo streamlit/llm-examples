@@ -3,6 +3,7 @@ import streamlit as st
 from streamlit_chat import message
 from components.Sidebar import sidebar
 import json
+from shared import constants
 
 api_key = sidebar()
 
@@ -30,12 +31,14 @@ if user_input and not api_key:
 if user_input and api_key:
     st.session_state.messages.append({"role": "user", "content": user_input})
     message(user_input, is_user=True)
-    openai.api_base = "https://openrouter.ai/api/v1"
     openai.api_key = api_key
+    openai.api_base = constants.OPENROUTER_API_BASE
     response = openai.ChatCompletion.create(
         model="openai/gpt-3.5-turbo",
         messages=st.session_state.messages,
-        headers={"HTTP-Referer": "https://yourdomain.streamlit.io"},
+        headers={
+            "HTTP-Referer": constants.OPENROUTER_REFERER
+        },
     )
     # response is sometimes type str
     # TODO replace this hack with a real fix

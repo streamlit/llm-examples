@@ -1,6 +1,7 @@
 import streamlit as st
 from langchain import OpenAI
 from components.Sidebar import sidebar
+from shared import constants
 
 st.title('🦜🔗 Langchain Quickstart App')
 
@@ -10,8 +11,8 @@ def generate_response(input_text):
   llm = OpenAI(
     temperature=0.7, 
     openai_api_key=api_key,
-    openai_api_base="https://openrouter.ai/api/v1",
-    headers={"HTTP-Referer": "https://yourdomain.streamlit.io"}
+    openai_api_base=constants.OPENROUTER_API_BASE,
+    headers={"HTTP-Referer": constants.OPENROUTER_REFERER}
   )
   st.info(llm(input_text))
 

@@ -4,6 +4,7 @@ from langchain.chat_models import ChatOpenAI
 from langchain.agents import initialize_agent, Tool
 from langchain.agents import AgentType
 from components.Sidebar import sidebar
+from shared import constants
 
 api_key = sidebar()
 
@@ -24,8 +25,8 @@ if question:
         llm = ChatOpenAI(
             model_name="gpt-3.5-turbo",    
             openai_api_key=api_key,
-            openai_api_base="https://openrouter.ai/api/v1",
-            headers={"HTTP-Referer": "https://yourdomain.streamlit.io"}
+            openai_api_base=constants.OPENROUTER_API_BASE,
+            headers={"HTTP-Referer": constants.OPENROUTER_REFERER}
         )
 
         search = GoogleSerperAPIWrapper(serper_api_key=serper_api_key)

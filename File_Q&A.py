@@ -2,6 +2,7 @@ import streamlit as st
 import openai
 import json
 from components.Sidebar import sidebar
+from shared import constants
 
 api_key = sidebar()
 
@@ -21,17 +22,19 @@ if uploaded_file and question and not api_key:
 
 if uploaded_file and question and api_key:
     article = uploaded_file.read().decode()
-    openai.api_base = "https://openrouter.ai/api/v1"
-    # openai.api_base = "http://localhost:3000/api/v1"
-    openai.api_key = api_key
     context_prompt = f"""Here's an article:\n\n<article>
     {article}\n\n</article>\n\n"""
     context_message = {"role": "assistant", "content": context_prompt}
     question_message = {"role": "user", "content": question}
+
+    openai.api_key = api_key
+    openai.api_base = constants.OPENROUTER_API_BASE
     response = openai.ChatCompletion.create(
         model="openai/gpt-3.5-turbo",
         messages=[context_message, question_message],
-        headers={"HTTP-Referer": "https://yourdomain.streamlit.io"},
+        headers={
+            "HTTP-Referer": constants.OPENROUTER_REFERER
+        },
     )
     # response is sometimes type str
     # TODO replace this hack with a real fix
