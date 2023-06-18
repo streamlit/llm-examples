@@ -10,7 +10,7 @@ api_key, selected_model = sidebar(constants.OPENROUTER_DEFAULT_CHAT_MODEL)
 def generate_response(input_text):
   llm = OpenAI(
     temperature=0.7, 
-    model=constants.OPENROUTER_DEFAULT_CHAT_MODEL,
+    model=selected_model,
     openai_api_key=api_key,
     openai_api_base=constants.OPENROUTER_API_BASE,
     headers={"HTTP-Referer": constants.OPENROUTER_REFERER}
