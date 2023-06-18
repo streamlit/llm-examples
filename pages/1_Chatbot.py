@@ -5,7 +5,7 @@ from components.Sidebar import sidebar
 import json
 from shared import constants
 
-api_key = sidebar()
+api_key, selected_model = sidebar(constants.OPENROUTER_DEFAULT_CHAT_MODEL)
 
 st.title("💬 Streamlit GPT")
 if "messages" not in st.session_state:
@@ -34,7 +34,7 @@ if user_input and api_key:
     openai.api_key = api_key
     openai.api_base = constants.OPENROUTER_API_BASE
     response = openai.ChatCompletion.create(
-        model=constants.OPENROUTER_DEFAULT_CHAT_MODEL,
+        model=selected_model,
         messages=st.session_state.messages,
         headers={
             "HTTP-Referer": constants.OPENROUTER_REFERER

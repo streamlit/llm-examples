@@ -6,7 +6,7 @@ from langchain.agents import AgentType
 from components.Sidebar import sidebar
 from shared import constants
 
-api_key = sidebar()
+api_key, selected_model = sidebar(constants.OPENROUTER_DEFAULT_CHAT_MODEL)
 
 with st.sidebar:
     serper_api_key = st.text_input('Serper API Key',key='langchain_search_api_key_serper')
@@ -23,7 +23,7 @@ if question:
         st.info("Please connect with OpenRouter to continue.")
     elif serper_api_key and api_key:
         llm = ChatOpenAI(
-            model_name=constants.OPENROUTER_DEFAULT_CHAT_MODEL,    
+            model_name=selected_model,    
             openai_api_key=api_key,
             openai_api_base=constants.OPENROUTER_API_BASE,
             headers={"HTTP-Referer": constants.OPENROUTER_REFERER}

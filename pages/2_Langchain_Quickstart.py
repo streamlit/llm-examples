@@ -5,7 +5,7 @@ from shared import constants
 
 st.title('🦜🔗 Langchain Quickstart App')
 
-api_key = sidebar()
+api_key, selected_model = sidebar(constants.OPENROUTER_DEFAULT_CHAT_MODEL)
 
 def generate_response(input_text):
   llm = OpenAI(
