@@ -4,7 +4,7 @@ import json
 from components.Sidebar import sidebar
 from shared import constants
 
-api_key = sidebar()
+api_key, selected_model = sidebar(constants.OPENROUTER_DEFAULT_CHAT_MODEL)
 
 st.title("📝 File Q&A with OpenRouter")
 uploaded_file = st.file_uploader("Upload an article", type="txt")
@@ -30,7 +30,7 @@ if uploaded_file and question and api_key:
     openai.api_key = api_key
     openai.api_base = constants.OPENROUTER_API_BASE
     response = openai.ChatCompletion.create(
-        model=constants.OPENROUTER_DEFAULT_INSTRUCT_MODEL,
+        model=selected_model,
         messages=[context_message, question_message],
         headers={
             "HTTP-Referer": constants.OPENROUTER_REFERER

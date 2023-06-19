@@ -6,12 +6,12 @@ from shared import constants
 
 st.title('🦜🔗 Langchain - Blog Outline Generator App')
 
-api_key = sidebar()
+api_key, selected_model = sidebar(constants.OPENROUTER_DEFAULT_INSTRUCT_MODEL)
 
 def blog_outline(topic):
   # Instantiate LLM model
   llm = OpenAI(
-    model_name=constants.OPENROUTER_DEFAULT_INSTRUCT_MODEL,
+    model_name=selected_model,
     openai_api_key=api_key,
     openai_api_base=constants.OPENROUTER_API_BASE,
     headers={"HTTP-Referer": constants.OPENROUTER_REFERER}
