@@ -26,7 +26,7 @@ for i, msg in enumerate(st.session_state.messages):
     message(msg["content"], is_user=msg["role"] == "user", key=i)
 
 if user_input and not api_key:
-    st.info("Please add your OpenAI API key to continue.")
+    st.info("Please click Connect OpenRouter to continue.")
 
 if user_input and api_key:
     st.session_state.messages.append({"role": "user", "content": user_input})
@@ -36,13 +36,11 @@ if user_input and api_key:
     response = openai.ChatCompletion.create(
         model=selected_model,
         messages=st.session_state.messages,
-        headers={
-            "HTTP-Referer": constants.OPENROUTER_REFERER
-        },
+        headers={"HTTP-Referer": constants.OPENROUTER_REFERRER},
     )
     # response is sometimes type str
     # TODO replace this hack with a real fix
-    if(type(response) == str):
+    if type(response) == str:
         response = json.loads(response)
     msg = response["choices"][0]["message"]
     st.session_state.messages.append(msg)

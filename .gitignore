@@ -2,3 +2,4 @@ venv
 .venv
 secrets.toml
 .vscode
+__pycache__
