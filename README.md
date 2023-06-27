@@ -26,7 +26,7 @@ Current examples include:
 python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
-streamlit run Chatbot.py
+streamlit run File_Q\&A.py
 ```
 
 ## Get an OpenRouter API key
