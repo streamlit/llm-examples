@@ -1,5 +1,5 @@
 streamlit
-langchain
+langchain==0.0.137
 openai
 google-search-results
 anthropic

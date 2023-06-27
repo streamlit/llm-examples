@@ -5,8 +5,8 @@ from langchain.agents import initialize_agent, Tool
 from langchain.agents import AgentType
 
 with st.sidebar:
-    serper_api_key = st.text_input('Serper API Key',key='langchain_search_api_key_serper')
-    openai_api_key = st.text_input('OpenAI API Key',key='langchain_search_api_key_openai')
+    serper_api_key = st.text_input("Serper API Key", key="langchain_search_api_key_serper", type="password")
+    openai_api_key = st.text_input("OpenAI API Key", key="langchain_search_api_key_openai", type="password")
     "[View the source code](https://github.com/streamlit/llm-examples/blob/main/pages/LangChain_Search.py)"
     "[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/streamlit/llm-examples?quickstart=1)"
 
@@ -22,10 +22,8 @@ if question:
         st.info("Please add your OpenAI API key to continue.")
     elif serper_api_key and openai_api_key:
         llm = ChatOpenAI(model_name="gpt-3.5-turbo", openai_api_key=openai_api_key)
-#         llm = ChatOpenAI(model_name="gpt-3.5-turbo", openai_api_key=st.secrets.openai_api_key)
 
         search = GoogleSerperAPIWrapper(serper_api_key=serper_api_key)
-#         search = GoogleSerperAPIWrapper(serper_api_key=st.secrets.serper_api_key)
 
         search_tool = Tool(
             name="Intermediate Answer",
