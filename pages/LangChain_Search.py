@@ -30,12 +30,7 @@ if question:
             func=search.run,
             description="useful for when you need to ask with search",
         )
-        search_agent = initialize_agent(
-            [search_tool],
-            llm,
-            agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION,
-            verbose=True,
-        )
+        search_agent = initialize_agent([search_tool], llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, verbose=True)
 
         response = search_agent.run(question)
         st.write("### Answer")
