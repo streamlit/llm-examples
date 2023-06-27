@@ -23,7 +23,6 @@ if uploaded_file and question and anthropic_api_key:
     {article}\n\n</article>\n\n{question}{anthropic.AI_PROMPT}"""
 
     client = anthropic.Client(anthropic_api_key)
-    # client = anthropic.Client(st.secrets.anthropic_api_key)
     response = client.completion(
         prompt=prompt,
         stop_sequences=[anthropic.HUMAN_PROMPT],
