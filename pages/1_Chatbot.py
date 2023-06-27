@@ -36,7 +36,7 @@ if user_input and api_key:
     response = openai.ChatCompletion.create(
         model=selected_model,
         messages=st.session_state.messages,
-        headers={"HTTP-Referer": constants.OPENROUTER_REFERER},
+        headers={"HTTP-Referer": constants.OPENROUTER_REFERRER},
     )
     # response is sometimes type str
     # TODO replace this hack with a real fix

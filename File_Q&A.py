@@ -32,13 +32,11 @@ if uploaded_file and question and api_key:
     response = openai.ChatCompletion.create(
         model=selected_model,
         messages=[context_message, question_message],
-        headers={
-            "HTTP-Referer": constants.OPENROUTER_REFERER
-        },
+        headers={"HTTP-Referer": constants.OPENROUTER_REFERRER},
     )
     # response is sometimes type str
     # TODO replace this hack with a real fix
-    if(type(response) == str):
+    if type(response) == str:
         response = json.loads(response)
     msg = response["choices"][0]["message"]
     st.write("### Answer")
