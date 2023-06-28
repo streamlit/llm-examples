@@ -29,21 +29,6 @@ pip install -r requirements.txt
 streamlit run File_Q\&A.py
 ```
 
-## Get an OpenRouter API key
+## Getting API keys
 
-You can get your own OpenRouter API key by following the following instructions:
-
-1. Go to https://openrouter.ai/account.
-2. Click on the `Create API key` button at the bottom.
-3. Next, enter an identifier name and click on the `Create` button.
-
-## Enter the OpenRouter API key in Streamlit Community Cloud
-
-To set the OpenRouter API key as an environment variable in Streamlit apps, do the following:
-
-1. At the lower right corner, click on `< Manage app` then click on the vertical "..." followed by clicking on `Settings`.
-2. This brings the **App settings**, next click on the `Secrets` tab and paste the API key into the text box as follows:
-
-```sh
-OPENROUTER_API_KEY='xxxxxxxxxx'
-```
+Not needed! Your users will click the **Connect OpenRouter** button and auto-supply your app with a custom API key, using an [OAuth PKCE flow]("https://oauth.net/2/pkce/").
