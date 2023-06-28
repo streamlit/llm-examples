@@ -1,6 +1,5 @@
-streamlit
-langchain==0.0.137
+streamlit>=1.24.0
+langchain>=0.0.217
 openai
-google-search-results
+duckduckgo-search
 anthropic
-streamlit-chat
