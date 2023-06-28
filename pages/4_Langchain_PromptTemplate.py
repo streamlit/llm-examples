@@ -1,6 +1,6 @@
 import streamlit as st
 from langchain.llms import OpenAI
-from langchain import PromptTemplate
+from langchain.prompts import PromptTemplate
 
 st.title("🦜🔗 Langchain - Blog Outline Generator App")
 
