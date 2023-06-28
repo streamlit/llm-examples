@@ -7,7 +7,7 @@ from langchain.chat_models import ChatOpenAI
 
 with st.sidebar:
     openai_api_key = st.text_input("OpenAI API Key", key="langchain_search_api_key_openai", type="password")
-    "[View the source code](https://github.com/streamlit/llm-examples/blob/main/pages/LangChain_Search.py)"
+    "[View the source code](https://github.com/streamlit/llm-examples/blob/main/pages/2_LangChain%3A_Chat_with_search.py)"
     "[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/streamlit/llm-examples?quickstart=1)"
 
 st.title("🔎 LangChain: Chat with search")
