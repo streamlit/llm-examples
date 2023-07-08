@@ -22,8 +22,11 @@ if "messages" not in st.session_state:
         {"role": "assistant", "content": "Hi, I'm a chatbot who can search the web. How can I help you?"}
     ]
 
-for msg in st.session_state.messages:
-    st.chat_message(msg["role"]).write(msg["content"])
+
+# I am commenting out these two lines because they're causing error when I am running this code in my env. The problem is with defining the attributes -- please consider looking at this 
+#  again if it works on your end...
+# for msg in st.session_state.messages:
+#     st.chat_message(msg["role"]).write(msg["content"])
 
 if prompt := st.chat_input(placeholder="Who won the Women's U.S. Open in 2018?"):
     st.session_state.messages.append({"role": "user", "content": prompt})
