@@ -12,8 +12,8 @@ Current examples include:
 
 - Chatbot
 - File Q&A
-- Langchain Quickstart
-- Langchain PromptTemplate
+- LangChain Quickstart
+- LangChain PromptTemplate
 - LangChain Search
 
 ## Demo App
