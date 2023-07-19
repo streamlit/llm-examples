@@ -20,7 +20,7 @@ Current examples include:
 
 [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://llm-examples.streamlit.app/)
 
-## Get an OpenAI API key
+### Get an OpenAI API key
 
 You can get your own OpenAI API key by following the following instructions:
 
@@ -28,7 +28,7 @@ You can get your own OpenAI API key by following the following instructions:
 2. Click on the `+ Create new secret key` button.
 3. Next, enter an identifier name (optional) and click on the `Create secret key` button.
 
-## Enter the OpenAI API key in Streamlit Community Cloud
+### Enter the OpenAI API key in Streamlit Community Cloud
 
 To set the OpenAI API key as an environment variable in Streamlit apps, do the following:
 
@@ -37,4 +37,13 @@ To set the OpenAI API key as an environment variable in Streamlit apps, do the f
 
 ```sh
 OPENAI_API_KEY='xxxxxxxxxx'
+```
+
+## Run it locally
+
+```sh
+virtualenv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+streamlit run Chatbot.py
 ```
