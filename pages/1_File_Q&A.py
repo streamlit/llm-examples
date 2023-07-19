@@ -22,12 +22,12 @@ if uploaded_file and question and anthropic_api_key:
     prompt = f"""{anthropic.HUMAN_PROMPT} Here's an article:\n\n<article>
     {article}\n\n</article>\n\n{question}{anthropic.AI_PROMPT}"""
 
-    client = anthropic.Client(anthropic_api_key)
-    response = client.completion(
+    client = anthropic.Client(api_key=anthropic_api_key)
+    response = client.completions.create(
         prompt=prompt,
         stop_sequences=[anthropic.HUMAN_PROMPT],
-        model="claude-v1",
+        model="claude-v1", #"claude-2" for Claude 2 model
         max_tokens_to_sample=100,
     )
     st.write("### Answer")
-    st.write(response["completion"])
+    st.write(response.completion)
