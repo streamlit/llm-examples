@@ -21,6 +21,8 @@ if "response" not in st.session_state:
 for msg in st.session_state.messages:
     st.chat_message(msg["role"]).write(msg["content"])
 
+model = "gpt-3.5-turbo"
+
 if prompt := st.chat_input(placeholder="Tell me a joke about sharks"):
     st.session_state.messages.append({"role": "user", "content": prompt})
     st.chat_message("user").write(prompt)
@@ -30,22 +32,25 @@ if prompt := st.chat_input(placeholder="Tell me a joke about sharks"):
         st.stop()
     else:
         openai.api_key = openai_api_key
-
-    response = openai.Completion.create(model="text-davinci-002", prompt=prompt, temperature=0.5, max_tokens=200)
-    st.session_state["response"] = response.choices[0].text.replace("\n", "")
+    response = openai.ChatCompletion.create(model=model, messages=st.session_state.messages)
+    st.session_state["response"] = response.choices[0].message.content
     with st.chat_message("assistant"):
         st.session_state.messages.append({"role": "assistant", "content": st.session_state["response"]})
         st.write(st.session_state["response"])
 
 if st.session_state["response"]:
-    collector = FeedbackCollector(component_name="default", email=None, password=None)
+    collector = FeedbackCollector(
+        component_name="default",
+        email=st.secrets.get("TRUBRICS_EMAIL"),
+        password=st.secrets.get("TRUBRICS_PASSWORD")
+    )
 
     feedback = collector.st_feedback(
         feedback_type="thumbs",
-        model="text-davinci-002",
+        model=model,
         open_feedback_label="[Optional] Provide additional feedback",
-        metadata={"response": st.session_state["response"], "prompt": prompt},
-        save_to_trubrics=False,
+        metadata={"chat": st.session_state.messages},
+        save_to_trubrics=True if st.secrets.get("TRUBRICS_SAVE") else False,
     )
-    if feedback:
+    if feedback and st.secrets.get("TRUBRICS_SAVE") is None:
         st.success("Feedback saved! You can analyse your feedback with https://trubrics.streamlit.app/.")
