@@ -6,14 +6,14 @@ from trubrics.integrations.streamlit import FeedbackCollector
 with st.sidebar:
     openai_api_key = st.text_input("OpenAI API Key", key="langchain_search_api_key_openai", type="password")
     "[Get an OpenAI API key](https://platform.openai.com/account/api-keys)"
-    "[View the source code](https://github.com/streamlit/llm-examples/blob/main/pages/2_Chat_with_search.py)"
+    "[View the source code](https://github.com/streamlit/llm-examples/blob/main/pages/5_Chat_with_user_feedback.py)"
     "[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/streamlit/llm-examples?quickstart=1)"
 
 st.title("🔎 Trubrics - Chat with user feedback")
 
 if "messages" not in st.session_state:
     st.session_state["messages"] = [
-        {"role": "assistant", "content": "Hi, I'm a chatbot who can search the web. How can I help you?"}
+        {"role": "assistant", "content": "Hi, how can I help you? Leave feedback to help my team understand my weaknesses!"}
     ]
 if "response" not in st.session_state:
     st.session_state["response"] = None
