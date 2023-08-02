@@ -2,6 +2,9 @@
 
 [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/streamlit/llm-examples?quickstart=1)
 
+[![litellm](https://img.shields.io/badge/%20%F0%9F%9A%85%20liteLLM-chatGPT%7CAzure%7CAnthropic-blue?color=green)](https://github.com/BerriAI/litellm)
+
+
 Starter examples for building LLM apps with Streamlit.
 
 ## Overview of the App
