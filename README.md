@@ -18,6 +18,7 @@ Current examples include:
 - LangChain Quickstart
 - LangChain PromptTemplate
 - LangChain Search
+- LiteLLM Playground - Run 1 prompt on Claude2, Claude 1.2, GPT-3.5, GPT-4
 
 ## Demo App
 
