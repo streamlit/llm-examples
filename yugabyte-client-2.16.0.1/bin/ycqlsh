@@ -1,0 +1,98 @@
+#!/bin/sh
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# shell script to find a suitable Python interpreter and run ycqlsh.py
+
+# Use the Python that is specified in the env
+if [ -n "$CQLSH_PYTHON" ]; then
+    USER_SPECIFIED_PYTHON="$CQLSH_PYTHON"
+fi
+
+
+# filter "--python" option and its value, and keep remaining arguments as it is
+USER_SPECIFIED_PYTHON_OPTION=false
+for arg do
+  shift
+  case "$arg" in
+    --python)
+        USER_SPECIFIED_PYTHON_OPTION=true
+        ;;
+    --)
+        break
+        ;;
+    *)
+        if [ "$USER_SPECIFIED_PYTHON_OPTION" = true ] ; then
+            USER_SPECIFIED_PYTHON_OPTION=false
+            USER_SPECIFIED_PYTHON="$arg"
+        else
+            set -- "$@" "$arg"
+        fi
+        ;;
+  esac
+done
+
+if [ "$USER_SPECIFIED_PYTHON_OPTION" = true ] ; then
+    echo "You must specify a python interpreter path with the --python option"
+    exit 1
+fi
+
+# get a version string for a Python interpreter
+get_python_version() {
+    interpreter=$1
+    version=$(command -v "$interpreter" > /dev/null 2>&1 && $interpreter -c "import os; print('{}.{}'.format(os.sys.version_info.major, os.sys.version_info.minor))")
+    echo "$version"
+}
+
+# test whether a version string matches one of the supported versions for cqlsh
+is_supported_version() {
+    version=$1
+    # shellcheck disable=SC2039
+    # shellcheck disable=SC2072
+    # python2.7 or python3.6+ is supported
+    if [ "$version" = "3.6" ] || [ "$version" \> "3.6" ] || [ "$version" = "2.7" ]; then
+        echo "supported"
+    else
+        echo "unsupported"
+    fi
+}
+
+run_if_supported_version() {
+    # get the interpreter and remove it from argument
+    interpreter="$1" shift
+
+    version=$(get_python_version "$interpreter")
+    if [ -n "$version" ]; then
+        if [ "$(is_supported_version "$version")" = "supported" ]; then
+            exec "$interpreter" "$($interpreter -c "import os; print(os.path.dirname(os.path.realpath('$0')))")/ycqlsh.py" "$@"
+            exit
+        fi
+    fi
+}
+
+
+if [ "$USER_SPECIFIED_PYTHON" != "" ]; then
+    # run a user specified Python interpreter
+    run_if_supported_version "$USER_SPECIFIED_PYTHON" "$@"
+else
+    # try unqualified python first, then python3, then python2.7
+    for interpreter in python python3 python2.7; do
+        run_if_supported_version "$interpreter" "$@"
+    done
+fi
+
+echo "No appropriate Python interpreter found." >&2
+exit 1
