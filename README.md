@@ -12,9 +12,10 @@ Current examples include:
 
 - Chatbot
 - File Q&A
+- Chat with Internet search
 - LangChain Quickstart
 - LangChain PromptTemplate
-- LangChain Search
+- Chat with user feedback
 
 ## Demo App
 
