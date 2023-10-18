@@ -1,4 +1,4 @@
-streamlit-nightly >= 1.26.1.dev20231011
+streamlit-nightly >= 1.27.3.dev20231017
 langchain>=0.0.217
 openai
 duckduckgo-search

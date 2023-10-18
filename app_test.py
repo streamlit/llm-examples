@@ -20,7 +20,7 @@ def test_Chatbot(openai_create):
     at = AppTest.from_file("Chatbot.py").run()
     assert not at.exception
     at.chat_input[0].set_value("Do you know any jokes?").run()
-    assert at.get("alert")[0].proto.body == "Please add your OpenAI API key to continue."
+    assert at.info[0].value == "Please add your OpenAI API key to continue."
 
     JOKE = "Why did the chicken cross the road? To get to the other side."
     openai_create.return_value = create_openai_object_sync(JOKE)
@@ -36,11 +36,11 @@ def test_Chatbot(openai_create):
 @patch("langchain.llms.OpenAI.__call__")
 def test_Langchain_Quickstart(langchain_llm):
     at = AppTest.from_file("pages/3_Langchain_Quickstart.py").run()
-    assert at.get("alert")[0].proto.body == "Please add your OpenAI API key to continue."
+    assert at.info[0].value == "Please add your OpenAI API key to continue."
 
     RESPONSE = "1. The best way to learn how to code is by practicing..."
     langchain_llm.return_value = RESPONSE
     at.sidebar.text_input[0].set_value("sk-...")
     at.button[0].set_value(True).run()
     print(at)
-    assert at.get("alert")[0].proto.body == RESPONSE
+    assert at.info[0].value == RESPONSE
