@@ -19,7 +19,7 @@
 
 ## Demo App
 
-[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://llm-examples.streamlit.app/)
+(https://jiraphinya-gpt.streamlit.app/)
 
 ### Get an OpenAI `API key` = คือ อะไร หาได้ที่ไหน ` น้องมิ้น `มีคำตอบ
 
