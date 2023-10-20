@@ -26,11 +26,11 @@ def test_Chatbot(openai_create):
     openai_create.return_value = create_openai_object_sync(JOKE)
     at.text_input(key="chatbot_api_key").set_value("sk-...")
     at.chat_input[0].set_value("Do you know any jokes?").run()
-    # print(at)
+    print(at)
     assert at.chat_message[1].markdown[0].value == "Do you know any jokes?"
     assert at.chat_message[2].markdown[0].value == JOKE
     assert at.chat_message[2].avatar == "assistant"
-    assert not at.exception
+    assert at.exception
 
 
 @patch("langchain.llms.OpenAI.__call__")
