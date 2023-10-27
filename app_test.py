@@ -30,7 +30,7 @@ def test_Chatbot(openai_create):
     assert at.chat_message[1].markdown[0].value == "Do you know any jokes?"
     assert at.chat_message[2].markdown[0].value == JOKE
     assert at.chat_message[2].avatar == "assistant"
-    assert at.exception
+    assert not at.exception
 
 
 @patch("langchain.llms.OpenAI.__call__")
