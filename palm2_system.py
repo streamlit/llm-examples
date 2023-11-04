@@ -13,16 +13,16 @@ user.
 
 The way to use this API is to do the following:
     1) While setting up the app, run the following command:
-            
+
             response = palm2_system.setup()
-       
+
        This setup command sets up the 'response' object, which will hold all of
        the conversation between the user and PaLM 2
 
     2) Each time the user gives a prompt, run the following command:
-            
+
             answer = palm2_system.chat(response, [whatever the prompt is])
-       
+
        This command returns the answer from PaLM 2 but at the same time updates
        the 'response' object with the new prompt and answer. To be clear, the
        'answer' variable contains the most recent text response from PaLM 2.
