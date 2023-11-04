@@ -84,12 +84,12 @@ def current_location() -> tuple[float, float]:
 
 # Get nearby restaurants using Google Maps Places API
 @staticmethod
-def nearby_restaurants(location) -> str:
+def nearby_restaurants(loc) -> str:
     """Given the location of the user, provide the nearby restaurants in a JSON
     format.
     """
     # Get current locaiton from user
-    lat, long = current_location()
+    lat, long = loc
 
     # Send a POST Request to the Google Maps Places API
     headers = {
