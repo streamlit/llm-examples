@@ -5,3 +5,6 @@ duckduckgo-search
 anthropic>=0.3.0
 trubrics>=1.4.3
 streamlit-feedback
+geocoder
+google.generativeai
+requests
