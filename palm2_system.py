@@ -13,7 +13,9 @@ user.
 """
 
 # Insert modules here
+import geocoder
 import google.generativeai as palm
+import requests
 
 __author__ = "Akhil Karra"
 __license__ = "MIT"
@@ -69,24 +71,48 @@ maps_api_key = MAPS_API_KEY
 
 # Get current location of the user
 @staticmethod
-def current_location():
-    """Using the Geolocator API, get the current location of the user.
+def current_location() -> tuple[float, float]:
+    """Using the Geocode Python library, get the current location of the user.
 
     Returns
     -------
     :returns: A (latitude, longitude) tuple with the user's current location
     """
+    geoloc = geocoder.ip("me")
+    return geoloc.latlng
 
-    return
 
-
-# Get nearby restaurants using Google Maps
+# Get nearby restaurants using Google Maps Places API
 @staticmethod
 def nearby_restaurants(location) -> str:
     """Given the location of the user, provide the nearby restaurants in a JSON
     format.
     """
-    return ""
+    # Get current locaiton from user
+    lat, long = current_location()
+
+    # Send a POST Request to the Google Maps Places API
+    headers = {
+        "Content-Type": "application/json",
+        "X-Goog-API-Key": MAPS_API_KEY,
+        "X-Goog-FieldMask": "places.displayName"
+    }
+    data = {
+        "includedTypes": ["restaurant"],
+        "maxResultCount": 20,
+        "locationRestriction": {
+            "circle": {
+                "center": {
+                    "latitude": lat,
+                    "longitude": long},
+                "radius": 100.0
+            }
+        }
+    }
+    url = "https://places.googleapis.com/v1/places:searchNearby"
+    maps_places_request = requests.post(url, headers=headers, data=data)
+
+    return maps_places_request.text
 
 
 # Setup necessary APIs (MUST USE THIS BEFORE USING CHAT)
