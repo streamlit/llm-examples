@@ -21,4 +21,9 @@ __maintainer__ = "Akhil Karra"
 __email__ = "akarra@andrew.cmu.edu"
 __status__ = "Prototype"
 
-
+# PaLM 2 Hyperparameters, Google PaLM2 & Maps API Keys
+temperature = 0.25
+top_k = 10
+top_p = 1.0
+palm_2_api_key = PALM_2_API_KEY
+maps_api_key = MAPS_API_KEY
