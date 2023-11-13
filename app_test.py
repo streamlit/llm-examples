@@ -1,21 +1,31 @@
+import datetime
 from unittest.mock import patch
 from streamlit.testing.v1 import AppTest
-from openai.openai_object import OpenAIObject
+from openai.types.chat import ChatCompletionMessage
+from openai.types.chat.chat_completion import ChatCompletion, Choice
 
 
-# See https://github.com/openai/openai-python/issues/398
-def create_openai_object_sync(response: str, role: str = "assistant") -> OpenAIObject:
-    obj = OpenAIObject()
-    message = OpenAIObject()
-    content = OpenAIObject()
-    content.content = response
-    content.role = role
-    message.message = content
-    obj.choices = [message]
-    return obj
+# See https://github.com/openai/openai-python/issues/715#issuecomment-1809203346
+def create_chat_completion(response: str, role: str = "assistant") -> ChatCompletion:
+    return ChatCompletion(
+        id="foo",
+        model="gpt-3.5-turbo",
+        object="chat.completion",
+        choices=[
+            Choice(
+                finish_reason="stop",
+                index=0,
+                message=ChatCompletionMessage(
+                    content=response,
+                    role=role,
+                ),
+            )
+        ],
+        created=int(datetime.datetime.now().timestamp()),
+    )
 
 
-@patch("openai.ChatCompletion.create")
+@patch("openai.resources.chat.Completions.create")
 def test_Chatbot(openai_create):
     at = AppTest.from_file("Chatbot.py").run()
     assert not at.exception
@@ -23,7 +33,7 @@ def test_Chatbot(openai_create):
     assert at.info[0].value == "Please add your OpenAI API key to continue."
 
     JOKE = "Why did the chicken cross the road? To get to the other side."
-    openai_create.return_value = create_openai_object_sync(JOKE)
+    openai_create.return_value = create_chat_completion(JOKE)
     at.text_input(key="chatbot_api_key").set_value("sk-...")
     at.chat_input[0].set_value("Do you know any jokes?").run()
     print(at)
