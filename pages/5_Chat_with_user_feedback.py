@@ -1,4 +1,4 @@
-import openai
+from openai import OpenAI
 import streamlit as st
 from streamlit_feedback import streamlit_feedback
 import trubrics
@@ -34,9 +34,8 @@ if prompt := st.chat_input(placeholder="Tell me a joke about sharks"):
     if not openai_api_key:
         st.info("Please add your OpenAI API key to continue.")
         st.stop()
-    else:
-        openai.api_key = openai_api_key
-    response = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=messages)
+    client = OpenAI(api_key=openai_api_key)
+    response = client.chat.completions.create(model="gpt-3.5-turbo", messages=messages)
     st.session_state["response"] = response.choices[0].message.content
     with st.chat_message("assistant"):
         messages.append({"role": "assistant", "content": st.session_state["response"]})
