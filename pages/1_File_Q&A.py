@@ -26,7 +26,7 @@ if uploaded_file and question and anthropic_api_key:
     response = client.completions.create(
         prompt=prompt,
         stop_sequences=[anthropic.HUMAN_PROMPT],
-        model="claude-v1", #"claude-2" for Claude 2 model
+        model="claude-v1",  # "claude-2" for Claude 2 model
         max_tokens_to_sample=100,
     )
     st.write("### Answer")
