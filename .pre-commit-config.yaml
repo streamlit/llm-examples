@@ -5,9 +5,8 @@ repos:
         -   id: check-yaml
         -   id: end-of-file-fixer
         -   id: trailing-whitespace
-  -   repo: https://github.com/psf/black
-      rev: 23.3.0
-      hooks:
-        - id: black
-          language_version: python3.11
-          args: ["--line-length", "105"]
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.1.14
+    hooks:
+      - id: ruff
+      - id: ruff-format
