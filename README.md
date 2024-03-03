@@ -19,7 +19,6 @@
 
 ## Demo App
 
-(https://jiraphinya-gpt.streamlit.app/)
 
 ### Get an OpenAI `API key` = คือ อะไร หาได้ที่ไหน ` น้องมิ้น `มีคำตอบ
 
