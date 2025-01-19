@@ -1,0 +1,34 @@
+{% load static %}
+<head>
+
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'css/sidebar_styles.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+</head>
+
+<aside class="sidebar">
+            
+    <div class="menu-icon" onclick="toggleMenu()">
+        <i class="fas fa-bars"></i>
+    </div>
+    
+    <ul id="menu" style="display: none;">
+        <li class="selected"><a href="/app/">Home</a></li>
+        <li><a href="/app/lulu">Lulu</a></li>
+        <li><a href="/app/register">Users</a></li>
+        <li><a href="/app/trainingFiles">Training Files</a></li>
+        <li><a href="/accounts/logout/">Logout</a></li>
+    </ul>
+
+    <div class="lulu_icon">
+        <img src="{% static 'img/lulu_bot.png' %}" alt="Image Description" class="starters-image" />
+    </div>
+
+    <script src="{% static 'js/scripts_sidebar.js' %}"></script>
+
+</aside>
+
+
+
+

@@ -1,0 +1,24 @@
+
+.header {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 10px;
+    background-color: #f4f4f4;
+}
+
+.header h1 {
+    margin-right: 15px;
+    font-size: 12px;
+    color: #333;
+    font-family: 'Poppins', sans-serif;
+}
+
+.user-icon img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #8761fc;
+    background: #8761fc;
+}

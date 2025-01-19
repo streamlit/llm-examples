@@ -1,0 +1,90 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lulu MVP | Training and Fine Tune Files</title>
+    <link rel="stylesheet" href="{% static 'css/home_styles.css' %}">
+
+
+</head>
+<body>
+    <div class="container">
+        
+        {% include 'sidebar.html' %}
+
+        <main class="content">
+
+            {% include 'header.html' %}
+            
+            <h1>Training and Fine Tune Files</h1>
+            <button id="openModal" class="new-user-button">New File</button>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>File Name</th>
+                        <th>File Proposal</th>
+                        <th>File</th>
+                        <th>Created Date</th>
+                        <!-- <th>Created By</th> -->
+                        <!-- <th>Status</th> -->
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for training in trainings %}
+                    <tr>
+                        <td>{{ training.id }}</td>
+                        <td>{{ training.version_title }}</td>
+                        <td>
+                            {% if training.attachments %}
+                            <a href="{{ training.attachments.url }}" target="_blank">Download</a>
+                            {% else %}
+                            No File
+                            {% endif %}
+                        </td>
+                        <td>{{ training.comments }}</td>
+                        <td>{{ training.creation_date|date:"Y-m-d H:i" }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <!-- Modal para o Formulário -->
+            <div id="userModal" class="modal">
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <h2>New File</h2>
+                    <form method="POST" action="{% url 'training_list' %}" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit">Save</button>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        var modal = document.getElementById("userModal");
+        var btn = document.getElementById("openModal");
+        var span = document.getElementsByClassName("close")[0];
+
+        btn.onclick = function() {
+            modal.style.display = "block";
+        }
+
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+</body>
+</html>

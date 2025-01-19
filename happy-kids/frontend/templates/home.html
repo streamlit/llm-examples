@@ -1,0 +1,51 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+    <head>
+        
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Página com Sidebar</title>
+        <link rel="stylesheet" href="{% static 'css/home_styles.css' %}">
+
+    </head>
+
+    <body>
+
+        <div class="container">
+            
+            {% include 'sidebar.html' %}
+
+            <main class="content">
+
+                {% include 'header.html' %}
+
+                <div class = "div_models">
+                    
+                    <h1>Moyen, {{ user.first_name }}</h1>
+                    <h4>Choose your assisstant today</h4>
+                    
+                    <div class="div_carrosel_models">
+                        <div class="carousel-container">
+                            <div class="carousel-item">
+                                <a href="lulu">
+                                    <img src="{% static 'img/lulu_bot.png' %}" class="carousel-img" alt="Lulu">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                
+                <div class = "footer">
+                    <p>We are an experimental start-up. Thank you for testing</p>
+                </div>    
+            </main>
+        </div>
+
+        <script src="{% static 'js/scripts.js' %}"></script> 
+        
+    </body>
+
+</html>
+

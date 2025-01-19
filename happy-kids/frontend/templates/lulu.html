@@ -1,0 +1,46 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Lulu</title>
+
+      <link rel="stylesheet" href="{% static 'css/lulu_styles.css' %}">
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto&display=swap">
+      <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <div class="container">
+      
+      {% include 'sidebar.html' %}
+
+      <main class="content">
+
+        {% include 'header.html' %}
+      
+        <div class="chat-container">
+            <h1>Hi, {{ user.first_name }}</h1>
+
+            <div class="chat-box" id="chat-box">
+              
+            
+              <div class="chat-history" id="chat-history">
+                  
+              </div>
+            </div>
+        </div>
+    
+        <div class="input-container">
+          <input type="text" id="user-input" placeholder="Type your message..." />
+          <button id="send-button">
+            <span>&#8594;</span> 
+          </button>
+        </div>
+
+      </main>
+  </div>
+    
+    <script src="{% static 'js/scripts.js' %}"></script>
+  </body>
+</html>

@@ -1,0 +1,51 @@
+{% load i18n %}
+{% load static %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="{% static 'css/login_styles.css' %}">
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+        
+
+        <title>
+            {% block head_title %}
+            {% endblock head_title %}
+        </title>
+        {% block extra_head %}
+        {% endblock extra_head %}
+    </head>
+    <body>
+        <div class="bla">
+
+            <div class="login-container">
+
+                {% block body %}
+                    {% if messages %}
+                        <div>
+                            <strong>{% trans "Messages:" %}</strong>
+                            <ul>
+                                {% for message in messages %}<li>{{ message }}</li>{% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                    <div>
+                        
+                    </div>
+                    {% block content %}
+                    {% endblock content %}
+                {% endblock body %}
+                {% block extra_body %}
+                {% endblock extra_body %}
+
+            </div>
+
+            <div class="image-happy-kids">
+                <img src="{% static 'img/img_5.png' %}" alt="Image Description" class="starters-image" />
+
+                <div class="image-overlay"></div>
+            </div>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,12 @@
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'css/header_styles.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<div class="header">
+    <h1>Hi, {{ user.first_name }}</h1>
+    <div class="user-icon">
+        <img src="{{ user.profile.picture.url }}" >
+    </div>
+</div>
