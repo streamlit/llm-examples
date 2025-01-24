@@ -1,0 +1,237 @@
+html,body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+
+
+.container {
+    display: flex;
+    height: 100%;
+}
+
+.content {
+    flex: 1; 
+    padding: 20px;
+    
+    background-color: #f4f4f4; 
+}
+
+h1, p {
+    color: #333; 
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    max-width: 400px;
+    margin: 20px 0;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+form label {
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #8761fc;
+}
+
+form input, form select {
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    width: 100%;
+    box-sizing: border-box; 
+}
+
+form input:focus, form select:focus {
+    border-color: #5ddee6;
+    outline: none;
+}
+
+form button {
+    padding: 10px 15px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    background-color: #8761fc;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+form button:hover {
+    background-color: #5ddee6;
+}
+
+.content form + h2 {
+    margin-top: 30px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+table, th, td {
+    border: 1px solid #ddd;
+}
+
+th, td {
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    background-color: #8761fc;
+    color: white;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.new-user-button {
+    padding: 12px 20px; 
+    background-color:#8761fc ; 
+    color: #fff; 
+    font-size: 16px; 
+    font-weight: bold; 
+    border: none; 
+    border-radius: 5px; 
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease; 
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); 
+}
+
+.new-user-button:hover {
+    background-color: #5ddee6 ; 
+    transform: scale(1.05); 
+}
+
+.new-user-button:focus {
+    outline: none; 
+    box-shadow: 0 0 5px rgba(135, 97, 252, 0.6); 
+}
+
+
+/* Estilos para o modal */
+.modal {
+    display: none; 
+    position: fixed; 
+    z-index: 1; 
+    left: 0;
+    top: 0;
+    width: 100%; 
+    height: 100%; 
+    overflow: auto; 
+    background-color: rgb(0,0,0); 
+    background-color: rgba(0,0,0,0.4); 
+}
+
+.modal-content {
+    background-color: #f9f9f9;
+    margin: 15% auto; 
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; 
+    max-width: 400px; 
+    border-radius: 8px; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.div_models {
+    display: flex;
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center; 
+    text-align: center; 
+    padding-top: 60px;
+    
+}
+
+.div_models h1 {
+    margin: 0;
+   
+    font-weight: bold;
+    background: linear-gradient(to right, #8d53ff, #5ddee6); 
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+.div_models h4 {
+    margin: 0; 
+    font-size: 12px;
+    color:#333;
+    font-weight: lighter;
+}
+
+.footer {
+    position: fixed;
+    bottom: 0; 
+    width: 100%; 
+    height: 10%;
+    background-color: #f1f1f1; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center; 
+    
+    box-sizing: border-box; 
+}
+
+.footer p {
+    margin: 0; 
+    font-size: 12px;
+    color: #333; 
+}
+
+
+
+.div_carrosel_models {
+    padding-top: 30px;
+    position: relative;
+    width: 80%;
+    margin: auto;
+    overflow: hidden;
+}
+
+.carousel-container {
+    display: flex;
+    transition: transform 0.5s ease;
+}
+
+.carousel-item {
+    min-width: 100%;
+    box-sizing: border-box;
+}
+
+.carousel-img {
+    object-fit: contain; /* Garante que a imagem se ajuste ao contêiner sem distorcer */
+    margin: 0 ;   /* Centraliza a imagem horizontalmente */
+   
+    top: 50%;         /* Posiciona a imagem verticalmente no meio da tela */
+    left: 50%;        /* Posiciona a imagem horizontalmente no meio da tela */
+}
