@@ -1,0 +1,149 @@
+body{
+    margin: 0
+}
+
+.bla {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.login-container {
+    flex: 0 0 25%;
+    box-sizing: border-box;
+    background-color: #f4f4f4;
+    padding: 100px 60px;
+    border-radius: 10px;
+    text-align: center;
+    height: 100vh;
+}
+
+.image-happy-kids {
+    flex: 0 0 100%;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    display: flex; 
+    justify-content: center;
+    align-items: center; 
+    overflow: hidden;
+}
+
+.image-happy-kids img {
+    object-fit: cover; 
+    width: 100%; 
+    height: 100%; 
+}
+
+.starters-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+.image-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: linear-gradient(to bottom, #e351ec, #526fe0);
+    opacity: 0.5;
+}
+
+
+h2 {
+    color: #333;
+    margin-bottom: 20px;
+    font-weight: bold;
+    font-size: 42px;
+    font-family: 'Poppins', sans-serif;
+    text-align: left; 
+}
+
+h4{
+    color: #5a5a5a;
+    font-size: 14px;
+    font-weight: lighter;
+    font-family: 'Poppins', sans-serif;
+}
+
+p{
+    font-family: 'Poppins', sans-serif;
+    color: #5a5a5a;
+}
+
+.alert {
+    background-color: #ff4d4d;
+    color: #fff;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    font-size: 14px;
+}
+
+.input-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.input-group input, #id_login, #id_password, #id_username, #id_email, #id_password1, #id_password2, #id_oldpassword{
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #f3f3f3;
+    border-radius: 20px;
+    font-size: 12px;
+    outline: none;
+    transition: all 0.3s ease;
+    box-sizing: border-box; 
+    
+}
+
+.input-group input:focus, #id_login:focus, #id_password:focus, #id_username:focus, #id_email:focus, #id_password1:focus, #id_password2:focus, #id_oldpassword:focus {
+    border-color: #8761fc;
+    box-shadow: 0 0 5px rgba(135, 97, 252, 0.4);
+}
+
+.login-button, button {
+    width: 100%;
+    padding: 12px;
+    background-color: #8761fc;
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.login-button:hover, button:hover {
+    background-color: #5ddee6;
+}
+
+.forgot-password {
+    display: inline-block;
+    padding: 10px 20px;
+    color: #bbbbbb;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-family: 'Poppins', sans-serif;
+    text-align: right; 
+}
+
+.forgot-password:hover {
+    color: #8761fc;
+}
+
+ul li{
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    color: #5a5a5a;
+}

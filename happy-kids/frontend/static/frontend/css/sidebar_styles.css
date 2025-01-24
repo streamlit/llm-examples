@@ -1,0 +1,91 @@
+.sidebar {
+    width: 80px; 
+    background: linear-gradient(to bottom, #8d53ff, #5ddee6);
+    color: white; 
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: width 0.3s ease; 
+    z-index: 1;
+}
+
+.sidebar.expanded {
+    width: 200px;
+}
+
+#menu {
+    display: none;
+    list-style-type: none;
+    padding: 0;
+    padding: 10px;
+}
+
+.sidebar.expanded #menu {
+    display: block;
+}
+
+.menu-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 25px;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+
+.menu-icon i {
+    font-size: 24px;
+    color: #fff;
+}
+
+.menu-icon:hover i {
+    color: #bbccec; 
+}
+
+
+.sidebar ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.sidebar ul li {
+    margin: 10px 0;
+}
+
+.sidebar ul li a {
+    color: white;
+    text-decoration: none; 
+    transition: background-color 0.3s; 
+}
+
+.sidebar ul li.selected {
+    font-weight: bold;
+    background-color: white; 
+    padding: 5px; 
+    border-radius: 5px;
+}
+
+.sidebar ul li.selected a {
+    color:#8761fc;
+}
+
+.sidebar ul li:hover {
+    background-color: white; 
+    padding: 5px; 
+    border-radius: 5px; 
+}
+.sidebar ul li:hover a {
+    color:#8761fc;
+    font-weight: bold;
+}
+
+.sidebar .lulu_icon {
+    margin-top: auto;
+    text-align: center;
+}
+
+.starters-image {
+    max-width: 80%;
+    height: auto;
+    padding-bottom: 15px;
+}
