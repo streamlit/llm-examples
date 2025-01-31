@@ -22,7 +22,9 @@ ALLOWED_HOSTS = [
     "https://lulu-teaches-988538575854.europe-west3.run.app"
     ]
 
-
+CSRF_TRUSTED_ORIGINS = [
+    "https://lulu-teaches-988538575854.europe-west3.run.app"
+]
 
 # Application definition
 
@@ -39,6 +41,8 @@ INSTALLED_APPS = [
 
     'frontend.apps.FrontendConfig'
 ]
+
+SITE_ID = 1
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -80,6 +84,9 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+ACCOUNT_EMAIL_VERIFICATION = "none"
+
 WSGI_APPLICATION = 'lulu_teaches.wsgi.application'
 
 # Database
@@ -114,6 +121,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+LOGIN_URL = '/accounts/login/'
+LOGIN_REDIRECT_URL = '/app/'
+LOGOUT_REDIRECT_URL = '/accounts/login/'
+ACCOUNT_SIGNUP_REDIRECT_URL = '/app/'
+
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
@@ -131,6 +143,8 @@ USE_TZ = True
 STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

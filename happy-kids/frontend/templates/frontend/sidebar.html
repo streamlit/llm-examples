@@ -2,7 +2,7 @@
 <head>
 
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="{% static 'css/sidebar_styles.css' %}">
+    <link rel="stylesheet" href="{% static 'frontend/css/sidebar_styles.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
 </head>
@@ -14,18 +14,28 @@
     </div>
     
     <ul id="menu" style="display: none;">
-        <li class="selected"><a href="/app/">Home</a></li>
-        <li><a href="/app/lulu">Lulu</a></li>
-        <li><a href="/app/register">Users</a></li>
-        <li><a href="/app/trainingFiles">Training Files</a></li>
-        <li><a href="/accounts/logout/">Logout</a></li>
+        <li class="{% if request.path == '/app/' %}selected{% endif %}">
+            <a href="/app/">Home</a>
+        </li>
+        <li class="{% if request.path == '/app/lulu' %}selected{% endif %}">
+            <a href="/app/lulu">Lulu</a>
+        </li>
+        <li class="{% if request.path == '/app/users_page' %}selected{% endif %}">
+            <a href="/app/users_page">Users</a>
+        </li>
+        <li class="{% if request.path == '/app/trainingFiles' %}selected{% endif %}">
+            <a href="/app/trainingFiles">Training Files</a>
+        </li>
+        <li class="{% if request.path == '/accounts/logout/' %}selected{% endif %}">
+            <a href="/accounts/logout/">Logout</a>
+        </li>
     </ul>
 
     <div class="lulu_icon">
-        <img src="{% static 'img/lulu_bot.png' %}" alt="Image Description" class="starters-image" />
+        <img src="{% static 'frontend/img/lulu_bot.png' %}" alt="Image Description" class="starters-image" />
     </div>
 
-    <script src="{% static 'js/scripts_sidebar.js' %}"></script>
+    <script src="{% static 'frontend/js/scripts_sidebar.js' %}"></script>
 
 </aside>
 
