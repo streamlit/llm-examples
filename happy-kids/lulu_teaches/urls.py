@@ -6,4 +6,5 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')),
     path('app/', include('frontend.urls')),
     path('', lambda request: redirect('accounts/')),
+    path('api/', include('api.urls')),
 ]
