@@ -36,3 +36,7 @@ After testing locally as proposed above, deploy the new version following the st
 - `docker build -t gcr.io/lulu-mvp/lulu-teaches .`
 - `docker push gcr.io/lulu-mvp/lulu-teaches`
 - `gcloud run deploy lulu-teaches --image gcr.io/lulu-mvp/lulu-teaches --platform managed --region europe-west3`
+
+## References
+- https://news.mit.edu/2023/large-language-models-in-context-learning-0207
+- https://hbr.org/2022/11/how-generative-ai-is-changing-creative-work

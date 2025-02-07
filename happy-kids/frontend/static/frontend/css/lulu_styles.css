@@ -53,24 +53,22 @@ body{
     font-family: 'Poppins', sans-serif;
 }
 
-.chat-box {
-    border-radius: 10px;
-    padding: 15px;  
-    flex-grow: 1;
-    overflow-y: auto;
-    max-width: 50%;
-    overflow: hidden;
-
-}
-
 .chat-history {
-    background-color: white;
-    overflow-y: auto;
-    margin-bottom: 10px;
-    max-height: calc(100vh - 150px);
-    overflow-y:hidden;
+    overflow-y: auto !important;
+    max-height: 60vh;
+    max-width: 600px;
+    padding-bottom: 10px;
+    scrollbar-width: thin;
+    scrollbar-color: #8d53ff transparent;
 }
 
+.chat-history::-webkit-scrollbar {
+    width: 6px;
+}
+.chat-history::-webkit-scrollbar-thumb {
+    background-color: #8d53ff;
+    border-radius: 10px;
+}
 .user-message {
     text-align: right;
     margin: 10px 0;
@@ -93,18 +91,20 @@ body{
 }
 
 .input-container {
-    position: absolute;
-    transform: translatex(50%);
-    bottom: 0;
-    width: 50%;
-    height: 15vh; 
-    padding: 10px;
+    width: 100%;
+    max-width: 500px;
+    margin-top: 15px;
     display: flex;
-    align-items: center;
-    justify-content: space-between;
+    justify-content: center;
 }
 
-#user-input {
+form {
+    width: 100%;
+    display: flex;
+    gap: 10px;
+}
+
+#question {
     flex: 1;
     padding: 12px;
     font-size: 16px;
@@ -115,7 +115,7 @@ body{
     box-sizing: border-box; 
 }
 
-#user-input:focus {
+#question:focus {
     border-color: #8761fc;
     box-shadow: 0 0 5px rgba(135, 97, 252, 0.4);
 }
@@ -145,8 +145,36 @@ body{
     background-color: #5ddee6; 
 }
 
+.quick-suggestions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+    align-items: center;
+    top: 50%;
+    left: 50%;
+    width: 80%;
+    text-align: center;
+}
+
+.suggestion {
+    background-color: #f1f1f1;
+    padding: 12px 18px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.3s;
+    white-space: nowrap;
+}
+
+.suggestion:hover {
+    background-color: #ddd;
+}
 
 
+.hidden {
+    display: none;
+}
 
 
 
