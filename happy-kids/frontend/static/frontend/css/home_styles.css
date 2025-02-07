@@ -190,6 +190,7 @@ tr:nth-child(even) {
 
 .footer {
     position: fixed;
+    left: 0;
     bottom: 0; 
     width: 100%; 
     height: 10%;
@@ -207,8 +208,6 @@ tr:nth-child(even) {
     font-size: 12px;
     color: #333; 
 }
-
-
 
 .div_carrosel_models {
     padding-top: 30px;
@@ -229,9 +228,8 @@ tr:nth-child(even) {
 }
 
 .carousel-img {
-    object-fit: contain; /* Garante que a imagem se ajuste ao contêiner sem distorcer */
-    margin: 0 ;   /* Centraliza a imagem horizontalmente */
-   
-    top: 50%;         /* Posiciona a imagem verticalmente no meio da tela */
-    left: 50%;        /* Posiciona a imagem horizontalmente no meio da tela */
+    object-fit: contain; 
+    margin: 0 ; 
+    top: 50%;      
+    left: 50%;     
 }

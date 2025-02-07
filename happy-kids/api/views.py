@@ -14,3 +14,5 @@ class LuluTrainningView(generics.ListAPIView):
 class UsersMilestonesView(generics.ListAPIView):
     queryset = UsersMilestones.objects.all()
     serializer_class = UsersMilestonesSerializer
+
+

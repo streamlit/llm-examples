@@ -16,3 +16,4 @@ class UsersMilestones(models.Model):
     milestone = models.CharField(max_length=255)
     completed = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
+
