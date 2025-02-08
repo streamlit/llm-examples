@@ -35,7 +35,7 @@ For local tests, after installing all the items listed above, run the command:
 After testing locally as proposed above, deploy the new version following the steps below:
 - `docker build -t gcr.io/lulu-mvp/lulu-teaches .`
 - `docker push gcr.io/lulu-mvp/lulu-teaches`
-- `gcloud run deploy lulu-teaches --image gcr.io/lulu-mvp/lulu-teaches --platform managed --region europe-west3`
+- `gcloud run deploy lulu-teaches --image gcr.io/lulu-mvp/lulu-teaches --platform managed --region europe-west3 --vpc-connector lulu-vcp-network-serverle`
 
 ## References
 - https://news.mit.edu/2023/large-language-models-in-context-learning-0207

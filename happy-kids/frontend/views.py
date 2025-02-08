@@ -8,6 +8,7 @@ from api import models
 from django.views.decorators.csrf import csrf_exempt 
 import openai
 import os
+from .utils import get_short_term_memory, save_short_term_memory
 
 # Create your views here.
 @login_required
@@ -70,24 +71,41 @@ def view_lulu(request):
     
     elif request.method == 'POST':
         question = request.POST.get('question')
+        user_id = request.user.id  # Pegamos o ID do usuário autenticado
+        
+        # Recupera memória de curto prazo
+        recent_memory = get_short_term_memory(user_id)
+
+        # Adiciona a memória ao prompt
+        messages = [
+            {"role": "system", "content": "Lulu is a friendly, empathetic assistant designed to help students improve their language skills in Luxembourgish, German, and French."},
+            {"role": "user", "content": "What's your name?"},
+            {"role": "assistant", "content": "Hey there! I'm Lulu, your language-learning buddy! How can I help you today?", "weight": 1},
+            {"role": "system", "content": "Your name is Lulu, you're a friend who will help children and teenagers on their academic journeys, aiming to show the positivity of life with sweetness and sensitivity."}
+        ]
+
+        # Adiciona o histórico recente ao contexto
+        for msg in recent_memory:
+            messages.append({"role": "user", "content": msg})
+
+        # Adiciona a pergunta atual
+        messages.append({"role": "user", "content": question})
 
         client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
         def stream_gpt():
             result = client.chat.completions.create(
                 model="gpt-4o-mini",
-                store= True,
-                messages=[
-                    {"role": "system", "content": "Your name is Lulu, you're a friend who will help children and teenagers on their academic journeys, aiming to show the positivity of life with sweetness and sensitivity."},
-                    {"role": "system", "content": "Don't return texts in portugues. You don't speak Portugues."},
-                    {"role": "user", "content": question}
-                ],
+                messages=messages,
                 stream=True
             )
 
             for chunk in result:
                 if chunk.choices and chunk.choices[0].delta.content:
                     yield chunk.choices[0].delta.content
+
+        # Salva a pergunta no Redis
+        save_short_term_memory(user_id, question)
 
         response_server = StreamingHttpResponse(stream_gpt(), content_type="text/plain; charset=utf-8")
         response_server['Cache-Control'] = 'no-cache'
