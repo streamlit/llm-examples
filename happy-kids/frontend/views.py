@@ -71,12 +71,10 @@ def view_lulu(request):
     
     elif request.method == 'POST':
         question = request.POST.get('question')
-        user_id = request.user.id  # Pegamos o ID do usuário autenticado
+        user_id = request.user.id 
         
-        # Recupera memória de curto prazo
         recent_memory = get_short_term_memory(user_id)
 
-        # Adiciona a memória ao prompt
         messages = [
             {"role": "system", "content": "Lulu is a friendly, empathetic assistant designed to help students improve their language skills in Luxembourgish, German, and French."},
             {"role": "user", "content": "What's your name?"},
@@ -84,11 +82,9 @@ def view_lulu(request):
             {"role": "system", "content": "Your name is Lulu, you're a friend who will help children and teenagers on their academic journeys, aiming to show the positivity of life with sweetness and sensitivity."}
         ]
 
-        # Adiciona o histórico recente ao contexto
         for msg in recent_memory:
             messages.append({"role": "user", "content": msg})
 
-        # Adiciona a pergunta atual
         messages.append({"role": "user", "content": question})
 
         client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
@@ -100,11 +96,19 @@ def view_lulu(request):
                 stream=True
             )
 
+            response_text = ""
             for chunk in result:
                 if chunk.choices and chunk.choices[0].delta.content:
+                    response_text += chunk.choices[0].delta.content
                     yield chunk.choices[0].delta.content
 
-        # Salva a pergunta no Redis
+            # Salvar a conversa no banco de dados após a resposta completa
+            models.chat_memories.objects.create(
+                user_id=request.user.id,
+                user_message=question,
+                chat_message=response_text
+            )
+
         save_short_term_memory(user_id, question)
 
         response_server = StreamingHttpResponse(stream_gpt(), content_type="text/plain; charset=utf-8")
@@ -112,3 +116,11 @@ def view_lulu(request):
         response_server['X-Accel-Buffering'] = 'no'
         
         return response_server
+    
+def view_chat_memory(request):
+    if request.user.is_authenticated:
+        conversas = models.chat_memories.objects.filter(user_id=str(request.user.id))
+    else:
+        conversas = models.chat_memories.objects.none()
+
+    return render(request, 'chat_memory.html', {'conversas': conversas})

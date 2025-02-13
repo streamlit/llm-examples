@@ -17,3 +17,8 @@ class UsersMilestones(models.Model):
     completed = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
+class chat_memories(models.Model):
+    user_id = models.CharField(max_length=100)
+    user_message = models.TextField()
+    chat_message = models.TextField()
+    date_time = models.DateTimeField(auto_now_add=True)

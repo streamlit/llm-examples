@@ -20,6 +20,9 @@
         <li class="{% if request.path == '/app/lulu' %}selected{% endif %}">
             <a href="/app/lulu">Lulu</a>
         </li>
+        <li class="{% if request.path == '/app/memory' %}selected{% endif %}">
+            <a href="/app/memory">My Memories</a>
+        </li>
         <li class="{% if request.path == '/app/users_page' %}selected{% endif %}">
             <a href="/app/users_page">Users</a>
         </li>
@@ -32,7 +35,7 @@
     </ul>
 
     <div class="lulu_icon">
-        <img src="{% static 'frontend/img/logo_happy_kids_2.png' %}" alt="Image Description" class="starters-image" />
+        <img src="{% static 'frontend/img/logo_happy_kids.png' %}" alt="Image Description" class="starters-image" />
     </div>
 
     <script src="{% static 'frontend/js/scripts_sidebar.js' %}"></script>

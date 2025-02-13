@@ -23,6 +23,8 @@ h1, p {
     color: #333; 
 }
 
+
+
 form {
     display: flex;
     flex-direction: column;
@@ -174,16 +176,18 @@ tr:nth-child(even) {
 
 .div_models h1 {
     margin: 0;
-   
+    font-size: 38px;
     font-weight: bold;
     background: linear-gradient(to right, #8d53ff, #5ddee6); 
     -webkit-background-clip: text;
     color: transparent;
+    font-family: 'Poppins', sans-serif;
 }
+
 
 .div_models h4 {
     margin: 0; 
-    font-size: 12px;
+    font-size: 15px;
     color:#333;
     font-weight: lighter;
 }
@@ -205,7 +209,7 @@ tr:nth-child(even) {
 
 .footer p {
     margin: 0; 
-    font-size: 12px;
+    font-size: 15px;
     color: #333; 
 }
 
