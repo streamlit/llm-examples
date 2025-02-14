@@ -1,0 +1,40 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Lulu</title>
+
+        <link rel="stylesheet" href="{% static 'frontend/css/lulu_styles.css' %}">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto&display=swap">
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    </head>
+    <body>
+        <div class="container">
+            {% include 'sidebar.html' %}
+
+            <main class="content">
+                {% include 'header.html' %}
+            
+                <div class="chat-container">
+                    <h1>Chat Memory</h1>
+                
+                    <!-- Adicionado chat-history -->
+                    <div class="chat-history" id="chat-history">
+                        {% for conversa in conversas %}
+                            <p>{{ conversa.date_time }}</p>
+                            <div class="message user-message">{{ conversa.user_message }}</div>
+                            <div class="message bot-message">{{ conversa.chat_message }}</div>
+                        {% endfor %}
+                    </div>
+                
+                </div>
+                
+            
+                
+            </main>
+        </div>
+
+    </body> 
+</html>

@@ -1,6 +1,19 @@
 # django-app-llm-system
 
 ## Database
+### Database Migrations in Docker Container
+To start testing the implementation of the new data model, it is necessary to migrate to the local container. To do this, run the migration with the commands below:
+
+First, make a local migrations
+`python manage.py makemigrations`
+
+`python manage.py migrate`
+
+After that, initialize container migrations
+`docker compose exec django-web python manage.py makemigrations`
+
+`docker compose exec django-web python manage.py migrate`
+
 ### Database Migrations in Production
 after carrying out the tests locally and all the constructions, it will be necessary to migrate the changes to google cloud SQL. Since the adjustments are only seen locally until then. 
 

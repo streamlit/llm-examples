@@ -1,6 +1,7 @@
 import redis
 import json
 import os
+from google.cloud import storage
 
 REDIS_HOST = os.getenv("REDIS_HOST", "redis")  # Usa "redis" se a variável não estiver definida
 REDIS_PORT = int(os.getenv("REDIS_PORT", 6379))

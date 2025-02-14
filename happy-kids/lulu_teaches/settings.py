@@ -13,6 +13,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 
+REDIS_HOST = os.getenv('REDIS_HOST')
+REDIS_PORT = os.getenv('REDIS_PORT')
+
+'redis://REDIS_HOST:REDIS_PORT/1'
+
+REDIS_URL = f"redis://{REDIS_HOST}:{REDIS_PORT}/1"
+
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(os.environ.get("DEBUG", default=0))
 
@@ -100,7 +108,7 @@ WSGI_APPLICATION = 'lulu_teaches.wsgi.application'
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://10.4.18.5:6379/1", 
+        "LOCATION": REDIS_URL, 
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }

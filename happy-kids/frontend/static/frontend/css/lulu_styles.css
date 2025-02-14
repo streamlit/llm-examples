@@ -56,7 +56,7 @@ body{
 .chat-history {
     overflow-y: auto !important;
     max-height: 60vh;
-    max-width: 600px;
+    max-width: 640px;
     padding-bottom: 10px;
     scrollbar-width: thin;
     scrollbar-color: #8d53ff transparent;
@@ -167,10 +167,57 @@ form {
     white-space: nowrap;
 }
 
-.suggestion:hover {
+.suggestion:hover, 
+#suggestion_highligh_1:hover, 
+#suggestion_highligh_2:hover,
+#suggestion_highligh_3:hover,
+#suggestion_highligh_4:hover {
     background-color: #ddd;
 }
 
+#suggestion_highligh_1 {
+    background-color: #8d53ff;
+    padding: 12px 18px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #ffffff;
+    transition: background 0.3s;
+    white-space: nowrap;
+}
+
+#suggestion_highligh_2 {
+    background-color: #6b79ff;
+    padding: 12px 18px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #ffffff;
+    transition: background 0.3s;
+    white-space: nowrap;
+}
+
+#suggestion_highligh_3 {
+    background-color: #5cc2e8;
+    padding: 12px 18px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #ffffff;
+    transition: background 0.3s;
+    white-space: nowrap;
+}
+
+#suggestion_highligh_4 {
+    background-color: #40E0D0;
+    padding: 12px 18px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #ffffff;
+    transition: background 0.3s;
+    white-space: nowrap;
+}
 
 .hidden {
     display: none;
