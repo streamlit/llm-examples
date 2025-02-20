@@ -1,4 +1,45 @@
-# django-app-llm-system
+# Lulu-Teaches-MVP
+
+## Get Start
+The first step is to set up a virtual environment. If this is your first time working with this code, run the following command:  
+
+```bash
+python -m venv .venv
+```  
+
+This will create a virtual environment within your project directory.  
+
+Next, you need to activate the virtual environment. Use the appropriate command based on your terminal:  
+
+- **PowerShell:**  
+  ```bash
+  .venv/Scripts/Activate
+  ```  
+
+- **Command Prompt (CMD):**  
+  ```bash
+  .venv\Scripts\activate.bat
+  ```  
+
+Once activated, your virtual environment is ready to use.
+
+## Installing Required Libraries  
+
+After setting up your virtual environment, you need to install the necessary libraries for the project to run correctly. First, navigate to the project directory by running the following command:  
+
+```bash
+cd happy-kids
+```  
+
+This will take you to the *happy-kids* folder.  
+
+Next, install all required dependencies by running:  
+
+```bash
+pip install -r requirements.txt
+```  
+
+This command will install all the necessary libraries for the project.
 
 ## Database
 ### Database Migrations in Docker Container

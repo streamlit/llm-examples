@@ -171,8 +171,7 @@ cython_debug/
 .pypirc
 
 
-## Project
+## Project Lulu-teaches-mvp
 gcloud_config.md
-
 
 lulu-mvp-service-account-key.json
