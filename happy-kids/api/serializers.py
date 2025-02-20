@@ -15,3 +15,12 @@ class UsersMilestonesSerializer(serializers.ModelSerializer):
     class Meta:
         model = UsersMilestones
         fields = ('id','user','milestone','completed','created_at')
+
+class chat_dim_onboarding_questionsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = chat_dim_onboarding_questions
+        fields = ('question','order','active')
+
+
+
+

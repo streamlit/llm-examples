@@ -9,6 +9,10 @@
     <link rel="stylesheet" href="{% static 'frontend/css/lulu_styles.css' %}">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto&display=swap">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+
 </head>
 <body>
     <div class="container">
@@ -32,7 +36,10 @@
                 </div>
 
                 <!-- Adicionado chat-history -->
-                <div class="chat-history" id="chat-history"></div>
+                <div class="chat-history" id="chat-history">
+
+                    
+                </div>
             
                 <div class="input-container">
                     <form id="ai-form" method="POST" onsubmit="hideSuggestions()">
@@ -85,7 +92,7 @@
             // Permitir envio imediato ao clicar em uma sugestão
             suggestions.forEach(suggestion => {
                 suggestion.addEventListener("click", function () {
-                    input.value = this.innerText; // Define a sugestão como entrada
+                    input.value = this.innerText;
                     form.dispatchEvent(new Event("submit", { bubbles: true, cancelable: true })); // Envia automaticamente
                 });
             });
@@ -93,7 +100,12 @@
 
     </script>
 
+    
+
     <script>
+
+
+
         document.getElementById('ai-form').addEventListener('submit', async function(event) {
             event.preventDefault();
 
@@ -129,19 +141,22 @@
                 botMessage.classList.add("message", "bot-message");
                 chatHistory.appendChild(botMessage);
 
+                
+
                 // Processamento do streaming de resposta
                 function processStream({ done, value }) {
                     if (done) return;
-                    botMessage.innerText += decoder.decode(value);
+
+                    botMessage.innerHTML = marked.parse(botMessage.innerHTML + decoder.decode(value));
                     reader.read().then(processStream);
                 }
 
                 reader.read().then(processStream);
             } catch (error) {
-                console.error("Erro ao obter resposta:", error);
+                console.error("Error fetching response:", error);
                 let errorMessage = document.createElement("div");
                 errorMessage.classList.add("message", "error-message");
-                errorMessage.innerText = "Erro ao obter resposta. Tente novamente.";
+                errorMessage.innerText = "Error fetching response. Try again.";
                 chatHistory.appendChild(errorMessage);
             }
         });

@@ -17,18 +17,19 @@
         <li class="{% if request.path == '/app/' %}selected{% endif %}">
             <a href="/app/">Home</a>
         </li>
+        
         <li class="{% if request.path == '/app/lulu' %}selected{% endif %}">
             <a href="/app/lulu">Lulu</a>
         </li>
+        
         <li class="{% if request.path == '/app/memory' %}selected{% endif %}">
             <a href="/app/memory">My Memories</a>
         </li>
-        <li class="{% if request.path == '/app/users_page' %}selected{% endif %}">
-            <a href="/app/users_page">Users</a>
+        
+        <li class="{% if '/app/adm/' in request.path %}selected{% endif %}">
+            <a href="/app/adm/users_page">Adm</a>
         </li>
-        <li class="{% if request.path == '/app/trainingFiles' %}selected{% endif %}">
-            <a href="/app/trainingFiles">Training Files</a>
-        </li>
+        
         <li class="{% if request.path == '/accounts/logout/' %}selected{% endif %}">
             <a href="/accounts/logout/">Logout</a>
         </li>

@@ -75,11 +75,13 @@ h4{
     font-size: 14px;
     font-weight: lighter;
     font-family: 'Poppins', sans-serif;
+    text-align: left;
 }
 
 p{
     font-family: 'Poppins', sans-serif;
     color: #5a5a5a;
+    text-align: left;
 }
 
 .alert {

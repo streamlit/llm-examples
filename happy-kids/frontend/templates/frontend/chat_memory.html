@@ -9,6 +9,8 @@
         <link rel="stylesheet" href="{% static 'frontend/css/lulu_styles.css' %}">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto&display=swap">
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+        <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     </head>
     <body>
         <div class="container">
@@ -25,7 +27,7 @@
                         {% for conversa in conversas %}
                             <p>{{ conversa.date_time }}</p>
                             <div class="message user-message">{{ conversa.user_message }}</div>
-                            <div class="message bot-message">{{ conversa.chat_message }}</div>
+                            <div class="message bot-message">{{ conversa.chat_message | safe}}</div>
                         {% endfor %}
                     </div>
                 

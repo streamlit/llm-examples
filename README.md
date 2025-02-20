@@ -9,7 +9,10 @@ First, make a local migrations
 
 `python manage.py migrate`
 
-After that, initialize container migrations
+After that, initialize container migrations. To do that, it's necessary run the container service:
+`docker compose up --build`
+
+then:
 `docker compose exec django-web python manage.py makemigrations`
 
 `docker compose exec django-web python manage.py migrate`
