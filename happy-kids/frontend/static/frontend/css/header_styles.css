@@ -1,9 +1,42 @@
 .header {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     align-items: center;
     padding: 10px;
     background-color: #f4f4f4;
+    width: 100%;
+}
+
+
+.adm_navigation {
+    text-decoration: none;
+    background-color: #8d53ff;
+    padding: 12px 18px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #ffffff;
+    transition: background 0.3s;
+    white-space: nowrap;
+    
+}
+
+.adm_navigation:hover {
+    background-color: #ddd;
+}
+
+a {
+    text-decoration: none;
+}
+
+.user_details{
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    position: absolute;
+    right: 0;
+    top: 0;
+    padding: 20px 20px 0 0;
 }
 
 .header h1 {
@@ -14,8 +47,8 @@
 }
 
 .user-icon img {
-    width: 30px;
-    height: 30px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     object-fit: cover;
     border: 2px solid #8761fc;

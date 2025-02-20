@@ -15,4 +15,7 @@ class UsersMilestonesView(generics.ListAPIView):
     queryset = UsersMilestones.objects.all()
     serializer_class = UsersMilestonesSerializer
 
+class chat_dim_onboarding_questionsView(generics.ListAPIView):
+    queryset = UsersMilestones.objects.all()
+    serializer_class = chat_dim_onboarding_questionsSerializer
 

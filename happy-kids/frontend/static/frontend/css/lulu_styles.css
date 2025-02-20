@@ -232,7 +232,22 @@ form {
 
 
 
+.bot-message table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
 
+.bot-message th, .bot-message td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.bot-message th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
 
 
 

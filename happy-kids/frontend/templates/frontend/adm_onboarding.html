@@ -1,0 +1,59 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Onboarding Management</title>
+    <link rel="stylesheet" href="{% static 'frontend/css/adm.css' %}">
+
+</head>
+<body>
+    <div class="container">
+        
+        {% include 'sidebar.html' %}
+
+        <main class="content">
+
+            {% include 'header.html' %}
+            
+            <h1>Onboarding Management</h1>
+            <form method="post">
+                <div class='form_title'>
+                    <h3>New Question</h3>
+                </div>
+                <div class = 'form_questions'>
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit">Salvar</button>
+                </div>
+                
+            </form>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Order</th>
+                        <th>Question</th>
+                        <th>Active</th>                    
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for question in questions %}
+
+                    <tr>
+                        <td>{{ question.order }}</td>
+                        <td>{{ question.question }}</td>
+                        <td>{{ question.active }}</td>
+                       
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+        </main>
+    </div>
+
+    
+</body>
+</html>

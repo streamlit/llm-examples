@@ -5,10 +5,24 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <div class="header">
-    <h1>Hi, {{ user.first_name }}</h1>
-    <div class="user-icon">
-        <a href="{% url 'profile' %}">
-            <img src="{% static 'frontend/img/logo_happy_kids_2.png' %}">
-        </a>
+    {% if '/app/adm/' in request.path %}
+
+        <div class = "adm_buttons" >
+            <div class="adm_pages_navigation" id="adm_pages_navigation">
+                <a ID = 'adm_page_user' class="adm_navigation" href="/app/adm/users_page">Users</a>
+                <a ID = 'adm_page_onboarding' class="adm_navigation" href="/app/adm/adm_onboarding_questions">Onboarding</a>
+                <a ID = 'adm_page_training_files' class="adm_navigation" href="/app/adm/trainingFiles">Training Files</a>
+            </div>
+        </div>
+
+    {% endif %}
+    <div class="user_details">
+        <h1>Hi, {{ user.first_name }}</h1>
+        <div class="user-icon">
+            <a href="{% url 'profile' %}">
+                <img src="{% static 'frontend/img/logo_happy_kids_2.png' %}">
+            </a>
+        </div>
+        
     </div>
 </div>

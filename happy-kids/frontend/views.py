@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from .forms import CustomUserForm, LuluTrainningForm, EditUserForm
+from .forms import CustomUserForm, LuluTrainningForm, EditUserForm, questionForm
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.http import StreamingHttpResponse
@@ -9,6 +9,9 @@ from django.views.decorators.csrf import csrf_exempt
 import openai
 import os
 from .utils import get_short_term_memory, save_short_term_memory
+
+import markdown
+from django.utils.safestring import mark_safe
 
 # Create your views here.
 @login_required
@@ -100,7 +103,8 @@ def view_lulu(request):
             for chunk in result:
                 if chunk.choices and chunk.choices[0].delta.content:
                     response_text += chunk.choices[0].delta.content
-                    yield chunk.choices[0].delta.content
+
+            response_text_html = markdown.markdown(text=response_text,output_format='html')
 
             # Salvar a conversa no banco de dados após a resposta completa
             models.chat_memories.objects.create(
@@ -109,9 +113,11 @@ def view_lulu(request):
                 chat_message=response_text
             )
 
+            yield response_text_html 
+
         save_short_term_memory(user_id, question)
 
-        response_server = StreamingHttpResponse(stream_gpt(), content_type="text/plain; charset=utf-8")
+        response_server = StreamingHttpResponse(stream_gpt(), content_type="text/html; charset=utf-8")
         response_server['Cache-Control'] = 'no-cache'
         response_server['X-Accel-Buffering'] = 'no'
         
@@ -124,3 +130,18 @@ def view_chat_memory(request):
         conversas = models.chat_memories.objects.none()
 
     return render(request, 'chat_memory.html', {'conversas': conversas})
+
+def view_chat_management_onboarding_questions(request):
+     
+    if request.method == 'POST':
+        form = questionForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.save()
+            messages.success(request, 'Usuário cadastrado com sucesso!')
+            return redirect('adm_onboarding_questions')
+    else:
+        form = questionForm()
+    
+    questions = models.chat_dim_onboarding_questions.objects.all().order_by('order')
+    return render(request,'adm_onboarding.html',{'questions': questions, 'form':form})
