@@ -19,7 +19,22 @@ class UsersMilestonesSerializer(serializers.ModelSerializer):
 class chat_dim_onboarding_questionsSerializer(serializers.ModelSerializer):
     class Meta:
         model = chat_dim_onboarding_questions
-        fields = ('question','order','active')
+        fields = ('question','order','active','question_type')
+
+class chat_dim_onboarding_options_answersSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = chat_dim_onboarding_options_answers
+        fields = ('question','option')
+
+class chat_facts_onboarding_answersSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = chat_facts_onboarding_answers
+        fields = ('user','question', 'answer','order','datetime')
+
+class dim_question_typeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = dim_question_type
+        field = ('question_type')
 
 
 

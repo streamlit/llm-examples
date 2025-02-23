@@ -122,8 +122,52 @@ th, td {
 th {
     background-color: #8761fc;
     color: white;
+    
 }
 
 tr:nth-child(even) {
     background-color: #f2f2f2;
 }
+
+
+.nested-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    background: #f9f9f9;
+}
+
+.nested-table th, .nested-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+.nested-table td {
+    width: 100%;
+}
+
+.nested-table th {
+    background: #e0e0e0;
+    text-align: left;
+}
+
+.delete-option, .add-option{
+    background: none;
+    border-color: transparent;
+    cursor: pointer;
+}
+
+.input-option{
+    border-radius: 8px;
+    width: 100%; 
+    padding:10px;
+    box-sizing: border-box;
+    border: 1px solid #ddd;
+    font-size: 16px;
+}
+
+.input-option:focus{
+    border-color: #5ddee6;
+    outline: none;
+}
+

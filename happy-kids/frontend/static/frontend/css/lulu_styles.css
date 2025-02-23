@@ -92,7 +92,7 @@ body{
 
 .input-container {
     width: 100%;
-    max-width: 500px;
+    max-width: 640px;
     margin-top: 15px;
     display: flex;
     justify-content: center;
@@ -251,3 +251,100 @@ form {
 
 
 
+#button-container {
+    display: flex; 
+    justify-content: center;
+    align-items: center; 
+    height: 100vh;
+}
+#start-onboarding {
+    background-color: #40E0D0; 
+    color: white; /* Cor do texto */
+    font-size: 16px; /* Tamanho da fonte */
+    padding: 15px 30px; /* Preenchimento interno (vertical e horizontal) */
+    border-radius: 25px; /* Bordas arredondadas */
+    border: none; /* Remove a borda padrão */
+    cursor: pointer; /* Mudança do cursor para indicar que é clicável */
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Transição suave para fundo e efeito de clique */
+    font-weight: bold; /* Negrito no texto */
+}
+
+#start-onboarding:hover {
+    background-color: #5cc2e8; 
+    transform: scale(1.05);
+}
+
+#start-onboarding:active {
+    transform: scale(0.98); 
+}
+
+.onboarding-container {
+    width: 50%;
+    margin: 100px auto;
+    background: white;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+.onboarding-container h1 {
+    font-size: 24px;
+    color: #333;
+}
+.onboarding-question {
+    font-size: 18px;
+    margin: 20px 0;
+}
+
+.onboarding-buttons {
+    margin-top: 20px;
+}
+.skip, .next {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.answer-options{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    justify-content: center;
+    text-align: center;
+}
+
+.option-button{
+    border: transparent;
+    background-color: #8d53ff;
+    display: block;
+    padding: 12px 18px;
+    margin: 10px 0;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 16px;    
+    color: #ffffff;
+    transition: background 0.3s;
+    white-space: nowrap;
+}
+
+.option-button:hover {
+    background-color: #ddd;
+}
+
+.answer-options input{
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 20px;
+    border: 1px solid #8761fc;
+    outline: none;
+    transition: all 0.3sease;
+    box-sizing: border-box;
+    width: 100%;
+    margin-top: 15px;
+}
+
+.answer-options:focus {
+    border-color: #8761fc;
+    box-shadow: 0 0 5px rgba(135, 97, 252, 0.4);
+}
