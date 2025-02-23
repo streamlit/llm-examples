@@ -25,9 +25,10 @@ class LuluTrainningForm(forms.ModelForm):
 class questionForm(forms.ModelForm):
     class Meta:
         model = models.chat_dim_onboarding_questions
-        fields = [ 'order','question', 'active']
+        fields = [ 'order','question_type','question', 'active']
         widgets = {
             'question': forms.TextInput(attrs={'class': 'form-control'}),  
+            'question_type': forms.Select(attrs={'class': 'form-control'}),
             'order': forms.NumberInput(attrs={'class': 'form-control'}),  
             'active': forms.CheckboxInput(attrs={'class': 'form-check-input'}) 
         }

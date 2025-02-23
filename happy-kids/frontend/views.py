@@ -9,7 +9,9 @@ from django.views.decorators.csrf import csrf_exempt
 import openai
 import os
 from .utils import get_short_term_memory, save_short_term_memory
+from django.http import JsonResponse
 
+import json
 import markdown
 from django.utils.safestring import mark_safe
 
@@ -123,6 +125,7 @@ def view_lulu(request):
         
         return response_server
     
+@login_required
 def view_chat_memory(request):
     if request.user.is_authenticated:
         conversas = models.chat_memories.objects.filter(user_id=str(request.user.id))
@@ -131,6 +134,7 @@ def view_chat_memory(request):
 
     return render(request, 'chat_memory.html', {'conversas': conversas})
 
+@login_required
 def view_chat_management_onboarding_questions(request):
      
     if request.method == 'POST':
@@ -145,3 +149,143 @@ def view_chat_management_onboarding_questions(request):
     
     questions = models.chat_dim_onboarding_questions.objects.all().order_by('order')
     return render(request,'adm_onboarding.html',{'questions': questions, 'form':form})
+
+
+def update_question_active(request, id):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            active = data.get('active')
+            question = models.chat_dim_onboarding_questions.objects.get(id=id)
+            question.active = active
+            question.save()
+            return JsonResponse({'success': True})
+        except models.chat_dim_onboarding_questions.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Question not found'}, status=404)
+    return JsonResponse({'success': False, 'error': 'Invalid request method'}, status=400)
+
+def view_chat_dim_onboarding_questions(request):
+    questions = models.chat_dim_onboarding_questions.objects.all().prefetch_related("options")
+    return render(request, "adm_onboarding.html", {"questions": questions})
+
+
+@csrf_exempt
+def add_option(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        question_id = data.get("question_id")
+        option_text = data.get("option")
+
+        question = models.chat_dim_onboarding_questions.objects.get(id=question_id)
+        new_option = models.chat_dim_onboarding_options_answers.objects.create(question=question, option=option_text)
+        new_option.save()
+
+        return JsonResponse({"success": True})
+
+    return JsonResponse({"success": False}, status=400)
+
+@csrf_exempt
+def delete_option(request, option_id):
+    if request.method == "DELETE":
+        try:
+            option = models.chat_dim_onboarding_options_answers.objects.get(id=option_id)
+            option.delete()
+            return JsonResponse({"success": True})
+        except models.chat_dim_onboarding_options_answers.DoesNotExist:
+            return JsonResponse({"success": False}, status=404)
+
+    return JsonResponse({"success": False}, status=400)
+
+
+########### Onboarding
+def onboarding_data(request):
+    """Retorna as perguntas de onboarding não respondidas em JSON com opções associadas."""
+    
+    # Obter o usuário atual
+    user = request.user
+
+    # Obter todas as perguntas ativas do onboarding
+    questions = models.chat_dim_onboarding_questions.objects.filter(active=True).order_by("order")
+
+    # Obter as perguntas já respondidas pelo usuário
+    answered_questions = models.chat_facts_onboarding_answers.objects.filter(user=user).values_list('question_id', flat=True)
+
+    # Filtrar as perguntas não respondidas
+    unanswered_questions = questions.exclude(id__in=answered_questions)
+
+    # Obter todas as opções de resposta
+    options = models.chat_dim_onboarding_options_answers.objects.all()
+
+    # Agrupar as opções por pergunta
+    grouped_options = {}
+    for option in options:
+        if option.question.id not in grouped_options:
+            grouped_options[option.question.id] = []
+        grouped_options[option.question.id].append(option.option)
+
+    # Preparando o JSON de resposta com as perguntas não respondidas e suas respectivas opções
+    data = {
+        "questions": [
+            {
+                "id": question.id,
+                "question": question.question,
+                "options": grouped_options.get(question.id, [])
+            }
+            for question in unanswered_questions
+        ]
+    }
+
+    return JsonResponse(data)
+
+
+
+@login_required
+@csrf_exempt 
+def save_onboarding_answer(request):
+    if request.method == 'POST':
+        try:
+            # Capturar os dados enviados via POST
+            data = json.loads(request.body)
+            question_id = data.get('question_id')
+            answer = data.get('answer')
+
+            # Verificar se os dados estão completos
+            if not question_id or answer is None:
+                return JsonResponse({'status': 'error', 'message': 'Dados incompletos'}, status=400)
+
+            # Obter a pergunta correspondente pelo ID
+            question = models.chat_dim_onboarding_questions.objects.get(id=question_id)
+
+            # Obter o usuário logado
+            user = request.user
+
+            # Criar e salvar a resposta no banco de dados
+            models.chat_facts_onboarding_answers.objects.create(
+                user=user,
+                question=question,
+                answer=answer,
+                order=question.order  # Caso você queira armazenar a ordem das perguntas
+            )
+
+            # Retornar sucesso
+            return JsonResponse({'status': 'success', 'message': 'Resposta salva com sucesso!'})
+
+        except Exception as e:
+            # Tratar erros, caso aconteçam
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+
+    return JsonResponse({'status': 'error', 'message': 'Método não permitido.'}, status=405)
+
+@login_required
+def check_onboarding_completed(request):
+    # Verificar se o usuário tem respostas para todas as perguntas de onboarding
+    unanswered_questions = models.chat_dim_onboarding_questions.objects.filter(
+        active=True
+    ).exclude(
+        id__in=models.chat_facts_onboarding_answers.objects.filter(user=request.user).values('question_id')
+    )
+    
+    # Se não houver perguntas não respondidas, o onboarding foi completado
+    onboarding_completed = unanswered_questions.count() == 0
+    
+    return JsonResponse({'onboarding_completed': onboarding_completed})

@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Onboarding Management</title>
+    <link rel="icon" href="{% static 'frontend/img/logo_happy_kids.png' %}">
+    <title>Happy Kids | Adm - Onboarding Management</title>
     <link rel="stylesheet" href="{% static 'frontend/css/adm.css' %}">
 
 </head>
@@ -35,7 +36,9 @@
                     <tr>
                         <th>Order</th>
                         <th>Question</th>
-                        <th>Active</th>                    
+                        <th>Question Type</th>
+                        <th>Active</th>   
+                        <th></th>                 
                     </tr>
                 </thead>
                 <tbody>
@@ -44,8 +47,40 @@
                     <tr>
                         <td>{{ question.order }}</td>
                         <td>{{ question.question }}</td>
-                        <td>{{ question.active }}</td>
-                       
+                        <td>{{ question.question_type }}</td>
+                        <td>
+                            <input type="checkbox" class="active-checkbox" data-id="{{ question.id }}" {% if question.active %}checked{% endif %}>
+                        </td>
+                        <td>
+                            <button type="button" class="toggle-answers" data-target="#answers-{{ question.id }}">Options</button>
+                        </td>
+                    </tr>
+                    <tr class="answer-options-row" id="answers-{{ question.id }}" style="display: none;">
+                        <td colspan="5">
+                            <table class="nested-table">
+                                
+                                <tbody>
+                                    {% for option in question.options.all %}
+                                    <tr>
+                                        <td>{{ option.option }}</td>
+                                        <td>
+                                            <button class="delete-option" data-id="{{ option.id }}">🗑️</button>
+                                        </td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="2">No options available</td>
+                                    </tr>
+                                    {% endfor %}
+                                    <tr>
+                                        <td><input class ="input-option" type="text" id="new-option-{{ question.id }}" placeholder="New option"></td>
+                                        <td>
+                                            <button class="add-option" data-question-id="{{ question.id }}">➕</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -56,4 +91,94 @@
 
     
 </body>
+
 </html>
+
+<script>
+    document.querySelectorAll('.active-checkbox').forEach(function(checkbox) {
+        checkbox.addEventListener('change', function() {
+            const questionId = this.getAttribute('data-id');
+            const isChecked = this.checked;
+
+            // Enviar a atualização via AJAX
+            fetch(`/app/update-question-active/${questionId}/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}' 
+                },
+                body: JSON.stringify({ active: isChecked })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (!data.success) {
+                    alert('Erro ao atualizar status.');
+                }
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+                alert('Erro ao comunicar com o servidor.');
+            });
+        });
+    });
+
+    // Script para alternar a exibição das opções de resposta
+    document.querySelectorAll('.toggle-answers').forEach(function(button) {
+        button.addEventListener('click', function() {
+            var target = document.querySelector(button.getAttribute('data-target'));
+            if (target.style.display === 'none') {
+                target.style.display = 'table-row';
+                button.textContent = 'Hide';
+            } else {
+                target.style.display = 'none';
+                button.textContent = 'Options';
+            }
+        });
+    });
+
+    // Adicionar nova opção
+    document.querySelectorAll('.add-option').forEach(function(button) {
+        button.addEventListener('click', function() {
+            var questionId = button.getAttribute('data-question-id');
+            var inputField = document.querySelector('#new-option-' + questionId);
+            var newOption = inputField.value.trim();
+
+            if (newOption) {
+                fetch('/app/add_option/', {  // Rota da view no Django
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    body: JSON.stringify({ question_id: questionId, option: newOption })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        location.reload(); // Recarrega a página para exibir a nova opção
+                    }
+                });
+            }
+        });
+    });
+
+    // Excluir opção
+    document.querySelectorAll('.delete-option').forEach(function(button) {
+        button.addEventListener('click', function() {
+            var optionId = button.getAttribute('data-id');
+
+            fetch('/app/delete_option/' + optionId + '/', { // Rota da view no Django
+                method: 'DELETE',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}' 
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload();
+                }
+            });
+        });
+    });
+</script>
