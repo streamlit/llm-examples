@@ -1,0 +1,68 @@
+
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Emotion Analysis Results</title>
+        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+        <style>
+            body { 
+                font-family: Arial, sans-serif; 
+                margin: 20px;
+                background-color: #f5f5f5;
+            }
+            .plot-container { 
+                max-width: 90%;
+                margin: 0 auto;
+                padding: 20px;
+                background: white;
+                border-radius: 8px;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            #plotDiv {
+                width: 100%;
+                height: 600px;
+            }
+            @media (max-width: 768px) {
+                .plot-container {
+                    max-width: 95%;
+                    padding: 10px;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="plot-container">
+            <h1>Emotion Analysis Trends</h1>
+            <div id="plotDiv"></div>
+        </div>
+        
+        <script>
+            const emotionData = {'LABEL_0': [0.13822054862976074, 0.014110509306192398, 0.020571269094944, 0.0423160195350647, 0.0010888604447245598, 0.05555838346481323, 0.0016690983902662992], 'LABEL_1': [0.22379633784294128, 0.908412516117096, 0.887048065662384, 0.9200544953346252, 0.0011076705995947123, 0.5688222050666809, 0.9871593713760376], 'LABEL_2': [0.03586941584944725, 0.013146095909178257, 0.006139909382909536, 0.0038489075377583504, 0.0005954821244813502, 0.010986526496708393, 0.001071617123670876], 'LABEL_3': [0.3685261011123657, 0.03685237839818001, 0.058904439210891724, 0.019498135894536972, 0.9950157999992371, 0.16495023667812347, 0.0021641296334564686], 'LABEL_4': [0.1915341019630432, 0.02126179076731205, 0.021864352747797966, 0.012737263925373554, 0.001541328732855618, 0.17614075541496277, 0.001795685850083828], 'LABEL_5': [0.0420534685254097, 0.006216830108314753, 0.005471799522638321, 0.0015452754450961947, 0.000650935573503375, 0.02354198321700096, 0.006140123587101698]};
+            const emotionLabels = ['sadness', 'joy', 'love', 'anger', 'fear', 'surprise'];
+            
+            const traces = Object.keys(emotionData).map((emotion, index) => ({
+                y: emotionData[emotion],
+                mode: 'lines',
+                name: emotionLabels[index],
+                line: {width: 3}
+            }));
+            
+            const layout = {
+                title: 'Emotion Probabilities Over Time',
+                xaxis: {title: 'Input Number'},
+                yaxis: {title: 'Probability'},
+                hovermode: 'closest',
+                showlegend: true,
+                legend: {
+                    x: 1.05,
+                    y: 1,
+                    xanchor: 'left'
+                },
+                margin: {r: 150}
+            };
+            
+            Plotly.newPlot('plotDiv', traces, layout);
+        </script>
+    </body>
+    </html>
+    
