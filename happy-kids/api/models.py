@@ -57,4 +57,12 @@ class chat_facts_onboarding_answers(models.Model):
 
     def __str__(self):
         return f"{self.user.id} | {self.question.id} | {self.question.order} | {self.answer}"
-    
+
+class diary_facts(models.Model):
+    date = models.DateField()
+    title = models.CharField(max_length=255)
+    body = models.TextField()
+    user = models.ForeignKey("auth.User", on_delete=models.CASCADE, default=None)
+
+    def __str__(self):
+        return self.title

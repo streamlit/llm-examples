@@ -1,0 +1,91 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" href="{% static 'frontend/img/logo_happy_kids.png' %}">
+        <title>Happy Kids | My Memories</title>
+
+        <link rel="stylesheet" href="{% static 'frontend/css/lulu_styles.css' %}">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto&display=swap">
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+        
+        <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    </head>
+    <body>
+        <div class="container">
+            {% include 'sidebar.html' %}
+
+            <main class="content">
+                {% include 'header.html' %}
+
+                <div class="diary-container">
+                    <div class="page-title">
+                        <h1>My Diary</h1>
+                    </div>
+
+                    <!-- Histórico de Diários - Linha do Tempo -->
+                    <div class="diary-history" id="diary-history" style="display: flex";>
+                        <div class="diary-menu">
+                            {% for entry in entries %}
+                                <div class="diary-entry">
+                                    <h3><a href="#{{ entry.id }}">{{ entry.date }}</a></h3>
+                                    <p>{{ entry.title }}</p>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        
+                        <div class="diary-entries">
+                            {% for entry in entries %}
+                                <div class="diary-entry-detail" id="{{ entry.id }}">
+                                    <h2>{{ entry.date }}</h2>
+                                    <h4>{{ entry.title }}</h4>
+                                    <div class="diary-body">
+                                        <p>{{ entry.body }}</p>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- Formulário de novo diário -->
+                    <div class="new-entry">
+                        <button onclick="toggleDiaryForm()">New Memory</button>
+
+                        <div id="diary-form" style="display: none;">
+                            <form id= "diary-form-id" method="POST" action="{% url 'create_diary' %}">
+                                {% csrf_token %}
+                                <div>
+                                    <label for="date">Day</label>
+                                    <input type="date" id="date" name="date" required>
+                                </div>
+                                <div>
+                                    <label for="title">Title</label>
+                                    <input type="text" id="title" name="title" required>
+                                </div>
+                                <div>
+                                    <label for="body">Memory</label>
+                                    <textarea id="body" name="body" rows="10" required></textarea>
+                                </div>
+                                <button type="submit">Save</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <script>
+            function toggleDiaryForm() {
+                const form = document.getElementById('diary-form');
+                const history = document.getElementById("diary-history");
+                const button_toggle = document.getElementById("");
+
+                form.style.display = (form.style.display === 'none' || form.style.display === '') ? 'flex' : 'none';
+                history.style.display = (history.style.display === 'flex') ? 'none' : 'flex';
+            }
+        </script>
+    </body>
+</html>

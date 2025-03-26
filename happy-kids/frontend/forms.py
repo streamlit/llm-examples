@@ -32,3 +32,8 @@ class questionForm(forms.ModelForm):
             'order': forms.NumberInput(attrs={'class': 'form-control'}),  
             'active': forms.CheckboxInput(attrs={'class': 'form-check-input'}) 
         }
+
+class diaryForm(forms.ModelForm):
+    class Meta:
+        model = models.diary_facts
+        fields = ['date', 'title', 'body']

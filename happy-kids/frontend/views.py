@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from .forms import CustomUserForm, LuluTrainningForm, EditUserForm, questionForm
+from django.contrib.admin.views.decorators import staff_member_required
+from .forms import *
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.http import StreamingHttpResponse
@@ -17,6 +18,7 @@ from django.utils.safestring import mark_safe
 
 # Create your views here.
 @login_required
+@staff_member_required
 def view_users(request):
     if request.method == 'POST':
         form = CustomUserForm(request.POST)
@@ -32,6 +34,7 @@ def view_users(request):
     return render(request, 'users_page.html', {'form': form, 'users': users})
 
 @login_required
+@staff_member_required
 def view_training_files(request):
     return render(request, 'trainingFiles.html')
 
@@ -39,7 +42,9 @@ def view_training_files(request):
 def view_profile(request):
     return render(request, 'profile.html')
 
+
 @login_required
+@staff_member_required
 def training_list(request):
     if request.method == 'POST':
         form = LuluTrainningForm(request.POST, request.FILES)
@@ -135,6 +140,28 @@ def view_chat_memory(request):
     return render(request, 'chat_memory.html', {'conversas': conversas})
 
 @login_required
+def view_diary(request):
+    entries = models.diary_facts.objects.filter(user=request.user).order_by('-date')  
+    return render(request, 'diary.html', {'entries': entries})
+
+def create_diary(request):
+    if request.method == 'POST':
+        form = diaryForm(request.POST)
+        if form.is_valid():
+            form.instance.user = request.user  # Associa o usuário autenticado
+            form.save()  # Salva o diário
+            return redirect('diary')  # Redireciona para a página de visualização do diário
+    else:
+        form = diaryForm()
+
+    return render(request, 'diary.html', {'form': form})
+
+def diary_view(request):
+    entries = models.diary_facts.objects.filter(user=request.user).order_by('-date')  
+    return render(request, 'diary.html', {'entries': entries})
+
+@login_required
+@staff_member_required
 def view_chat_management_onboarding_questions(request):
      
     if request.method == 'POST':
@@ -150,7 +177,8 @@ def view_chat_management_onboarding_questions(request):
     questions = models.chat_dim_onboarding_questions.objects.all().order_by('order')
     return render(request,'adm_onboarding.html',{'questions': questions, 'form':form})
 
-
+@login_required
+@staff_member_required
 def update_question_active(request, id):
     if request.method == 'POST':
         try:
@@ -168,7 +196,8 @@ def view_chat_dim_onboarding_questions(request):
     questions = models.chat_dim_onboarding_questions.objects.all().prefetch_related("options")
     return render(request, "adm_onboarding.html", {"questions": questions})
 
-
+@login_required
+@staff_member_required
 @csrf_exempt
 def add_option(request):
     if request.method == "POST":
@@ -198,6 +227,7 @@ def delete_option(request, option_id):
 
 
 ########### Onboarding
+@login_required
 def onboarding_data(request):
     """Retorna as perguntas de onboarding não respondidas em JSON com opções associadas."""
     

@@ -23,12 +23,18 @@
         </li>
         
         <li class="{% if request.path == '/app/memory' %}selected{% endif %}">
-            <a href="/app/memory">My Memories</a>
+            <a href="/app/memory">Chat History</a>
+        </li>
+
+        <li class="{% if request.path == '/app/diary' %}selected{% endif %}">
+            <a href="/app/diary">My Life - Journal</a>
         </li>
         
-        <li class="{% if '/app/adm/' in request.path %}selected{% endif %}">
-            <a href="/app/adm/users_page">Adm</a>
-        </li>
+        {% if request.user.is_staff %}
+            <li class="{% if '/app/adm/' in request.path %}selected{% endif %}">
+                <a href="/app/adm/users_page">Adm</a>
+            </li>
+        {% endif %}
         
         <li class="{% if request.path == '/accounts/logout/' %}selected{% endif %}">
             <a href="/accounts/logout/">Logout</a>
