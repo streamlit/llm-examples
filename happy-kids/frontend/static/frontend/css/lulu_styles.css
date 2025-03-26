@@ -27,7 +27,8 @@ body{
     justify-content: center; 
     align-items: center;     
     height: 100vh;           
-    padding: 20px;           
+    padding: 20px;  
+    width: 100%;         
 }
 
 .chat-container {
@@ -251,22 +252,40 @@ form {
 
 
 
+.img-lulu-onboarding{
+    max-width: 25%;
+    max-height: 25%;
+}
+
 #button-container {
     display: flex; 
+    flex-direction: column;
     justify-content: center;
     align-items: center; 
     height: 100vh;
+    gap:15px;
+
 }
+
+.start-onboarding-message{
+    text-align: center;
+    background: #ffffff;
+    border-radius: 45px;
+    padding: 25px;
+}
+
+
+
 #start-onboarding {
     background-color: #40E0D0; 
-    color: white; /* Cor do texto */
-    font-size: 16px; /* Tamanho da fonte */
-    padding: 15px 30px; /* Preenchimento interno (vertical e horizontal) */
-    border-radius: 25px; /* Bordas arredondadas */
-    border: none; /* Remove a borda padrão */
-    cursor: pointer; /* Mudança do cursor para indicar que é clicável */
-    transition: background-color 0.3s ease, transform 0.2s ease; /* Transição suave para fundo e efeito de clique */
-    font-weight: bold; /* Negrito no texto */
+    color: white;
+    font-size: 25px;
+    padding: 15px 30px;
+    border-radius: 25px; 
+    border: none; 
+    cursor: pointer; 
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    font-weight: bold; 
 }
 
 #start-onboarding:hover {
@@ -304,6 +323,13 @@ form {
     border-radius: 5px;
     cursor: pointer;
     font-size: 16px;
+}
+
+.next:hover{
+    background: #40E0D0;
+    color: #ffffff;
+    transition: transparent 0.3s;
+    font-weight: bold;
 }
 
 .answer-options{
@@ -347,4 +373,281 @@ form {
 .answer-options:focus {
     border-color: #8761fc;
     box-shadow: 0 0 5px rgba(135, 97, 252, 0.4);
+}
+
+
+/* Container geral */
+.diary-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    height: 70vh;
+    padding: 20px;
+}
+
+/* Título */
+.diary-container h1 {
+    font-size: 38px;
+    font-weight: bold;
+    background: linear-gradient(to right, #8d53ff, #5ddee6); 
+    -webkit-background-clip: text;
+    color: transparent;
+    font-family: 'Poppins', sans-serif;
+    text-align: center;
+}
+
+/* Layout principal */
+.diary-history {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
+    width: 100%;
+    max-width: 1200px;
+    padding: 20px;
+    gap: 20px;
+    height: 60vh;
+}
+
+/* Linha do tempo */
+.timeline {
+    position: relative;
+    width: 3px;
+    background-color: #3498db;
+    height: 100%;
+}
+
+/* Menu lateral */
+.diary-menu {
+    display: flex;
+    flex-direction: column;
+    width: 25%;
+    min-width: 180px;
+    height: 100%;
+    overflow-y: auto;
+    padding-right: 10px;
+    scrollbar-width: thin;
+    scrollbar-color: #8d53ff transparent;
+}
+
+/* Entradas no menu */
+.diary-entry {
+    background: #fff;
+    border-radius: 10px;
+    padding: 10px;
+    margin: 10px 0;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.diary-entry h3 a {
+    text-decoration: none;
+    color: #3498db;
+}
+
+.diary-entry::before {
+    content: '';
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background: #3498db;
+    border-radius: 50%;
+    left: -15px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+/* Área de exibição das entradas */
+.diary-entries {
+    flex-grow: 1;
+    max-width: 70%;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    height: 100%;
+    scrollbar-color: #f4f4f4 transparent;
+}
+
+/* Detalhes do diário */
+.diary-entry-detail {
+    background: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    width: 100%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.diary-entry-detail:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Títulos e texto */
+.diary-entry-detail h2 {
+    color: #3498db;
+    font-size: 1.5em;
+}
+
+.diary-entry-detail h4 {
+    font-size: 1.2em;
+    color: #555;
+}
+
+.diary-body {
+    font-size: 1em;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* Botão para abrir o formulário */
+.new-entry {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    gap:20px;
+}
+
+.new-entry button {
+    background: #8d53ff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.new-entry button:hover {
+    background: #6a3dc9;
+}
+
+/* Formulário de nova entrada */
+#diary-form {
+    display: none;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    width: 100%;
+}
+
+#diary-form-id{
+    flex-direction: column;
+
+}
+
+#diary-form-id div{
+    display: contents;
+    flex-direction: column;
+}
+
+#diary-form-id div textarea{
+    max-width: 100%;
+} 
+
+/* Responsividade para tablets */
+@media (max-width: 1024px) {
+    .diary-history {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .timeline {
+        display: none;
+    }
+
+    .diary-menu {
+        flex-direction: row;
+        overflow-x: auto;
+        width: 100%;
+        max-width: 90%;
+        justify-content: center;
+        padding-right: 0;
+        scrollbar-width: thin;
+    }
+
+    .diary-entry {
+        min-width: 140px;
+        width: auto;
+        display: inline-block;
+        margin: 5px;
+    }
+
+    .diary-entries {
+        width: 100%;
+        max-width: 90%;
+    }
+}
+
+/* Responsividade para celulares */
+@media (max-width: 768px) {
+    .diary-container {
+        padding: 10px;
+        
+    }
+
+    .diary-container h1 {
+        font-size: 30px;
+    }
+
+    .diary-menu {
+        overflow-x: auto;
+        width: 100%;
+        max-width: 100%;
+        justify-content: flex-start;
+    }
+
+    .diary-entry {
+        font-size: 0.9em;
+        padding: 8px;
+    }
+
+    .diary-entries {
+        width: 100%;
+        max-width: 100%;
+        padding-left: 0;
+    }
+
+    .diary-entry-detail {
+        padding: 15px;
+        font-size: 0.9em;
+    }
+
+    .diary-entry-detail h2 {
+        font-size: 1.2em;
+    }
+
+    .diary-entry-detail h4 {
+        font-size: 1em;
+    }
+
+    .diary-body {
+        font-size: 0.9em;
+    }
+
+    .new-entry {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: auto;
+        z-index: 1000;
+    }
+
+    .new-entry button {
+        padding: 12px 24px;
+        font-size: 1.1rem;
+    }
+
+    #diary-form {
+        width: 90%;
+    }
 }

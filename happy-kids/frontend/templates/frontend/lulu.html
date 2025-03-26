@@ -23,8 +23,15 @@
             {% include 'header.html' %}
             
 
-            <div id="button-container">
-                <button id="start-onboarding">Start Onboarding</button>
+            <div id="button-container" style= "display:none">
+                <img src="{% static 'frontend/img/lulu_bot_novo.png' %}" class="img-lulu-onboarding" alt="Lulu">
+                <div class="start-onboarding-message">
+                    <h3>{{user.username}}</h3>
+                    <h4>🤩 I am so excited to meet you!!!</h4>
+                    <p>There are so many things I want to learn about you...</p>
+                    <p>Can I make some questions?</p>
+                </div>
+                <button id="start-onboarding">Lëtz Start!</button>
             </div>
 
             <div id="onboarding-container" class="onboarding-container" style="display: none">
@@ -37,6 +44,7 @@
             
                 <div class="onboarding-buttons">
                     <button class="skip" onclick="hideOnboarding()">Skip</button>
+                    <button class="next" onclick="nextQuestion()">Next</button>
                     
                 </div>
             </div>
@@ -85,6 +93,8 @@
                     // Se o onboarding foi completado, esconder o botão "Iniciar Onboarding"
                     document.getElementById("button-container").style.display = "none";
                     document.getElementById("chat-container").style.display = "flex";
+                } else {
+                    document.getElementById("button-container").style.display = "flex"
                 }
             })
             .catch(error => console.error("Erro ao verificar onboarding:", error));
@@ -126,7 +136,7 @@
         function showQuestion() {
             if (currentQuestionIndex < questions.length) {
                 const question = questions[currentQuestionIndex];
-                document.getElementById("step-title").textContent = `Passo ${currentQuestionIndex + 1} de ${questions.length}`;
+                document.getElementById("step-title").textContent = `Step ${currentQuestionIndex + 1} of ${questions.length}`;
                 document.getElementById("question-text").textContent = question.question;
     
                 // Limpar opções anteriores
@@ -162,8 +172,21 @@
     
         // Função para avançar para a próxima pergunta
         function nextQuestion() {
-            currentQuestionIndex++;
-            showQuestion();
+            const currentQuestion = questions[currentQuestionIndex];
+        
+            // Verificar se a pergunta atual é de resposta aberta (campo de texto)
+            if (currentQuestion.options.length === 0) {
+                const textAnswer = document.getElementById(`text-answer-${currentQuestion.id}`);
+                if (textAnswer && textAnswer.value.trim() !== "") {
+                    handleTextAnswer(currentQuestion.id); // Salva a resposta antes de avançar
+                } else {
+                    console.warn("Nenhuma resposta foi inserida!");
+                    return; // Impede que avance sem uma resposta
+                }
+            } else {
+                currentQuestionIndex++; // Avança para a próxima pergunta
+                showQuestion(); // Exibe a próxima pergunta
+            }
         }
     
         // Função para lidar com o clique nas opções
@@ -199,17 +222,21 @@
     
         // Função para salvar a resposta de um campo de texto
         function handleTextAnswer(questionId) {
-            const textAnswer = document.getElementById(`text-answer-${questionId}`).value;
-            console.log('Resposta de texto:', textAnswer);
-            console.log('ID da Pergunta:', questionId);
-    
-            // Preparar os dados para enviar ao backend
+            const textAnswer = document.getElementById(`text-answer-${questionId}`).value.trim();
+            
+            if (textAnswer === "") {
+                console.warn("The text reply is empty. It will not be sent.");
+                return;
+            }
+        
+            console.log('Text Answer:', textAnswer);
+            console.log('Question ID:', questionId);
+        
             const data = {
                 question_id: questionId,
                 answer: textAnswer
             };
-    
-            // Enviar os dados via requisição POST para salvar no banco
+        
             fetch("/app/save-onboarding-answer/", {
                 method: "POST",
                 headers: {
@@ -221,8 +248,8 @@
             .then(response => response.json())
             .then(result => {
                 console.log("Resposta salva com sucesso:", result);
-                // Avançar para a próxima pergunta
-                nextQuestion();
+                currentQuestionIndex++; // Só avança após salvar no banco
+                showQuestion();
             })
             .catch(error => {
                 console.error("Erro ao salvar a resposta:", error);

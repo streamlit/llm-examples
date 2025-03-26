@@ -36,6 +36,7 @@ class dim_question_typeSerializer(serializers.ModelSerializer):
         model = dim_question_type
         field = ('question_type')
 
-
-
-
+class diary_factsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = diary_facts
+        fields = ('date','title', 'body','user')

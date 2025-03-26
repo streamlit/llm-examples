@@ -30,3 +30,7 @@ class chat_facts_onboarding_answersView(generics.ListAPIView):
 class dim_question_type_view(generics.ListAPIView):
     queryset = dim_question_type.objects.all()
     serializer_class = dim_question_typeSerializer
+
+class diary_factsView(generics.ListAPIView):
+    queryset = diary_facts.objects.all()
+    serializer_class = diary_factsSerializer
