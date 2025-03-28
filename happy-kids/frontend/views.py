@@ -1,20 +1,19 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
-from django.contrib.admin.views.decorators import staff_member_required
+from .utils import get_short_term_memory, save_short_term_memory
 from .forms import *
-from django.contrib import messages
+from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.http import StreamingHttpResponse
-from api import models
+from django.contrib import messages
+from django.http import StreamingHttpResponse, JsonResponse
+from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt 
+from django.utils.safestring import mark_safe
+from api import models
+
 import openai
 import os
-from .utils import get_short_term_memory, save_short_term_memory
-from django.http import JsonResponse
-
 import json
 import markdown
-from django.utils.safestring import mark_safe
 
 # Create your views here.
 @login_required
@@ -130,6 +129,7 @@ def view_lulu(request):
         
         return response_server
     
+    
 @login_required
 def view_chat_memory(request):
     if request.user.is_authenticated:
@@ -148,9 +148,9 @@ def create_diary(request):
     if request.method == 'POST':
         form = diaryForm(request.POST)
         if form.is_valid():
-            form.instance.user = request.user  # Associa o usuário autenticado
-            form.save()  # Salva o diário
-            return redirect('diary')  # Redireciona para a página de visualização do diário
+            form.instance.user = request.user 
+            form.save()  
+            return redirect('diary') 
     else:
         form = diaryForm()
 
@@ -231,29 +231,17 @@ def delete_option(request, option_id):
 def onboarding_data(request):
     """Retorna as perguntas de onboarding não respondidas em JSON com opções associadas."""
     
-    # Obter o usuário atual
     user = request.user
-
-    # Obter todas as perguntas ativas do onboarding
     questions = models.chat_dim_onboarding_questions.objects.filter(active=True).order_by("order")
-
-    # Obter as perguntas já respondidas pelo usuário
     answered_questions = models.chat_facts_onboarding_answers.objects.filter(user=user).values_list('question_id', flat=True)
-
-    # Filtrar as perguntas não respondidas
     unanswered_questions = questions.exclude(id__in=answered_questions)
-
-    # Obter todas as opções de resposta
     options = models.chat_dim_onboarding_options_answers.objects.all()
-
-    # Agrupar as opções por pergunta
     grouped_options = {}
     for option in options:
         if option.question.id not in grouped_options:
             grouped_options[option.question.id] = []
         grouped_options[option.question.id].append(option.option)
 
-    # Preparando o JSON de resposta com as perguntas não respondidas e suas respectivas opções
     data = {
         "questions": [
             {
@@ -267,55 +255,46 @@ def onboarding_data(request):
 
     return JsonResponse(data)
 
-
-
 @login_required
 @csrf_exempt 
 def save_onboarding_answer(request):
     if request.method == 'POST':
         try:
-            # Capturar os dados enviados via POST
+
             data = json.loads(request.body)
             question_id = data.get('question_id')
             answer = data.get('answer')
 
-            # Verificar se os dados estão completos
             if not question_id or answer is None:
                 return JsonResponse({'status': 'error', 'message': 'Dados incompletos'}, status=400)
 
-            # Obter a pergunta correspondente pelo ID
             question = models.chat_dim_onboarding_questions.objects.get(id=question_id)
 
-            # Obter o usuário logado
             user = request.user
 
-            # Criar e salvar a resposta no banco de dados
             models.chat_facts_onboarding_answers.objects.create(
                 user=user,
                 question=question,
                 answer=answer,
-                order=question.order  # Caso você queira armazenar a ordem das perguntas
+                order=question.order
             )
 
-            # Retornar sucesso
             return JsonResponse({'status': 'success', 'message': 'Resposta salva com sucesso!'})
 
         except Exception as e:
-            # Tratar erros, caso aconteçam
+
             return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
 
     return JsonResponse({'status': 'error', 'message': 'Método não permitido.'}, status=405)
 
 @login_required
 def check_onboarding_completed(request):
-    # Verificar se o usuário tem respostas para todas as perguntas de onboarding
     unanswered_questions = models.chat_dim_onboarding_questions.objects.filter(
         active=True
     ).exclude(
         id__in=models.chat_facts_onboarding_answers.objects.filter(user=request.user).values('question_id')
     )
     
-    # Se não houver perguntas não respondidas, o onboarding foi completado
     onboarding_completed = unanswered_questions.count() == 0
     
     return JsonResponse({'onboarding_completed': onboarding_completed})
