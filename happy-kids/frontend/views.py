@@ -299,12 +299,11 @@ def check_onboarding_completed(request):
     
     return JsonResponse({'onboarding_completed': onboarding_completed})
 
-######### Sugestoes
+######################### Question suggestion based on chat context #########################
 @login_required
 def generate_suggestions(request):
     user_id = request.user.id
 
-    # Buscar as últimas mensagens do usuário para contexto
     recent_messages = models.chat_memories.objects.filter(user_id=user_id).order_by('-id')[:3]
     messages = [{"role": "system", "content": "You are a helpful assistant that suggests quick questions based on the conversation."}]
 
@@ -314,7 +313,6 @@ def generate_suggestions(request):
 
     client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
-    # Gerar sugestões com o GPT-4o-mini
     response = client.chat.completions.create(
         model="gpt-4o-mini",
         messages=messages + [
