@@ -25,4 +25,7 @@ urlpatterns = [
     path('diary', views.view_diary, name='diary'),
     path('create_diary/', views.create_diary, name='create_diary'),
 
+    path("generate_suggestions/", views.generate_suggestions, name="generate_suggestions"),
+
+
 ]

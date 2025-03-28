@@ -165,10 +165,9 @@ form {
     cursor: pointer;
     font-size: 14px;
     transition: background 0.3s;
-    white-space: nowrap;
 }
 
-#new-suggestion {
+.new-suggestion {
     background-color: #f1f1f1;
     border: 1px solid #3498db;
     padding: 6px 18px;
@@ -180,7 +179,7 @@ form {
 }
 
 .suggestion:hover,
-#new-suggestion:hover, 
+.new-suggestion:hover, 
 #suggestion_highligh_1:hover, 
 #suggestion_highligh_2:hover,
 #suggestion_highligh_3:hover,

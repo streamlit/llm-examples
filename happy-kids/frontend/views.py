@@ -15,6 +15,7 @@ import os
 import json
 import markdown
 
+
 # Create your views here.
 @login_required
 @staff_member_required
@@ -225,7 +226,6 @@ def delete_option(request, option_id):
 
     return JsonResponse({"success": False}, status=400)
 
-
 ########### Onboarding
 @login_required
 def onboarding_data(request):
@@ -298,3 +298,35 @@ def check_onboarding_completed(request):
     onboarding_completed = unanswered_questions.count() == 0
     
     return JsonResponse({'onboarding_completed': onboarding_completed})
+
+######### Sugestoes
+@login_required
+def generate_suggestions(request):
+    user_id = request.user.id
+
+    # Buscar as últimas mensagens do usuário para contexto
+    recent_messages = models.chat_memories.objects.filter(user_id=user_id).order_by('-id')[:3]
+    messages = [{"role": "system", "content": "You are a helpful assistant that suggests quick questions based on the conversation."}]
+
+    for msg in reversed(recent_messages):
+        messages.append({"role": "user", "content": msg.user_message})
+        messages.append({"role": "assistant", "content": msg.chat_message})
+
+    client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
+    # Gerar sugestões com o GPT-4o-mini
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=messages + [
+            {
+                "role": "user", 
+                "content": "Generate a short question suggestion to continue this conversation, maintaining the context of the dialogue and the just use english language. Just return the question."
+            }
+        ],
+        max_tokens=8,
+        n=3 
+    )
+
+    suggestions = [choice.message.content.strip() for choice in response.choices]
+
+    return JsonResponse({"suggestions": suggestions})

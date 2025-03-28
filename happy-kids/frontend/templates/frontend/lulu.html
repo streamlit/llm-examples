@@ -255,6 +255,8 @@
     </script>
 
     <!--Funções para Suggestions-->
+
+    
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             const form = document.getElementById("ai-form");
@@ -280,30 +282,33 @@
 
     </script>
 
+    
     <script>
         function hideSuggestions() {
-            let suggestionsContainer = document.getElementById('quick-suggestions');
+            fetch("{% url 'generate_suggestions' %}")  // Certifique-se de ter essa rota no urls.py
+                .then(response => response.json())
+                .then(data => {
+                    let suggestionsContainer = document.getElementById('quick-suggestions');
+                    suggestionsContainer.innerHTML = '';
     
-            // Substitui as sugestões antigas por novas
-            suggestionsContainer.innerHTML = `
-            <span id="new-suggestion" class="suggestion">Suggestion A</span>
-            <span id="new-suggestion" class="suggestion">Suggestion B</span>
-            <span id="new-suggestion" class="suggestion">Suggestion C</span>
-            `;
-
-            const newSuggestions = document.querySelectorAll(".suggestion");
-
-            // Permitir envio imediato ao clicar em uma nova sugestão
-            newSuggestions.forEach(suggestion => {
-                suggestion.addEventListener("click", function () {
-                    const input = document.getElementById("question");
-                    input.value = this.innerText;
-                    document.getElementById("ai-form").dispatchEvent(new Event("submit", { bubbles: true, cancelable: true }));
-                });
-            });
-            
-
+                    data.suggestions.forEach(suggestion => {
+                        let suggestionSpan = document.createElement("span");
+                        suggestionSpan.className = "new-suggestion";
+                        suggestionSpan.innerText = suggestion;
+    
+                        suggestionSpan.addEventListener("click", function () {
+                            const input = document.getElementById("question");
+                            input.value = this.innerText;
+                            document.getElementById("ai-form").dispatchEvent(new Event("submit", { bubbles: true, cancelable: true }));
+                        });
+    
+                        suggestionsContainer.appendChild(suggestionSpan);
+                    });
+                })
+                .catch(error => console.error("Erro ao obter sugestões:", error));
         }
+    
+        
     </script>
 
     <script>
@@ -361,6 +366,8 @@
         });
 
     </script>
+
+    
 
 </body> 
 </html>
