@@ -7,34 +7,37 @@
     justify-content: space-between;
     transition: width 0.3s ease; 
     z-index: 1;
+    overflow: hidden;
 }
 
 .sidebar.expanded {
-    width: 200px;
+    width: 20vw;
 }
 
 #menu {
-    display: none;
     list-style-type: none;
+    justify-items: center;
     padding: 0;
     padding: 10px;
 }
 
 .sidebar.expanded #menu {
     display: block;
+    justify-items: stretch;
 }
 
 .menu-icon {
     display: flex;
-    justify-content: center;
     align-items: center;
-    padding-top: 25px;
+    padding: 25px;
     cursor: pointer;
     margin-bottom: 20px;
 }
 
 .menu-icon i {
     font-size: 24px;
+    min-width: 24px;
+    text-align: center;
     color: #fff;
 }
 
@@ -49,33 +52,48 @@
 }
 
 .sidebar ul li {
-    margin: 10px 0;
+    display: flex;
+    align-items: center;
+    padding: 10px;
 }
+
+
 
 .sidebar ul li a {
     color: white;
     text-decoration: none; 
-    transition: background-color 0.3s; 
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.sidebar.sidebar.expanded ul li a {
+    gap: 10px;
 }
 
 .sidebar ul li.selected {
     font-weight: bold;
-    background-color: white; 
+    background-color: rgba(141, 83, 255, 0.2);
+    border: 2px solid #ffffff;
     padding: 5px; 
+    margin: 10px;
     border-radius: 5px;
 }
 
-.sidebar ul li.selected a {
-    color:#8761fc;
+.icon-container {
+    display: inline-block;
+    padding: 10px;
+    border-radius: 50%;
+    transition: background-color 0.3s ease-in-out, border 0.3s ease-in-out;
 }
 
+
 .sidebar ul li:hover {
-    background-color: white; 
     padding: 5px; 
     border-radius: 5px; 
 }
 .sidebar ul li:hover a {
-    color:#8761fc;
     font-weight: bold;
 }
 
@@ -85,10 +103,57 @@
 }
 
 .starters-image {
-    max-width: 60%;
+    max-width: 55%;
     height: auto;
     padding-bottom: 15px;
 }
+
+
+/* Esconder o texto quando o sidebar está recolhido */
+.sidebar:not(.expanded) ul li a span {
+    opacity: 0;
+    visibility: hidden;
+    width: 0;
+    transition: opacity 0.3s ease, visibility 0.3s ease, width 0.3s ease;
+}
+
+/* Manter ícones visíveis */
+.sidebar ul li a i {
+    font-size: 18px;
+    min-width: 24px;
+    text-align: center;
+}
+
+/* Quando expandido, mostrar os textos */
+.sidebar.expanded ul li a span {
+    opacity: 1;
+    visibility: visible;
+    width: auto;
+}
+
+
+/* Esconder o texto do menu-icon quando a sidebar estiver recolhida */
+.sidebar:not(.expanded) .menu-icon span {
+    opacity: 0;
+    visibility: hidden;
+    width: 0;
+    transition: opacity 0.3s ease, visibility 0.3s ease, width 0.3s ease;
+}
+
+/* Manter visível quando expandido */
+.sidebar.expanded .menu-icon span {
+    opacity: 1;
+    visibility: visible;
+    width: auto;
+}
+
+.sidebar ul li a img {
+    width: 28px; 
+    height: 28px;
+    min-width: 24px;
+}
+
+
 
 @media screen and (max-width: 768px) {
     .sidebar {

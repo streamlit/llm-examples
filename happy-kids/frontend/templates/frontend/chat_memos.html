@@ -1,0 +1,39 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" href="{% static 'frontend/img/logo_happy_kids.png' %}">
+        <title>Happy Kids | My Memories</title>
+
+        <link rel="stylesheet" href="{% static 'frontend/css/lulu_styles.css' %}">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto&display=swap">
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+        <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    </head>
+    <body>
+        <div class="container">
+            {% include 'sidebar.html' %}
+
+            <main class="content">
+                {% include 'header.html' %}
+            
+                <div class="chat-container">
+                    <h1>💡✨ We're Building Something Amazing! ✨💡</h1>
+                    <p>Hey there, awesome visitor! 🚀💙</p>
+                    <p>Our page is still under construction, but we're busy crafting a special little spot full of surprises and excitement just for you! 🎨🔧</p>
+                    <p>In the meantime, grab a coffee ☕, cuddle with your pet 🐶🐱, and stay tuned... We'll be ready to welcome you with open arms very soon! 💖</p>
+                    <p>See you soon! 👀💫</p>
+                    <p class="emoji">🚧🔜🚀</p>
+                
+                </div>
+                
+            
+                
+            </main>
+        </div>
+
+    </body> 
+</html>

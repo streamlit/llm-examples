@@ -97,3 +97,5 @@ After testing locally as proposed above, deploy the new version following the st
 ## References
 - https://news.mit.edu/2023/large-language-models-in-context-learning-0207
 - https://hbr.org/2022/11/how-generative-ai-is-changing-creative-work
+- https://cloud.google.com/artifact-registry/docs?hl=pt-br
+- https://cloud.google.com/build/docs?hl=pt-br
