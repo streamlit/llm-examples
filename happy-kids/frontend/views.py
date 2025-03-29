@@ -141,6 +141,18 @@ def view_chat_memory(request):
     return render(request, 'chat_memory.html', {'conversas': conversas})
 
 @login_required
+def view_chat_memos(request):
+    return render(request, 'chat_memos.html')
+
+@login_required
+def view_emotions_atlas(request):
+    return render(request, 'emotions_atlas.html')
+
+@login_required
+def view_ideas_box(request):
+    return render(request, 'ideas_box.html')
+
+@login_required
 def view_diary(request):
     entries = models.diary_facts.objects.filter(user=request.user).order_by('-date')  
     return render(request, 'diary.html', {'entries': entries})
@@ -322,6 +334,7 @@ def generate_suggestions(request):
             }
         ],
         max_tokens=8,
+        temperature = 1.2,
         n=3 
     )
 

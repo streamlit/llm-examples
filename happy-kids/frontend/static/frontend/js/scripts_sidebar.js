@@ -1,12 +1,16 @@
 function toggleMenu() {
     const sidebar = document.querySelector('.sidebar');
-    const menu = document.getElementById('menu');
-    
     sidebar.classList.toggle('expanded');
 
-    if (menu.style.display === "none" || menu.style.display === "") {
-        menu.style.display = "block";
+    const menuLinks = document.querySelectorAll('.sidebar ul li a');
+
+    if (sidebar.classList.contains('expanded')) {
+        menuLinks.forEach(link => {
+            link.classList.remove('collapsed');
+        });
     } else {
-        menu.style.display = "none";
+        menuLinks.forEach(link => {
+            link.classList.add('collapsed');
+        });
     }
 }
