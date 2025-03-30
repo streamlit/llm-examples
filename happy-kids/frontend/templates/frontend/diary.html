@@ -52,7 +52,7 @@
 
                     <!-- Formulário de novo diário -->
                     <div class="new-entry">
-                        <button onclick="toggleDiaryForm()">New Memory</button>
+                        <button id="btn_new_memory" onclick="toggleDiaryForm()">New Memory</button>
 
                         <div id="diary-form" style="display: none;">
                             <form id= "diary-form-id" method="POST" action="{% url 'create_diary' %}">
@@ -70,6 +70,7 @@
                                     <textarea id="body" name="body" rows="10" required></textarea>
                                 </div>
                                 <button type="submit">Save</button>
+                                <button onclick="toggleDiaryForm()">Cancel</button>
                             </form>
                         </div>
                     </div>
@@ -81,10 +82,11 @@
             function toggleDiaryForm() {
                 const form = document.getElementById('diary-form');
                 const history = document.getElementById("diary-history");
-                const button_toggle = document.getElementById("");
+                const button_toggle = document.getElementById("btn_new_memory");
 
                 form.style.display = (form.style.display === 'none' || form.style.display === '') ? 'flex' : 'none';
                 history.style.display = (history.style.display === 'flex') ? 'none' : 'flex';
+                button_toggle.style.display = (button_toggle.style.display === 'none') ? 'block' : 'none';
             }
         </script>
     </body>
