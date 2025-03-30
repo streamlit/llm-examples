@@ -21,6 +21,14 @@ urlpatterns = [
     path('onboarding-data/', views.onboarding_data, name='onboarding-data'),
     path('save-onboarding-answer/', views.save_onboarding_answer, name='save_onboarding_answer'),   
     path('check-onboarding-completed/', views.check_onboarding_completed, name='check_onboarding_completed'),
+
+    path('adm/adm_am_i_boring_questions', views.view_management_am_i_boring_questions, name='adm_am_i_boring_questions'),
+    path('add_option_am_i_boring/', views.add_option_am_i_boring, name="add_option_am_i_boring"),
+    path('delete_option_am_i_boring/<int:option_id>/', views.delete_option_am_i_boring, name="delete_option_am_i_boring"),
+    path('am-i-boring-data/', views.am_i_boring_data, name='am_i_boring_data'),
+    path('update-question-active-am-i-boring/<int:id>/', views.update_question_active_am_i_boring, name='update_question_active'),
+    
+
     path('create_diary/', views.create_diary, name='create_diary'),
     path("generate_suggestions/", views.generate_suggestions, name="generate_suggestions"),
 

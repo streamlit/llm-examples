@@ -34,3 +34,15 @@ class dim_question_type_view(generics.ListAPIView):
 class diary_factsView(generics.ListAPIView):
     queryset = diary_facts.objects.all()
     serializer_class = diary_factsSerializer
+
+class dim_am_i_boring_questionsView(generics.ListAPIView):
+    queryset = dim_am_i_boring_questions.objects.all()
+    serializer_class = dim_am_i_boring_questionsSerializer
+
+class dim_am_i_boring_options_answersView(generics.ListAPIView):
+    queryset = dim_am_i_boring_options_answers.objects.all()
+    serializer_class = dim_am_i_boring_options_answersSerializer
+
+class facts_am_i_boring_answersView(generics.ListAPIView):
+    queryset = facts_am_i_boring_answers.objects.all()
+    serializer_class = facts_am_i_boring_answersSerializer

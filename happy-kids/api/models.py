@@ -31,7 +31,7 @@ class dim_question_type(models.Model):
 
 class chat_dim_onboarding_questions(models.Model):
     question = models.TextField()
-    question_type = models.ForeignKey(dim_question_type, on_delete=models.CASCADE, null=True)
+    question_type = models.ForeignKey(dim_question_type, on_delete=models.CASCADE, null=True, related_name="onboarding_question_types")
     order = models.IntegerField()
     active = models.BooleanField(default=True)
 
@@ -39,15 +39,15 @@ class chat_dim_onboarding_questions(models.Model):
         return self.question
 
 class chat_dim_onboarding_options_answers(models.Model):
-    question = models.ForeignKey(chat_dim_onboarding_questions, on_delete=models.CASCADE,related_name="options")
+    question = models.ForeignKey(chat_dim_onboarding_questions, on_delete=models.CASCADE, related_name="onboarding_options")
     option = models.TextField()
 
     def __str__(self):
         return f"{self.question} - {self.option}"
     
 class chat_facts_onboarding_answers(models.Model):
-    user = models.ForeignKey("auth.User",on_delete=models.CASCADE)
-    question  = models.ForeignKey(chat_dim_onboarding_questions, on_delete=models.CASCADE)
+    user = models.ForeignKey("auth.User", on_delete=models.CASCADE)
+    question  = models.ForeignKey(chat_dim_onboarding_questions, on_delete=models.CASCADE, related_name="onboarding_answers")
     answer = models.TextField(blank=True, null=True)
     order = models.IntegerField(default=0)
     date_time = models.DateTimeField(auto_now_add=True)
@@ -66,3 +66,32 @@ class diary_facts(models.Model):
 
     def __str__(self):
         return self.title
+
+class dim_am_i_boring_questions(models.Model):
+    question = models.TextField()
+    question_type = models.ForeignKey(dim_question_type, on_delete=models.CASCADE, null=True, related_name="boring_question_types")
+    order = models.IntegerField()
+    active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.question
+
+class dim_am_i_boring_options_answers(models.Model):
+    question = models.ForeignKey(dim_am_i_boring_questions, on_delete=models.CASCADE, related_name="boring_options")
+    option = models.TextField()
+
+    def __str__(self):
+        return f"{self.question} - {self.option}"
+    
+class facts_am_i_boring_answers(models.Model):
+    user = models.ForeignKey("auth.User", on_delete=models.CASCADE)
+    question  = models.ForeignKey(dim_am_i_boring_questions, on_delete=models.CASCADE, related_name="boring_answers")
+    answer = models.TextField(blank=True, null=True)
+    order = models.IntegerField(default=0)
+    date_time = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'question')
+
+    def __str__(self):
+        return f"{self.user.id} | {self.question.id} | {self.question.order} | {self.answer}"
