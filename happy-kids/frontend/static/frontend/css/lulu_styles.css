@@ -57,7 +57,7 @@ body{
 .chat-history {
     overflow-y: auto !important;
     max-height: 60vh;
-    max-width: 640px;
+    max-width: 80vw;
     padding-bottom: 10px;
     scrollbar-width: thin;
     scrollbar-color: #8d53ff transparent;
@@ -82,13 +82,14 @@ body{
 }
 
 .bot-message {
-    text-align: left; 
+    text-align: left;
     margin: 10px 0;
     background-color: white;
     padding: 20px;
     border-radius: 20px;
-    min-width: 70%;
-    max-width: 80%;
+    min-width: 70vw;
+    max-width: 80vw;
+    padding: 35px;
 }
 
 .input-container {
