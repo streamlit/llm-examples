@@ -33,6 +33,17 @@ class questionForm(forms.ModelForm):
             'active': forms.CheckboxInput(attrs={'class': 'form-check-input'}) 
         }
 
+class amIBoringQuestionForm(forms.ModelForm):
+    class Meta:
+        model = models.dim_am_i_boring_questions
+        fields = [ 'order','question_type','question', 'active']
+        widgets = {
+            'question': forms.TextInput(attrs={'class': 'form-control'}),  
+            'question_type': forms.Select(attrs={'class': 'form-control'}),
+            'order': forms.NumberInput(attrs={'class': 'form-control'}),  
+            'active': forms.CheckboxInput(attrs={'class': 'form-check-input'}) 
+        }
+
 class diaryForm(forms.ModelForm):
     class Meta:
         model = models.diary_facts

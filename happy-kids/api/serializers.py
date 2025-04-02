@@ -40,3 +40,20 @@ class diary_factsSerializer(serializers.ModelSerializer):
     class Meta:
         model = diary_facts
         fields = ('date','title', 'body','user')
+
+
+
+class dim_am_i_boring_questionsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = dim_am_i_boring_questions
+        fields = ('question','order','active','question_type')
+
+class dim_am_i_boring_options_answersSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = dim_am_i_boring_options_answers
+        fields = ('question','option')
+
+class facts_am_i_boring_answersSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = facts_am_i_boring_answers
+        fields = ('user','question', 'answer','order','datetime')
