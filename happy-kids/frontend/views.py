@@ -42,6 +42,9 @@ def view_training_files(request):
 def view_profile(request):
     return render(request, 'profile.html')
 
+@login_required
+def view_surprise_me(request):
+    return render(request, 'surprise_me.html')
 
 @login_required
 @staff_member_required
@@ -392,27 +395,32 @@ def delete_option_am_i_boring(request, option_id):
 
 @login_required
 def am_i_boring_data(request):
-    """Retorna as perguntas de onboarding não respondidas em JSON com opções associadas."""
+    """Retorna todas as perguntas ativas em JSON com opções associadas, mesmo que já tenham sido respondidas."""
     
     user = request.user
+
+    # Busca todas as perguntas ativas
     questions = models.dim_am_i_boring_questions.objects.filter(active=True).order_by("order")
-    answered_questions = models.facts_am_i_boring_answers.objects.filter(user=user).values_list('question_id', flat=True)
-    unanswered_questions = questions.exclude(id__in=answered_questions)
-    options = models.dim_am_i_boring_options_answers.objects.all()
+
+    # Obtém todas as opções associadas a essas perguntas
+    options = models.dim_am_i_boring_options_answers.objects.filter(question__in=questions)
+
+    # Agrupa as opções por pergunta
     grouped_options = {}
     for option in options:
         if option.question.id not in grouped_options:
             grouped_options[option.question.id] = []
         grouped_options[option.question.id].append(option.option)
 
+    # Retorna todas as perguntas com suas opções
     data = {
         "questions": [
             {
                 "id": question.id,
                 "question": question.question,
-                "options": grouped_options.get(question.id, [])
+                "options": grouped_options.get(question.id, [])  # Garante que sempre haverá uma lista de opções
             }
-            for question in unanswered_questions
+            for question in questions
         ]
     }
 
@@ -436,3 +444,35 @@ def update_question_active_am_i_boring(request, id):
 def view_dim_am_i_boring_questions(request):
     questions = models.dim_am_i_boring_questions.objects.all().prefetch_related("options")
     return render(request, "adm_am_i_boring.html", {"questions": questions})
+
+@login_required
+@csrf_exempt 
+def save_am_i_boring_answer(request):
+    if request.method == 'POST':
+        try:
+
+            data = json.loads(request.body)
+            question_id = data.get('question_id')
+            answer = data.get('answer')
+
+            if not question_id or answer is None:
+                return JsonResponse({'status': 'error', 'message': 'Dados incompletos'}, status=400)
+
+            question = models.dim_am_i_boring_questions.objects.get(id=question_id)
+
+            user = request.user
+
+            models.facts_am_i_boring_answers.objects.create(
+                user=user,
+                question=question,
+                answer=answer,
+                order=question.order
+            )
+
+            return JsonResponse({'status': 'success', 'message': 'Resposta salva com sucesso!'})
+
+        except Exception as e:
+
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+
+    return JsonResponse({'status': 'error', 'message': 'Método não permitido.'}, status=405)

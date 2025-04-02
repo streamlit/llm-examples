@@ -81,6 +81,12 @@
     border-radius: 5px;
 }
 
+.sidebar:not(.expanded) #btn-surprise-me.selected{
+    background-color: transparent;
+    border: none;
+
+}
+
 .icon-container {
     display: inline-block;
     padding: 10px;
@@ -103,7 +109,7 @@
 }
 
 .starters-image {
-    max-width: 55%;
+    max-width: 40%;
     height: auto;
     padding-bottom: 15px;
 }
@@ -153,7 +159,12 @@
     min-width: 24px;
 }
 
-
+.sidebar.expanded #btn-surprise-me{
+    margin: 25px 0;
+    border: 2px dashed #ffffff;
+    border-radius: 20px;
+    padding: 10px;
+}
 
 @media screen and (max-width: 768px) {
     .sidebar {

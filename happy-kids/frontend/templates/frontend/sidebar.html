@@ -38,6 +38,10 @@
         <li class="{% if request.path == '/app/ideas_box' %}selected{% endif %}">
             <a href="https://docs.google.com/forms/d/e/1FAIpQLSeeV_O5Jw9o338PRQsazVu1pEL9ekd2JjWTVj9O5B0y-AGg8Q/viewform"><img src="{% static 'frontend/img/menu-icons/icon_idea_box.png' %}" alt="Idea Box Icon"> <span>Idea Box</span></a>
         </li>
+
+        <li id="btn-surprise-me" class="{% if request.path == '/app/surprise_me' %}selected{% endif %}">
+            <a href="/app/surprise_me"> <span>Surprise Me</span></a>
+        </li>
         
         {% if request.user.is_staff %}
             <li class="{% if '/app/adm/' in request.path %}selected{% endif %}">
