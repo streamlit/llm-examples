@@ -9,12 +9,10 @@ from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt 
 from django.utils.safestring import mark_safe
 from api import models
-
 import openai
 import os
 import json
 import markdown
-
 
 # Create your views here.
 @login_required
@@ -116,7 +114,6 @@ def view_lulu(request):
 
             response_text_html = markdown.markdown(text=response_text,output_format='html')
 
-            # Salvar a conversa no banco de dados após a resposta completa
             models.chat_memories.objects.create(
                 user_id=request.user.id,
                 user_message=question,
@@ -132,8 +129,37 @@ def view_lulu(request):
         response_server['X-Accel-Buffering'] = 'no'
         
         return response_server
-    
-    
+
+
+######################### Memos andd Feedback #########################
+@login_required
+def view_chat_memos(request):
+    return render(request, 'chat_memos.html')
+
+@login_required
+def view_save_memo(request):
+    if request.method == "POST":
+        texto = request.POST.get("message")
+        if texto:
+            memo = models.facts_memos.objects.create(user=request.user, message=texto)
+            return JsonResponse({"status": "ok", "memo_id": memo.id})
+        return JsonResponse({"status": "error", "message": "Mensagem vazia"}, status=400)
+    return JsonResponse({"status": "error", "message": "Método não permitido"}, status=405)
+
+@login_required
+@csrf_exempt
+def view_delete_memo(request, memo_id):
+    if request.method == "POST":
+        memo = models.facts_memos.objects.get(id=memo_id, user=request.user)
+        memo.delete()
+        return JsonResponse({"status": "ok"})
+    return JsonResponse({"status": "error"}, status=405)
+
+@login_required
+def view_list_memos(request):
+    memos = models.facts_memos.objects.filter(user=request.user).order_by("-created_at")
+    return render(request, "memos.html", {"memos": memos})
+
 @login_required
 def view_chat_memory(request):
     if request.user.is_authenticated:
@@ -143,9 +169,50 @@ def view_chat_memory(request):
 
     return render(request, 'chat_memory.html', {'conversas': conversas})
 
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+
 @login_required
-def view_chat_memos(request):
-    return render(request, 'chat_memos.html')
+def view_save_feedback(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        user_prompt = data.get("user_prompt", "").strip()
+        bot_message = data.get("bot_message", "").strip()
+        feedback_type = data.get("feedback_type", "").strip()
+
+        if not user_prompt or not bot_message or not feedback_type:
+            return JsonResponse({"error": "Dados inválidos."}, status=400)
+
+        # Verifica se já existe feedback desse usuário para esse par prompt/resposta
+        existing_feedback = models.chat_facts_feedback.objects.filter(
+            user=request.user,
+            user_prompt=user_prompt,
+            bot_message=bot_message
+        ).first()
+
+        if existing_feedback:
+            if existing_feedback.feedback_type == feedback_type:
+                # Mesmo tipo já selecionado → remover (toggle off)
+                existing_feedback.delete()
+                return JsonResponse({"status": "removed"})
+            else:
+                # Tipo diferente → substituir
+                existing_feedback.feedback_type = feedback_type
+                existing_feedback.save()
+                return JsonResponse({"status": "updated"})
+
+        # Nenhum feedback anterior → criar novo
+        models.chat_facts_feedback.objects.create(
+            user=request.user,
+            user_prompt=user_prompt,
+            bot_message=bot_message,
+            feedback_type=feedback_type
+        )
+        return JsonResponse({"status": "created"})
+
+    return JsonResponse({"error": "Método inválido."}, status=405)
+
+######################### Other pages #########################
 
 @login_required
 def view_emotions_atlas(request):
@@ -176,6 +243,8 @@ def diary_view(request):
     entries = models.diary_facts.objects.filter(user=request.user).order_by('-date')  
     return render(request, 'diary.html', {'entries': entries})
 
+
+######################### Onboarding #########################
 @login_required
 @staff_member_required
 def view_chat_management_onboarding_questions(request):
@@ -241,7 +310,7 @@ def delete_option(request, option_id):
 
     return JsonResponse({"success": False}, status=400)
 
-########### Onboarding
+
 @login_required
 def onboarding_data(request):
     """Retorna as perguntas de onboarding não respondidas em JSON com opções associadas."""
@@ -345,7 +414,6 @@ def generate_suggestions(request):
 
     return JsonResponse({"suggestions": suggestions})
 
-
 ######################### Am I Boring Foms #########################
 @login_required
 @staff_member_required
@@ -399,26 +467,22 @@ def am_i_boring_data(request):
     
     user = request.user
 
-    # Busca todas as perguntas ativas
     questions = models.dim_am_i_boring_questions.objects.filter(active=True).order_by("order")
 
-    # Obtém todas as opções associadas a essas perguntas
     options = models.dim_am_i_boring_options_answers.objects.filter(question__in=questions)
 
-    # Agrupa as opções por pergunta
     grouped_options = {}
     for option in options:
         if option.question.id not in grouped_options:
             grouped_options[option.question.id] = []
         grouped_options[option.question.id].append(option.option)
 
-    # Retorna todas as perguntas com suas opções
     data = {
         "questions": [
             {
                 "id": question.id,
                 "question": question.question,
-                "options": grouped_options.get(question.id, [])  # Garante que sempre haverá uma lista de opções
+                "options": grouped_options.get(question.id, [])
             }
             for question in questions
         ]

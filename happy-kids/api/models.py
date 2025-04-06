@@ -95,3 +95,26 @@ class facts_am_i_boring_answers(models.Model):
 
     def __str__(self):
         return f"{self.user.id} | {self.question.id} | {self.question.order} | {self.answer}"
+    
+class facts_memos(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    message = models.TextField()
+    datetime = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return f"Memo de {self.user.username} em {self.datetime.strftime('%d/%m/%Y %H:%M')}"
+
+class chat_facts_feedback(models.Model):
+    user_prompt = models.TextField()
+    bot_message = models.TextField()
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    
+    feedback_type = models.CharField(
+        max_length=20,
+        choices=[("like", "Like"), ("dislike", "Dislike")]
+    )
+    reason = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.bot_message

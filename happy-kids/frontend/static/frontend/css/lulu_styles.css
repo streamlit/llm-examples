@@ -89,7 +89,7 @@ body{
     border-radius: 20px;
     min-width: 70vw;
     max-width: 80vw;
-    padding: 35px;
+    padding: 20px 35px;
 }
 
 .input-container {
@@ -574,6 +574,54 @@ form {
 #diary-form-id div textarea{
     max-width: 100%;
 } 
+
+/* Memos and feedbacks */
+.bot-message-options {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-bottom: 5px;
+}
+
+.save-memo-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: transform 0.2s;
+}
+
+.save-memo-btn:hover {
+    transform: scale(1.2);
+}
+
+.bot-message-options{
+    padding-top: 10px;
+}
+
+.save-memo-btn i {
+    color: #999;
+    transition: color 0.2s;
+}
+
+.save-memo-btn.liked i {
+    color: red;
+}
+
+.save-memo-btn.liked i::before {
+    content: "\f004";
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+}
+
+button.selected.like i {
+    color: #2ecc71; /* Verde para like */
+}
+
+button.selected.dislike i {
+    color: #c4891c; /* Vermelho para dislike */
+}
+
 
 /* Responsividade para tablets */
 @media (max-width: 1024px) {
