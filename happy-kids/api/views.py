@@ -6,7 +6,6 @@ class historicalSessionsView(generics.ListAPIView):
     queryset = historicalSessions.objects.all()
     serializer_class = historicalSessionsSerializer
 
-
 class LuluTrainningView(generics.ListAPIView):
     queryset = luluTrainning.objects.all()
     serializer_class = LuluTrainningSerializer
@@ -46,3 +45,11 @@ class dim_am_i_boring_options_answersView(generics.ListAPIView):
 class facts_am_i_boring_answersView(generics.ListAPIView):
     queryset = facts_am_i_boring_answers.objects.all()
     serializer_class = facts_am_i_boring_answersSerializer
+
+class facts_memosView(generics.ListAPIView):
+    queryset = facts_memos.objects.all()
+    serializer_class = facts_memosSerializer
+
+class chat_facts_feedbackView(generics.ListAPIView):
+    queryset = chat_facts_feedback.objects.all()
+    serializer_class = chat_facts_feedbackSerializer

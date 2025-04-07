@@ -11,6 +11,10 @@ admin.site.register(dim_question_type)
 admin.site.register(chat_facts_onboarding_answers)
 admin.site.register(diary_facts)
 
+admin.site.register(chat_memories)
+admin.site.register(chat_facts_feedback)
+admin.site.register(facts_memos)
+
 admin.site.register(dim_am_i_boring_questions)
 admin.site.register(dim_am_i_boring_options_answers)
 admin.site.register(facts_am_i_boring_answers)

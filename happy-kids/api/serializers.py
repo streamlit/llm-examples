@@ -57,3 +57,13 @@ class facts_am_i_boring_answersSerializer(serializers.ModelSerializer):
     class Meta:
         model = facts_am_i_boring_answers
         fields = ('user','question', 'answer','order','datetime')
+
+class facts_memosSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = facts_memos
+        fields = ('user','message','datetime')      
+
+class chat_facts_feedbackSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = chat_facts_feedback
+        fields = ('user_prompt','bot_message','user','feedback_type','reason','created_at')

@@ -22,7 +22,10 @@ urlpatterns = [
     path('onboarding-data/', views.onboarding_data, name='onboarding-data'),
     path('save-onboarding-answer/', views.save_onboarding_answer, name='save_onboarding_answer'),   
     path('check-onboarding-completed/', views.check_onboarding_completed, name='check_onboarding_completed'),
-
+    path('save_memos/', views.view_save_memo, name='save_memos'),
+    path('delete_memo/<int:memo_id>/', views.view_delete_memo, name="delete_memo"),
+    path("save_feedback/", views.view_save_feedback, name="save_feedback"),
+    
     path('adm/adm_am_i_boring_questions', views.view_management_am_i_boring_questions, name='adm_am_i_boring_questions'),
     path('add_option_am_i_boring/', views.add_option_am_i_boring, name="add_option_am_i_boring"),
     path('delete_option_am_i_boring/<int:option_id>/', views.delete_option_am_i_boring, name="delete_option_am_i_boring"),

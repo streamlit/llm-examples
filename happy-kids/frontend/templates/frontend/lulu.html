@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="{% static 'frontend/css/lulu_styles.css' %}">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto&display=swap">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
 
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
@@ -39,9 +41,7 @@
                 <h1 id="step-title"></h1>
                 <p id="question-text"></p>
                 
-                <div id="answer-options" class="answer-options">
-                    <!-- As opções de resposta serão inseridas aqui dinamicamente -->
-                </div>
+                <div id="answer-options" class="answer-options"></div>
             
                 <div class="onboarding-buttons">
                     <button class="skip" onclick="hideOnboarding()">Skip</button>
@@ -88,7 +88,6 @@
             .then(response => response.json())
             .then(data => {
                 if (data.onboarding_completed) {
-                    // Se o onboarding foi completado, esconder o botão "Iniciar Onboarding"
                     document.getElementById("button-container").style.display = "none";
                     document.getElementById("chat-container").style.display = "flex";
                 } else {
@@ -97,13 +96,11 @@
             })
             .catch(error => console.error("Erro ao verificar onboarding:", error));
 
-        // Função para mostrar o container de onboarding
         document.getElementById("start-onboarding").addEventListener("click", function() {
             document.getElementById("onboarding-container").style.display = "block";
             document.getElementById("button-container").style.display = "none";
         });
     
-        // Função para esconder o container de onboarding (caso o usuário clique em "Pular")
         function hideOnboarding() {
             document.getElementById("onboarding-container").style.display = "none";
             document.getElementById("chat-container").style.display = "flex";
@@ -112,9 +109,8 @@
         let questions = [];
         let currentQuestionIndex = 0;
     
-        // Função para carregar as perguntas e opções
         document.getElementById("start-onboarding").addEventListener("click", function() {
-            fetch("/app/onboarding-data/")  // Endpoint que retorna as perguntas não respondidas
+            fetch("/app/onboarding-data/")
                 .then(response => response.json())
                 .then(data => {
                     questions = data.questions;
@@ -123,24 +119,21 @@
                         showQuestion();
                         document.getElementById("onboarding-container").style.display = "block";
                     } else {
-                        hideOnboarding();  // Se todas as perguntas foram respondidas, esconde o onboarding
+                        hideOnboarding();
                     }
                 })
                 .catch(error => console.error("Erro ao carregar onboarding:", error));
         });
     
-        // Função para exibir a pergunta e suas opções
         function showQuestion() {
             if (currentQuestionIndex < questions.length) {
                 const question = questions[currentQuestionIndex];
                 document.getElementById("step-title").textContent = `Step ${currentQuestionIndex + 1} of ${questions.length}`;
                 document.getElementById("question-text").textContent = question.question;
     
-                // Limpar opções anteriores
                 const answerOptionsContainer = document.getElementById("answer-options");
                 answerOptionsContainer.innerHTML = '';
     
-                // Verificar se existem opções para essa pergunta
                 if (question.options.length > 0) {
                     question.options.forEach(option => {
                         const optionButton = document.createElement('button');
@@ -150,14 +143,14 @@
                         answerOptionsContainer.appendChild(optionButton);
                     });
                 } else {
-                    // Caso não haja opções, adicionar um campo de texto
+
                     const textInput = document.createElement('input');
                     textInput.type = 'text';
                     textInput.placeholder = 'Digite sua resposta...';
-                    textInput.id = `text-answer-${question.id}`;  // Adicionar um ID único por pergunta
+                    textInput.id = `text-answer-${question.id}`;
                     textInput.addEventListener('keydown', function(event) {
-                        if (event.key === 'Enter') {  // Quando pressionar Enter
-                            handleTextAnswer(question.id);  // Salva a resposta e avança para a próxima
+                        if (event.key === 'Enter') { 
+                            handleTextAnswer(question.id);
                         }
                     });
                     answerOptionsContainer.appendChild(textInput);
@@ -167,37 +160,32 @@
             }
         }
     
-        // Função para avançar para a próxima pergunta
         function nextQuestion() {
             const currentQuestion = questions[currentQuestionIndex];
         
-            // Verificar se a pergunta atual é de resposta aberta (campo de texto)
             if (currentQuestion.options.length === 0) {
                 const textAnswer = document.getElementById(`text-answer-${currentQuestion.id}`);
                 if (textAnswer && textAnswer.value.trim() !== "") {
-                    handleTextAnswer(currentQuestion.id); // Salva a resposta antes de avançar
+                    handleTextAnswer(currentQuestion.id);
                 } else {
                     console.warn("Nenhuma resposta foi inserida!");
-                    return; // Impede que avance sem uma resposta
+                    return;
                 }
             } else {
-                currentQuestionIndex++; // Avança para a próxima pergunta
-                showQuestion(); // Exibe a próxima pergunta
+                currentQuestionIndex++;
+                showQuestion();
             }
         }
     
-        // Função para lidar com o clique nas opções
         function handleOptionClick(option, questionId) {
             console.log('Opção escolhida:', option);
             console.log('ID da Pergunta:', questionId);
     
-            // Preparar os dados para enviar ao backend
             const data = {
                 question_id: questionId,
                 answer: option
             };
     
-            // Enviar os dados via requisição POST para salvar no banco
             fetch("/app/save-onboarding-answer/", {
                 method: "POST",
                 headers: {
@@ -209,7 +197,7 @@
             .then(response => response.json())
             .then(result => {
                 console.log("Resposta salva com sucesso:", result);
-                // Avançar para a próxima pergunta
+
                 nextQuestion();
             })
             .catch(error => {
@@ -217,7 +205,6 @@
             });
         }
     
-        // Função para salvar a resposta de um campo de texto
         function handleTextAnswer(questionId) {
             const textAnswer = document.getElementById(`text-answer-${questionId}`).value.trim();
             
@@ -245,7 +232,7 @@
             .then(response => response.json())
             .then(result => {
                 console.log("Resposta salva com sucesso:", result);
-                currentQuestionIndex++; // Só avança após salvar no banco
+                currentQuestionIndex++;
                 showQuestion();
             })
             .catch(error => {
@@ -255,15 +242,12 @@
     </script>
 
     <!--Funções para Suggestions-->
-
-    
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             const form = document.getElementById("ai-form");
             const input = document.getElementById("question");
             const suggestions = document.querySelectorAll(".suggestion");
         
-            // Permitir envio com Enter no campo de input
             input.addEventListener("keydown", function (event) {
                 if (event.key === "Enter") {
                     event.preventDefault();
@@ -271,21 +255,19 @@
                 }
             });
         
-            // Permitir envio imediato ao clicar em uma sugestão
             suggestions.forEach(suggestion => {
                 suggestion.addEventListener("click", function () {
                     input.value = this.innerText;
-                    form.dispatchEvent(new Event("submit", { bubbles: true, cancelable: true })); // Envia automaticamente
+                    form.dispatchEvent(new Event("submit", { bubbles: true, cancelable: true }));
                 });
             });
         });
 
     </script>
 
-    
     <script>
         function hideSuggestions() {
-            fetch("{% url 'generate_suggestions' %}")  // Certifique-se de ter essa rota no urls.py
+            fetch("{% url 'generate_suggestions' %}")
                 .then(response => response.json())
                 .then(data => {
                     let suggestionsContainer = document.getElementById('quick-suggestions');
@@ -311,6 +293,7 @@
         
     </script>
 
+    <!--Funções para Chat-History-->
     <script>
         document.getElementById('ai-form').addEventListener('submit', async function(event) {
             event.preventDefault();
@@ -322,14 +305,12 @@
 
             if (question === "") return;
 
-            // Adiciona a pergunta do usuário ao chat
             const userMessage = document.createElement("div");
             userMessage.classList.add("message", "user-message");
             userMessage.innerText = question;
             chatHistory.appendChild(userMessage);
             questionInput.value = "";
 
-            // Scroll para a última mensagem
             chatHistory.scrollTop = chatHistory.scrollHeight;
 
             const form_data = new FormData();
@@ -343,15 +324,83 @@
 
                 const reader = response.body.getReader();
                 const decoder = new TextDecoder("utf-8");
+                
                 let botMessage = document.createElement("div");
                 botMessage.classList.add("message", "bot-message");
+
+                // Cria a div de opções do bot
+                let optionsDiv = document.createElement("div");
+                optionsDiv.classList.add("bot-message-options");
+                
+                // Botão de salvar com ícone de coração
+                let saveButton = document.createElement("button");
+                saveButton.classList.add("save-memo-btn");
+                saveButton.title = "Save as Memo";
+                saveButton.innerHTML = '<i class="fa-regular fa-heart"></i>'; 
+                optionsDiv.appendChild(saveButton);
+
+                // Botão de Like com ícone
+                let likeButton = document.createElement("button");
+                likeButton.classList.add("save-memo-btn");
+                likeButton.title = "Positive Feedback";
+                likeButton.innerHTML = '<i class="fa-regular fa-thumbs-up"></i>'; 
+                optionsDiv.appendChild(likeButton);
+                
+                // Botão de disLike com ícone
+                let dislikeButton = document.createElement("button");
+                dislikeButton.classList.add("save-memo-btn");
+                dislikeButton.title = "Negative Feedback";
+                dislikeButton.innerHTML = '<i class="fa-regular fa-thumbs-down"></i>'; 
+                optionsDiv.appendChild(dislikeButton);
+
+                let messageContent = document.createElement("div");
+                messageContent.classList.add("bot-message-content");
+
+                // Evento de clique que captura o conteúdo da resposta
+                saveButton.addEventListener("click", () => {
+                    const contentToSave = messageContent.innerText.trim();
+                
+                    if (saveButton.classList.contains("liked")) {
+                        removerMemo(saveButton.dataset.memoId, saveButton);
+                    } else {
+                        salvarMemo(contentToSave, saveButton);
+                    }
+                });
+
+                likeButton.addEventListener("click", () => {
+                    const userPrompt = question;
+                    const botMessage = messageContent.innerText.trim();
+                    sendFeedback(userPrompt, botMessage, "like");
+                
+                    if (likeButton.classList.contains("selected")) {
+                        updateFeedbackVisual(null, likeButton, dislikeButton);
+                    } else {
+                        updateFeedbackVisual("like", likeButton, dislikeButton);
+                    }
+                });
+
+                dislikeButton.addEventListener("click", () => {
+                    const userPrompt = question;
+                    const botMessage = messageContent.innerText.trim();
+                    sendFeedback(userPrompt, botMessage, "dislike");
+                
+                    if (dislikeButton.classList.contains("selected")) {
+                        updateFeedbackVisual(null, likeButton, dislikeButton);
+                    } else {
+                        updateFeedbackVisual("dislike", likeButton, dislikeButton);
+                    }
+                });
+
+                // Anexa as partes na ordem correta
+                botMessage.appendChild(messageContent);
+                botMessage.appendChild(optionsDiv);
                 chatHistory.appendChild(botMessage);    
 
                 // Processamento do streaming de resposta
                 function processStream({ done, value }) {
                     if (done) return;
-
-                    botMessage.innerHTML = marked.parse(botMessage.innerHTML + decoder.decode(value));
+                
+                    messageContent.innerHTML = marked.parse(messageContent.innerHTML + decoder.decode(value));
                     reader.read().then(processStream);
                 }
 
@@ -364,6 +413,69 @@
                 chatHistory.appendChild(errorMessage);
             }
         });
+
+        function salvarMemo(texto, button) {
+            fetch("{% url 'save_memos' %}", {
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": '{{ csrf_token }}'
+                },
+                body: new URLSearchParams({ message: texto })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === "ok") {
+                    button.classList.add("liked");
+                    button.dataset.memoId = data.memo_id;
+                }
+            })
+            .catch(err => console.error(err));
+        }
+
+        function removerMemo(memoId, button) {
+            fetch(`/app/delete_memo/${memoId}/`, {
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": '{{ csrf_token }}'
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === "ok") {
+                    button.classList.remove("liked");
+                    delete button.dataset.memoId;
+                }
+            })
+            .catch(err => console.error(err));
+        }
+
+        function sendFeedback(userPrompt, botMessage, feedbackType) {
+            fetch("/app/save_feedback/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": '{{ csrf_token }}'
+                },
+                body: JSON.stringify({
+                    user_prompt: userPrompt,
+                    bot_message: botMessage,
+                    feedback_type: feedbackType,
+                })
+            })
+            .then(res => res.json())
+            .catch(err => console.error("Erro ao enviar feedback:", err));
+        }
+
+        function updateFeedbackVisual(type, likeBtn, dislikeBtn) {
+            likeBtn.classList.remove("selected", "like");
+            dislikeBtn.classList.remove("selected", "dislike");
+        
+            if (type === "like") {
+                likeBtn.classList.add("selected", "like");
+            } else if (type === "dislike") {
+                dislikeBtn.classList.add("selected", "dislike");
+            }
+        }
 
     </script>
 
