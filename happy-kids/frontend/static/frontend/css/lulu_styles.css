@@ -57,7 +57,7 @@ body{
 .chat-history {
     overflow-y: auto !important;
     max-height: 60vh;
-    max-width: 80vw;
+    max-width: 70vw;
     padding-bottom: 10px;
     scrollbar-width: thin;
     scrollbar-color: #8d53ff transparent;
@@ -87,14 +87,14 @@ body{
     background-color: white;
     padding: 20px;
     border-radius: 20px;
-    min-width: 70vw;
-    max-width: 80vw;
+    min-width: 60vw;
+    max-width: 70vw;
     padding: 20px 35px;
 }
 
 .input-container {
-    width: 100%;
-    max-width: 640px;
+    width: 70vw;
+    max-width: 70vw;
     margin-top: 15px;
     display: flex;
     justify-content: center;
@@ -153,9 +153,7 @@ form {
     gap: 15px;
     justify-content: center;
     align-items: center;
-    top: 50%;
-    left: 50%;
-    width: 80%;
+    width: 70vw;
     text-align: center;
 }
 
@@ -176,7 +174,6 @@ form {
     cursor: pointer;
     font-size: 14px;
     transition: background 0.3s;
-    white-space: nowrap;
 }
 
 .suggestion:hover,
@@ -629,6 +626,18 @@ button.selected.dislike i {
         flex-direction: column;
         align-items: center;
         gap: 10px;
+    }
+
+    .input-container {
+        width: 90vw;
+        max-width: 90vw;
+        
+    }
+
+    .quick-suggestions {
+        width: 90vw;
+        max-width: 90vw;
+        
     }
 
     .timeline {
