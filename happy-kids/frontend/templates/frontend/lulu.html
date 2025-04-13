@@ -71,7 +71,7 @@
             
                 <div class="input-container">
                     <form id="ai-form" method="POST" onsubmit="hideSuggestions()">
-                        <input type="text" id="question" name="question" placeholder="Type your message..." required />
+                        <textarea id="question" name="question" placeholder="Type your message..." rows="1" required></textarea>
                         <button id="send-button">
                             <span>&#8594;</span> 
                         </button>
@@ -146,7 +146,7 @@
 
                     const textInput = document.createElement('input');
                     textInput.type = 'text';
-                    textInput.placeholder = 'Digite sua resposta...';
+                    textInput.placeholder = 'Enter your answer...';
                     textInput.id = `text-answer-${question.id}`;
                     textInput.addEventListener('keydown', function(event) {
                         if (event.key === 'Enter') { 
@@ -168,7 +168,7 @@
                 if (textAnswer && textAnswer.value.trim() !== "") {
                     handleTextAnswer(currentQuestion.id);
                 } else {
-                    console.warn("Nenhuma resposta foi inserida!");
+                    console.warn("No answer has been entered!");
                     return;
                 }
             } else {
@@ -247,6 +247,19 @@
             const form = document.getElementById("ai-form");
             const input = document.getElementById("question");
             const suggestions = document.querySelectorAll(".suggestion");
+            const textarea = document.getElementById("question");
+
+            textarea.addEventListener("input", () => {
+                textarea.style.height = "auto"; // reset altura
+                textarea.style.height = (textarea.scrollHeight) + "px"; // ajusta à nova altura
+            });
+
+            textarea.addEventListener("keydown", function (event) {
+                if (event.key === "Enter" && !event.shiftKey) {
+                    event.preventDefault();
+                    document.getElementById("ai-form").dispatchEvent(new Event("submit", { bubbles: true, cancelable: true }));
+                }
+            });
         
             input.addEventListener("keydown", function (event) {
                 if (event.key === "Enter") {
