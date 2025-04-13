@@ -133,10 +133,6 @@ def view_lulu(request):
 
 ######################### Memos andd Feedback #########################
 @login_required
-def view_chat_memos(request):
-    return render(request, 'chat_memos.html')
-
-@login_required
 def view_save_memo(request):
     if request.method == "POST":
         texto = request.POST.get("message")
@@ -156,9 +152,9 @@ def view_delete_memo(request, memo_id):
     return JsonResponse({"status": "error"}, status=405)
 
 @login_required
-def view_list_memos(request):
-    memos = models.facts_memos.objects.filter(user=request.user).order_by("-created_at")
-    return render(request, "memos.html", {"memos": memos})
+def view_chat_memos(request):
+    memos = models.facts_memos.objects.filter(user=request.user).order_by("-datetime")
+    return render(request, "chat_memos.html", {"memos": memos})
 
 @login_required
 def view_chat_memory(request):

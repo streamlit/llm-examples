@@ -57,7 +57,8 @@ body{
 .chat-history {
     overflow-y: auto !important;
     max-height: 60vh;
-    max-width: 70vw;
+    width: 60vw;
+    max-width: 900px;
     padding-bottom: 10px;
     scrollbar-width: thin;
     scrollbar-color: #8d53ff transparent;
@@ -87,14 +88,14 @@ body{
     background-color: white;
     padding: 20px;
     border-radius: 20px;
-    min-width: 60vw;
-    max-width: 70vw;
+    width: 50vw;
+    max-width: 800px;
     padding: 20px 35px;
 }
 
 .input-container {
-    width: 70vw;
-    max-width: 70vw;
+    width: 60vw;
+    max-width: 900px;
     margin-top: 15px;
     display: flex;
     justify-content: center;
@@ -115,6 +116,7 @@ form {
     outline: none;
     transition: all 0.3s ease;
     box-sizing: border-box; 
+    overflow: hidden;
 }
 
 #question:focus {
@@ -153,7 +155,8 @@ form {
     gap: 15px;
     justify-content: center;
     align-items: center;
-    width: 70vw;
+    width: 60vw;
+    max-width: 900px;
     text-align: center;
 }
 
@@ -233,15 +236,6 @@ form {
     display: none;
 }
 
-
-
-
-
-
-
-
-
-
 .bot-message table {
     width: 100%;
     border-collapse: collapse;
@@ -258,8 +252,6 @@ form {
     background-color: #f2f2f2;
     font-weight: bold;
 }
-
-
 
 .img-lulu-onboarding{
     max-width: 25%;
@@ -395,8 +387,6 @@ form {
     box-shadow: 0 0 5px rgba(135, 97, 252, 0.4);
 }
 
-
-/* Container geral */
 .diary-container {
     display: flex;
     flex-direction: column;
@@ -407,7 +397,6 @@ form {
     padding: 20px;
 }
 
-/* Título */
 .diary-container h1 {
     font-size: 38px;
     font-weight: bold;
@@ -418,7 +407,6 @@ form {
     text-align: center;
 }
 
-/* Layout principal */
 .diary-history {
     display: flex;
     flex-direction: row;
@@ -439,7 +427,6 @@ form {
     height: 100%;
 }
 
-/* Menu lateral */
 .diary-menu {
     display: flex;
     flex-direction: column;
@@ -452,7 +439,6 @@ form {
     scrollbar-color: #8d53ff transparent;
 }
 
-/* Entradas no menu */
 .diary-entry {
     background: #fff;
     border-radius: 10px;
@@ -479,7 +465,6 @@ form {
     transform: translateY(-50%);
 }
 
-/* Área de exibição das entradas */
 .diary-entries {
     flex-grow: 1;
     max-width: 70%;
@@ -491,7 +476,6 @@ form {
     scrollbar-color: #f4f4f4 transparent;
 }
 
-/* Detalhes do diário */
 .diary-entry-detail {
     background: #fff;
     border-radius: 10px;
@@ -506,7 +490,6 @@ form {
     box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
 }
 
-/* Títulos e texto */
 .diary-entry-detail h2 {
     color: #3498db;
     font-size: 1.5em;
@@ -523,7 +506,6 @@ form {
     line-height: 1.6;
 }
 
-/* Botão para abrir o formulário */
 .new-entry {
     display: flex;
     justify-content: center;
@@ -547,7 +529,6 @@ form {
     background: #6a3dc9;
 }
 
-/* Formulário de nova entrada */
 #diary-form {
     display: none;
     background: white;
@@ -572,7 +553,6 @@ form {
     max-width: 100%;
 } 
 
-/* Memos and feedbacks */
 .bot-message-options {
     display: flex;
     justify-content: flex-end;
@@ -612,15 +592,72 @@ form {
 }
 
 button.selected.like i {
-    color: #2ecc71; /* Verde para like */
+    color: #2ecc71; 
 }
 
 button.selected.dislike i {
-    color: #c4891c; /* Vermelho para dislike */
+    color: #c4891c; 
 }
 
+/*Telas Default*/
 
-/* Responsividade para tablets */
+.class-container{
+    display: flex;
+    flex-direction: column;
+    width: 50vw;
+    max-width: 900px;
+    margin: auto;
+}
+
+.class-page-title {
+    gap: 10px;
+    width: 100%;
+    align-items: baseline;
+    display: flex;
+    flex-direction: row;
+}
+
+.class-tag-buttons{
+    width: 100%;
+    margin: 10px;
+}
+
+.class-tag-buttons .tag-suggestion {
+    background-color: #f1f1f1;
+    border: 1px solid #3498db;
+    padding: 6px 18px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.3s;
+}
+
+.class-page-content {
+    overflow-y: auto !important;
+    max-height: 70vh;
+    max-width: 900px;
+    padding-bottom: 10px;
+    scrollbar-width: thin;
+    scrollbar-color: #f4f4f4 transparent;
+}
+
+.memos-message {
+    text-align: right;
+    padding: 20px;
+    border-radius: 20px;
+    min-width: 70%;
+    margin: 20px;
+    background-color: #fafafa;
+}
+
+.class-container img{
+    height: 5vh;
+    min-width: 24px;
+    color: #333;
+}   
+
+
+
 @media (max-width: 1024px) {
     .diary-history {
         flex-direction: column;
@@ -667,7 +704,6 @@ button.selected.dislike i {
     }
 }
 
-/* Responsividade para celulares */
 @media (max-width: 768px) {
     .diary-container {
         padding: 10px;
