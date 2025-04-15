@@ -30,5 +30,8 @@ if uploaded_file and question:
         messages=[{"role": "user", "content": prompt}],
         temperature=0.7,
         stream=False,  # Make sure streaming is disabled
+        extra_headers={
+            "X-TFY-METADATA": '{"tfy_log_request":"true"}',
+        },
     )
     st.write(response.choices[0].message.content)
