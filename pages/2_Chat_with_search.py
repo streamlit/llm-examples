@@ -1,15 +1,15 @@
-import streamlit as st
+import os
 
-from langchain.agents import initialize_agent, AgentType
+import streamlit as st
+from langchain.agents import AgentType, initialize_agent
 from langchain.callbacks import StreamlitCallbackHandler
 from langchain.chat_models import ChatOpenAI
 from langchain.tools import DuckDuckGoSearchRun
 
+API_KEY = os.getenv("API_KEY")
+BASE_URL = os.getenv("API_BASE", "https://api.openai.com/v1")
+LLM_MODEL_NAME = os.getenv("LLM_MODEL_NAME", "gpt-3.5-turbo")
 with st.sidebar:
-    openai_api_key = st.text_input(
-        "OpenAI API Key", key="langchain_search_api_key_openai", type="password"
-    )
-    "[Get an OpenAI API key](https://platform.openai.com/account/api-keys)"
     "[View the source code](https://github.com/streamlit/llm-examples/blob/main/pages/2_Chat_with_search.py)"
     "[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/streamlit/llm-examples?quickstart=1)"
 
@@ -32,11 +32,15 @@ if prompt := st.chat_input(placeholder="Who won the Women's U.S. Open in 2018?")
     st.session_state.messages.append({"role": "user", "content": prompt})
     st.chat_message("user").write(prompt)
 
-    if not openai_api_key:
-        st.info("Please add your OpenAI API key to continue.")
-        st.stop()
-
-    llm = ChatOpenAI(model_name="gpt-3.5-turbo", openai_api_key=openai_api_key, streaming=True)
+    llm = ChatOpenAI(
+        model_name=LLM_MODEL_NAME,
+        api_key=API_KEY,
+        base_url=BASE_URL,
+        streaming=True,
+        extra_headers={
+            "X-TFY-METADATA": '{"tfy_log_request":"true"}',
+        },
+    )
     search = DuckDuckGoSearchRun(name="Search")
     search_agent = initialize_agent(
         [search], llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, handle_parsing_errors=True
