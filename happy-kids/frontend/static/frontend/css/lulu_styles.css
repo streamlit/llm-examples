@@ -117,6 +117,7 @@ form {
     transition: all 0.3s ease;
     box-sizing: border-box; 
     overflow: hidden;
+    font-family: 'Poppins', sans-serif;
 }
 
 #question:focus {
@@ -655,6 +656,12 @@ button.selected.dislike i {
     min-width: 24px;
     color: #333;
 }   
+
+.memos-message h5{
+    color: #b9b9b9;
+    font-weight: normal;
+    padding-top: 10px;
+}
 
 
 

@@ -188,11 +188,9 @@ def view_save_feedback(request):
 
         if existing_feedback:
             if existing_feedback.feedback_type == feedback_type:
-                # Mesmo tipo já selecionado → remover (toggle off)
                 existing_feedback.delete()
                 return JsonResponse({"status": "removed"})
             else:
-                # Tipo diferente → substituir
                 existing_feedback.feedback_type = feedback_type
                 existing_feedback.save()
                 return JsonResponse({"status": "updated"})
@@ -385,7 +383,21 @@ def generate_suggestions(request):
     user_id = request.user.id
 
     recent_messages = models.chat_memories.objects.filter(user_id=user_id).order_by('-id')[:3]
-    messages = [{"role": "system", "content": "You are a helpful assistant that suggests quick questions based on the conversation."}]
+    system_prompt = (
+        "You are a smart assistant responsible for generating follow-up short question suggestions, max 12 tokens."
+        "based on the conversation between the user and an AI assistant named Lulu.\n\n"
+        "Your goal is to suggest 3 to 5 natural, context-aware questions the user might ask Lulu about himself next. These questions should:\n"
+        "- Be relevant to the conversation history provided.\n"
+        "- Feel natural, informal, and curious — as if coming from the user to learn or go deeper into the subject, always with the user as the focus.\n"
+        "- Encourage the continuation or deepening of the conversation.\n\n"
+        "Use the conversation history to generate your suggestions."
+    )
+    messages = [
+        {
+            "role": "system", 
+            "content": system_prompt
+        }
+    ]
 
     for msg in reversed(recent_messages):
         messages.append({"role": "user", "content": msg.user_message})
@@ -401,9 +413,9 @@ def generate_suggestions(request):
                 "content": "Generate a short question suggestion to continue this conversation, maintaining the context of the dialogue and the just use english language. Just return the question."
             }
         ],
-        max_tokens=8,
-        temperature = 1.2,
-        n=3 
+        max_tokens=12,
+        temperature = 1.4,
+        n=3
     )
 
     suggestions = [choice.message.content.strip() for choice in response.choices]
