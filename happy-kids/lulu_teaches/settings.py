@@ -105,11 +105,7 @@ WSGI_APPLICATION = 'lulu_teaches.wsgi.application'
 
 CACHES = {
     "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": REDIS_URL, 
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
-        }
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache"
     }
 }
 

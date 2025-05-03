@@ -1,4 +1,4 @@
-from .utils import get_short_term_memory, save_short_term_memory
+from .utils import get_short_term_memory
 from .forms import *
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
@@ -122,8 +122,6 @@ def view_lulu(request):
 
             yield response_text_html 
 
-        save_short_term_memory(user_id, question)
-
         response_server = StreamingHttpResponse(stream_gpt(), content_type="text/html; charset=utf-8")
         response_server['Cache-Control'] = 'no-cache'
         response_server['X-Accel-Buffering'] = 'no'
@@ -131,7 +129,7 @@ def view_lulu(request):
         return response_server
 
 
-######################### Memos andd Feedback #########################
+######################### Memos and Feedback #########################
 @login_required
 def view_save_memo(request):
     if request.method == "POST":
@@ -387,9 +385,16 @@ def generate_suggestions(request):
         "You are a smart assistant responsible for generating follow-up short question suggestions, max 12 tokens."
         "based on the conversation between the user and an AI assistant named Lulu.\n\n"
         "Your goal is to suggest 3 to 5 natural, context-aware questions the user might ask Lulu about himself next. These questions should:\n"
-        "- Be relevant to the conversation history provided.\n"
+        "- Be written **from the user's perspective**, as if the user is talking about their own life, needs, problems, or interests.\n"
+        "- Focus on the user's goals, doubts, and context — **not about Lulu or her experiences**.\n"
+        "- Use natural, informal, curious phrasing (e.g. 'How can I...', 'What should I do if...', 'Can you help me with...').\n"
         "- Feel natural, informal, and curious — as if coming from the user to learn or go deeper into the subject, always with the user as the focus.\n"
+        "- Be relevant to the conversation history provided.\n"
+        "- Be safe and appropriate for a general-purpose assistant.\n\n"
         "- Encourage the continuation or deepening of the conversation.\n\n"
+        "IMPORTANT: Do NOT generate questions that are:\n"
+        "- Sexual, explicit, flirtatious, discriminatory, or offensive\n"
+        "- About politics, religion, or medical advice\n\n"
         "Use the conversation history to generate your suggestions."
     )
     messages = [
