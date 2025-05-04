@@ -1,40 +1,25 @@
-import redis
 import json
 import os
 from google.cloud import storage
-
-REDIS_HOST = os.getenv("REDIS_HOST", "redis")  # Usa "redis" se a variável não estiver definida
-REDIS_PORT = int(os.getenv("REDIS_PORT", 6379))
-# Conectar ao Redis
-redis_client = redis.StrictRedis(host=REDIS_HOST, port=REDIS_PORT, db=1, decode_responses=True)
-
-def save_short_term_memory(user_id, message):
-    """Armazena a memória de curto prazo no Redis (expira em 10 minutos)."""
-    key = f"user:{user_id}:memory"
-    
-    # Recupera mensagens anteriores
-    history = redis_client.lrange(key, 0, -1)
-
-    # Adiciona a nova mensagem no histórico
-    history.append(json.dumps({"message": message}))
-    
-    # Mantém apenas as últimas 5 mensagens
-    if len(history) > 5:
-        history.pop(0)
-
-    # Salva no Redis com tempo de expiração de 10 minutos
-    redis_client.delete(key)  # Remove a chave antiga
-    redis_client.rpush(key, *history)  # Insere a lista atualizada
-    redis_client.expire(key, 600)  # Expira em 10 minutos
-
-    return True
+from django.utils import timezone
+from datetime import timedelta
+from api import models
 
 def get_short_term_memory(user_id):
-    """Recupera a memória de curto prazo do Redis."""
-    key = f"user:{user_id}:memory"
-    history = redis_client.lrange(key, 0, -1)
+    """Recupera a memória de curto prazo do banco de dados."""
+    time_threshold = timezone.now() - timedelta(minutes=30)
+    
+    # Filtra as últimas 20 interações do usuário nos últimos 30 minutos
+    conversations = (
+        models.chat_memories.objects
+        .filter(user_id=user_id, date_time__gte=time_threshold)
+        .order_by('-date_time')[:20]
+    )
 
-    # Decodifica os JSONs armazenados
-    messages = [json.loads(msg)["message"] for msg in history]
+    # Extrai apenas as mensagens
+    messages = [
+        f"User: {conv.user_message}\nChat: {conv.chat_message}"
+        for conv in conversations
+    ]
     
     return messages

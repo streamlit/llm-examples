@@ -1,4 +1,4 @@
-from .utils import get_short_term_memory, save_short_term_memory
+from .utils import get_short_term_memory
 from .forms import *
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
@@ -13,6 +13,8 @@ import openai
 import os
 import json
 import markdown
+from django.db.models.functions import TruncDate
+from django.db.models import Count
 
 # Create your views here.
 @login_required
@@ -122,8 +124,6 @@ def view_lulu(request):
 
             yield response_text_html 
 
-        save_short_term_memory(user_id, question)
-
         response_server = StreamingHttpResponse(stream_gpt(), content_type="text/html; charset=utf-8")
         response_server['Cache-Control'] = 'no-cache'
         response_server['X-Accel-Buffering'] = 'no'
@@ -131,7 +131,7 @@ def view_lulu(request):
         return response_server
 
 
-######################### Memos andd Feedback #########################
+######################### Memos and Feedback #########################
 @login_required
 def view_save_memo(request):
     if request.method == "POST":
@@ -188,11 +188,9 @@ def view_save_feedback(request):
 
         if existing_feedback:
             if existing_feedback.feedback_type == feedback_type:
-                # Mesmo tipo já selecionado → remover (toggle off)
                 existing_feedback.delete()
                 return JsonResponse({"status": "removed"})
             else:
-                # Tipo diferente → substituir
                 existing_feedback.feedback_type = feedback_type
                 existing_feedback.save()
                 return JsonResponse({"status": "updated"})
@@ -385,7 +383,28 @@ def generate_suggestions(request):
     user_id = request.user.id
 
     recent_messages = models.chat_memories.objects.filter(user_id=user_id).order_by('-id')[:3]
-    messages = [{"role": "system", "content": "You are a helpful assistant that suggests quick questions based on the conversation."}]
+    system_prompt = (
+        "You are a smart assistant responsible for generating follow-up short question suggestions, max 12 tokens."
+        "based on the conversation between the user and an AI assistant named Lulu.\n\n"
+        "Your goal is to suggest 3 to 5 natural, context-aware questions the user might ask Lulu about himself next. These questions should:\n"
+        "- Be written **from the user's perspective**, as if the user is talking about their own life, needs, problems, or interests.\n"
+        "- Focus on the user's goals, doubts, and context — **not about Lulu or her experiences**.\n"
+        "- Use natural, informal, curious phrasing (e.g. 'How can I...', 'What should I do if...', 'Can you help me with...').\n"
+        "- Feel natural, informal, and curious — as if coming from the user to learn or go deeper into the subject, always with the user as the focus.\n"
+        "- Be relevant to the conversation history provided.\n"
+        "- Be safe and appropriate for a general-purpose assistant.\n\n"
+        "- Encourage the continuation or deepening of the conversation.\n\n"
+        "IMPORTANT: Do NOT generate questions that are:\n"
+        "- Sexual, explicit, flirtatious, discriminatory, or offensive\n"
+        "- About politics, religion, or medical advice\n\n"
+        "Use the conversation history to generate your suggestions."
+    )
+    messages = [
+        {
+            "role": "system", 
+            "content": system_prompt
+        }
+    ]
 
     for msg in reversed(recent_messages):
         messages.append({"role": "user", "content": msg.user_message})
@@ -401,9 +420,9 @@ def generate_suggestions(request):
                 "content": "Generate a short question suggestion to continue this conversation, maintaining the context of the dialogue and the just use english language. Just return the question."
             }
         ],
-        max_tokens=8,
-        temperature = 1.2,
-        n=3 
+        max_tokens=12,
+        temperature = 1.4,
+        n=3
     )
 
     suggestions = [choice.message.content.strip() for choice in response.choices]
@@ -536,3 +555,117 @@ def save_am_i_boring_answer(request):
             return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
 
     return JsonResponse({'status': 'error', 'message': 'Método não permitido.'}, status=405)
+
+
+###### Dashboards #####
+
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from django.db.models import Count, Q
+from django.db.models.functions import TruncDate
+
+@login_required
+def dashboard_view(request):
+    
+    # --- CHAT ---
+    chat_per_day = (
+        models.chat_memories.objects
+        .annotate(date=TruncDate('date_time'))
+        .values('date')
+        .annotate(count=Count('id'))
+        .order_by('date')
+    )
+    chat_dates = [str(r['date']) for r in chat_per_day]
+    chat_counts = [r['count'] for r in chat_per_day]
+
+    top_users_chat = (
+        models.chat_memories.objects
+        .values('user_id')
+        .annotate(count=Count('id'))
+        .order_by('-count')[:5]
+    )
+    top_usernames = []
+    top_user_counts = []
+    from django.contrib.auth.models import User
+    for u in top_users_chat:
+        user = User.objects.get(id=u['user_id'])
+        top_usernames.append(user.username)
+        top_user_counts.append(u['count'])
+
+    total_messages = models.chat_memories.objects.count()
+
+    # --- ONBOARDING ---
+    total_questions = models.chat_dim_onboarding_questions.objects.filter(active=True).count()
+    total_users = User.objects.count()
+    completed_users = 0
+    for user in User.objects.all():
+        answered = models.chat_facts_onboarding_answers.objects.filter(user=user).count()
+        if answered >= total_questions:
+            completed_users += 1
+    onboarding_completion = round((completed_users / total_users) * 100 if total_users > 0 else 0, 2)
+
+    answers_count = (
+        models.chat_facts_onboarding_answers.objects
+        .values('question__question')
+        .annotate(count=Count('id'))
+    )
+    onboarding_questions = [r['question__question'] for r in answers_count]
+    onboarding_counts = [r['count'] for r in answers_count]
+
+    # --- FEEDBACK ---
+    feedbacks = (
+        models.chat_facts_feedback.objects
+        .values('feedback_type')
+        .annotate(count=Count('id'))
+    )
+    likes = next((f['count'] for f in feedbacks if f['feedback_type'] == 'like'), 0)
+    dislikes = next((f['count'] for f in feedbacks if f['feedback_type'] == 'dislike'), 0)
+    total_feedbacks = likes + dislikes
+    
+    
+
+    reasons = (
+        models.chat_facts_feedback.objects
+        .filter(feedback_type='dislike')
+        .values('reason')
+        .annotate(count=Count('id'))
+        .order_by('-count')[:5]
+    )
+    reasons_texts = [r['reason'] or "Sem motivo" for r in reasons]
+    reasons_counts = [r['count'] for r in reasons]
+
+    unique_users = (
+    models.chat_memories.objects
+    .annotate(date=TruncDate('date_time'))
+    .values('date')
+    .annotate(unique_count=Count('user_id', distinct=True))
+    .order_by('date')
+    )
+
+    unique_user_dates = [str(u['date']) for u in unique_users]
+    unique_user_counts = [u['unique_count'] for u in unique_users]
+
+    return render(request, 'dashboard.html', {
+        # Chat
+        'chat_dates_json': json.dumps(chat_dates),
+        'chat_counts_json': json.dumps(chat_counts),
+        'top_usernames_json': json.dumps(top_usernames),
+        'top_user_counts_json': json.dumps(top_user_counts),
+        'total_messages': total_messages,
+
+        # Onboarding
+        'onboarding_completion': onboarding_completion,
+        'onboarding_questions_json': json.dumps(onboarding_questions),
+        'onboarding_counts_json': json.dumps(onboarding_counts),
+
+        # Feedback
+        'likes': likes,
+        'dislikes': dislikes,
+        'total_feedbacks': total_feedbacks,
+        'reasons_texts_json': json.dumps(reasons_texts),
+        'reasons_counts_json': json.dumps(reasons_counts),
+
+        'unique_user_dates_json': json.dumps(unique_user_dates),
+        'unique_user_counts_json': json.dumps(unique_user_counts),
+    })
+

@@ -47,7 +47,12 @@
             <li class="{% if '/app/adm/' in request.path %}selected{% endif %}">
                 <a href="/app/adm/users_page"><i class="fas fa-user-shield"></i> <span>Adm</span></a>
             </li>
+        
+            <li class="{% if request.path == '/app/dashboard' %}selected{% endif %}">
+                <a href="/app/dashboard"><i class="fa-regular fa-chart-bar"></i></i> <span>Dashboard</span></a>
+            </li>
         {% endif %}
+
         <li class="{% if request.path == '/accounts/logout/' %}selected{% endif %}">
             <a href="/accounts/logout/"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a>
         </li>

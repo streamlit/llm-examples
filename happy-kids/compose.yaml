@@ -21,15 +21,6 @@ services:
      - postgres_data:/var/lib/postgresql/data
    env_file:
      - .env
-  
- redis:
-   image: redis:latest
-   container_name: redis_cache
-   restart: always
-   ports:
-     - "6379:6379"
-   volumes:
-     - redis_data:/data
  
  django-web:
    build: .
@@ -48,8 +39,6 @@ services:
      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
      DATABASE_HOST: ${DATABASE_HOST}
      DATABASE_PORT: ${DATABASE_PORT}
-     REDIS_HOST: redis
-     REDIS_PORT: 6379
      GOOGLE_APPLICATION_CREDENTIALS: /run/secrets/gcp_credentials
    secrets:
      - gcp_credentials
@@ -57,7 +46,6 @@ services:
      - .env
 volumes:
    postgres_data:
-   redis_data:
 
 secrets:
   gcp_credentials:
