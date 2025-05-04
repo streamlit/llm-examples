@@ -52,3 +52,21 @@ a {
     border: 2px solid #8761fc;
     background: white;
 }
+
+.class-page-title {
+    gap: 10px;
+    width: 100%;
+    align-items: baseline;
+    display: flex;
+    flex-direction: row;
+}
+
+.class-page-title h1{
+    margin: 20px;
+    font-size: 38px;
+    font-weight: bold;
+    background: linear-gradient(to right, #8d53ff, #5ddee6); 
+    -webkit-background-clip: text;
+    color: transparent;
+    font-family: 'Poppins', sans-serif;
+}
