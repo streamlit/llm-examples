@@ -13,6 +13,8 @@ import openai
 import os
 import json
 import markdown
+from django.db.models.functions import TruncDate
+from django.db.models import Count
 
 # Create your views here.
 @login_required
@@ -553,3 +555,117 @@ def save_am_i_boring_answer(request):
             return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
 
     return JsonResponse({'status': 'error', 'message': 'Método não permitido.'}, status=405)
+
+
+###### Dashboards #####
+
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from django.db.models import Count, Q
+from django.db.models.functions import TruncDate
+
+@login_required
+def dashboard_view(request):
+    
+    # --- CHAT ---
+    chat_per_day = (
+        models.chat_memories.objects
+        .annotate(date=TruncDate('date_time'))
+        .values('date')
+        .annotate(count=Count('id'))
+        .order_by('date')
+    )
+    chat_dates = [str(r['date']) for r in chat_per_day]
+    chat_counts = [r['count'] for r in chat_per_day]
+
+    top_users_chat = (
+        models.chat_memories.objects
+        .values('user_id')
+        .annotate(count=Count('id'))
+        .order_by('-count')[:5]
+    )
+    top_usernames = []
+    top_user_counts = []
+    from django.contrib.auth.models import User
+    for u in top_users_chat:
+        user = User.objects.get(id=u['user_id'])
+        top_usernames.append(user.username)
+        top_user_counts.append(u['count'])
+
+    total_messages = models.chat_memories.objects.count()
+
+    # --- ONBOARDING ---
+    total_questions = models.chat_dim_onboarding_questions.objects.filter(active=True).count()
+    total_users = User.objects.count()
+    completed_users = 0
+    for user in User.objects.all():
+        answered = models.chat_facts_onboarding_answers.objects.filter(user=user).count()
+        if answered >= total_questions:
+            completed_users += 1
+    onboarding_completion = round((completed_users / total_users) * 100 if total_users > 0 else 0, 2)
+
+    answers_count = (
+        models.chat_facts_onboarding_answers.objects
+        .values('question__question')
+        .annotate(count=Count('id'))
+    )
+    onboarding_questions = [r['question__question'] for r in answers_count]
+    onboarding_counts = [r['count'] for r in answers_count]
+
+    # --- FEEDBACK ---
+    feedbacks = (
+        models.chat_facts_feedback.objects
+        .values('feedback_type')
+        .annotate(count=Count('id'))
+    )
+    likes = next((f['count'] for f in feedbacks if f['feedback_type'] == 'like'), 0)
+    dislikes = next((f['count'] for f in feedbacks if f['feedback_type'] == 'dislike'), 0)
+    total_feedbacks = likes + dislikes
+    
+    
+
+    reasons = (
+        models.chat_facts_feedback.objects
+        .filter(feedback_type='dislike')
+        .values('reason')
+        .annotate(count=Count('id'))
+        .order_by('-count')[:5]
+    )
+    reasons_texts = [r['reason'] or "Sem motivo" for r in reasons]
+    reasons_counts = [r['count'] for r in reasons]
+
+    unique_users = (
+    models.chat_memories.objects
+    .annotate(date=TruncDate('date_time'))
+    .values('date')
+    .annotate(unique_count=Count('user_id', distinct=True))
+    .order_by('date')
+    )
+
+    unique_user_dates = [str(u['date']) for u in unique_users]
+    unique_user_counts = [u['unique_count'] for u in unique_users]
+
+    return render(request, 'dashboard.html', {
+        # Chat
+        'chat_dates_json': json.dumps(chat_dates),
+        'chat_counts_json': json.dumps(chat_counts),
+        'top_usernames_json': json.dumps(top_usernames),
+        'top_user_counts_json': json.dumps(top_user_counts),
+        'total_messages': total_messages,
+
+        # Onboarding
+        'onboarding_completion': onboarding_completion,
+        'onboarding_questions_json': json.dumps(onboarding_questions),
+        'onboarding_counts_json': json.dumps(onboarding_counts),
+
+        # Feedback
+        'likes': likes,
+        'dislikes': dislikes,
+        'total_feedbacks': total_feedbacks,
+        'reasons_texts_json': json.dumps(reasons_texts),
+        'reasons_counts_json': json.dumps(reasons_counts),
+
+        'unique_user_dates_json': json.dumps(unique_user_dates),
+        'unique_user_counts_json': json.dumps(unique_user_counts),
+    })
+

@@ -1,0 +1,133 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="{% static 'frontend/img/logo_happy_kids.png' %}">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="{% static 'frontend/css/lulu_styles.css' %}">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+<div class="container">
+    {% include 'sidebar.html' %}
+    <main class="content">
+        {% include 'header.html' %}
+
+        <!-- TÍTULO DA PÁGINA -->
+        <div class="class-container-horizontal">
+            <div class="class-page-title">
+                        
+                <h1> Dashboard </h1> 
+                <a>to remember </a>
+            
+            </div>
+
+            <div class="dashboard-grid" style="width: 100%; max-width: 100%; margin: 0 auto; padding: 20px;">
+                <div class="dashboard-card">
+                    <h3>Mensagens por Dia</h3>
+                    <div id="chat-messages-graph" style="height:300px; width: 100%;"></div>
+                </div>
+
+                <div class="dashboard-card">
+                    <h3>Usuários Únicos por Dia</h3>
+                    <div id="unique-users-graph" style="height:300px; width: 100%;"></div>
+                </div>
+
+                <div class="dashboard-card">
+                    <h3>Top 5 Usuários</h3>
+                    <div id="top-users-graph" style="height:300px; width: 100%;"></div>
+                </div>
+
+                <div class="dashboard-card">
+                    <h3>Feedback Like/Dislike</h3>
+                    <div id="feedback-pie" style="height:300px; width: 100%;"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script>
+    const plotConfig = {
+        responsive: true,
+        displaylogo: false,
+        displayModeBar: true // ou 'hover' se quiser só ao passar o mouse
+    };
+
+    // Paleta personalizada mais próxima do CSS da aplicação
+    const customLayout = {
+        paper_bgcolor: "#faf8ff",   // fundo lilás super claro
+        plot_bgcolor: "#ffffff",    // fundo interno branco
+        font: {color: "#4a2d7c"},   // roxo institucional
+        xaxis: {
+            gridcolor: '#ddd',
+            zerolinecolor: '#ccc',
+            titlefont: {color: '#4a2d7c'},
+            tickfont: {color: '#4a2d7c'}
+        },
+        yaxis: {
+            gridcolor: '#ddd',
+            zerolinecolor: '#ccc',
+            titlefont: {color: '#4a2d7c'},
+            tickfont: {color: '#4a2d7c'}
+        },
+        legend: {font: {color: "#4a2d7c"}},
+        title: {font: {color: "#4a2d7c"}}
+    };
+
+    // Dados vindos do Django
+    const chatDates = {{ chat_dates_json|safe }};
+    const minDate = chatDates.length > 0 ? chatDates[0] : null;
+
+    // Mensagens por dia
+    Plotly.newPlot('chat-messages-graph', [{
+        x: chatDates,
+        y: {{ chat_counts_json|safe }},
+        type: 'scatter',
+        mode: 'lines+markers',
+        marker: {color: '#8c30f5'} // roxo vibrante
+    }], Object.assign({}, customLayout, {
+        title: 'Mensagens por Dia',
+        xaxis: Object.assign({}, customLayout.xaxis, {title: 'Data', range: [minDate, null]}),
+        yaxis: Object.assign({}, customLayout.yaxis, {title: 'Mensagens'})
+    }), plotConfig);
+
+    // Usuários únicos por dia
+    Plotly.newPlot('unique-users-graph', [{
+        x: {{ unique_user_dates_json|safe }},
+        y: {{ unique_user_counts_json|safe }},
+        type: 'bar',
+        marker: {color: '#8c30f5'}
+    }], Object.assign({}, customLayout, {
+        title: 'Usuários Únicos por Dia',
+        xaxis: Object.assign({}, customLayout.xaxis, {title: 'Data'}),
+        yaxis: Object.assign({}, customLayout.yaxis, {title: 'Usuários'})
+    }), plotConfig);
+
+    // Top usuários
+    Plotly.newPlot('top-users-graph', [{
+        x: {{ top_usernames_json|safe }},
+        y: {{ top_user_counts_json|safe }},
+        type: 'bar',
+        marker: {color: '#3bace2'} // azul institucional
+    }], Object.assign({}, customLayout, {
+        title: 'Top 5 Usuários',
+        xaxis: Object.assign({}, customLayout.xaxis, {title: 'Usuário'}),
+        yaxis: Object.assign({}, customLayout.yaxis, {title: 'Mensagens'})
+    }), plotConfig);
+
+    // Feedback Pie
+    Plotly.newPlot('feedback-pie', [{
+        labels: ['Like', 'Dislike'],
+        values: [{{ likes }}, {{ dislikes }}],
+        type: 'pie',
+        marker: {colors: ['#81d4af', '#f78da7']}, 
+    }], Object.assign({}, customLayout, {
+        title: 'Likes vs Dislikes',
+        legend: {orientation: "h", x: 0.5, xanchor: 'center', font: {color: '#4a2d7c'}}
+    }), plotConfig);
+</script>
+
+</body>
+</html>
