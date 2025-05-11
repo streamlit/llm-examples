@@ -2,7 +2,7 @@ from openai import OpenAI
 import os
 import time
 
-client = OpenAI(api_key= "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")
+client = OpenAI(api_key= "XXXXXXXXX")
 # Upload do arquivo
 with open("happy-kids/fine_tuning/datasets/lulu_fine_tuning_dataset.jsonl", "rb") as f:
     file_response = client.files.create(file=f, purpose="fine-tune")
