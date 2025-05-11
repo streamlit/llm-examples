@@ -104,7 +104,7 @@ def view_lulu(request):
 
         def stream_gpt():
             result = client.chat.completions.create(
-                model="gpt-4o-mini",
+                model="ft:gpt-4o-mini-2024-07-18:personal::BVkSVA0p",
                 messages=messages,
                 stream=True
             )

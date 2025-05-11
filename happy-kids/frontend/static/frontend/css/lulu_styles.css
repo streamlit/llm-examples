@@ -667,7 +667,9 @@ button.selected.dislike i {
     color: #333;
 }   
 
-.memos-message h5{
+.memos-message h5,
+.user-message h5,
+.bot-message h5{
     color: #b9b9b9;
     font-weight: normal;
     padding-top: 10px;
