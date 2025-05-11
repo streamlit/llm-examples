@@ -17,8 +17,16 @@
         <main class="content">
 
             {% include 'header.html' %}
+
+            <div class = "adm_buttons" >
+                <div class="adm_pages_navigation" id="adm_pages_navigation">
+                    <a ID = 'adm_page_user' class="adm_navigation" href="/app/adm/users_page">Users</a>
+                    <a ID = 'adm_page_onboarding' class="adm_navigation" href="/app/adm/adm_onboarding_questions">Onboarding</a>
+                    <a ID = 'adm_am_i_boring' class="adm_navigation" href="/app/adm/adm_am_i_boring_questions">Am I Boring?</a>
+                    <a ID = 'adm_page_training_files' class="adm_navigation" href="/app/adm/trainingFiles">Training Files</a>
+                </div>
+            </div>
             
-            <h1>Am I Boring?</h1>
             <form method="post">
                 <div class='form_title'>
                     <h3>New Question</h3>

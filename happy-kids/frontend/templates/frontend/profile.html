@@ -20,9 +20,6 @@
 
         {% include 'header.html' %}
 
-        <!-- Profile Section -->
-       
-            <h1>Edit Profile</h1>
 
             <form method="POST" action="{% url 'profile' %}">
                 {% csrf_token %}

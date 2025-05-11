@@ -6,18 +6,18 @@
     
 </head>
 <div class="header">
-    {% if '/app/adm/' in request.path %}
+    <div class="class-page-title">
+                        
+        {% if '/app/adm/' in request.path %}<h1>Painel Administrativo</h1>
+        {% elif '/app/dashboard' in request.path %}<h1>Dashboard</h1>
+        {% elif '/app/memos' in request.path %}<h1>My Memos</h1>
+        {% elif '/app/memory' in request.path %}<h1>Chat Memory</h1>
+        {% elif '/app/diary' in request.path %}<h1>My Diary</h1>
+        {% elif '/app/profile' in request.path %}<h1>My Profile</h1>
+        {% endif %}
+    
+    </div>
 
-        <div class = "adm_buttons" >
-            <div class="adm_pages_navigation" id="adm_pages_navigation">
-                <a ID = 'adm_page_user' class="adm_navigation" href="/app/adm/users_page">Users</a>
-                <a ID = 'adm_page_onboarding' class="adm_navigation" href="/app/adm/adm_onboarding_questions">Onboarding</a>
-                <a ID = 'adm_am_i_boring' class="adm_navigation" href="/app/adm/adm_am_i_boring_questions">Am I Boring?</a>
-                <a ID = 'adm_page_training_files' class="adm_navigation" href="/app/adm/trainingFiles">Training Files</a>
-            </div>
-        </div>
-
-    {% endif %}
     <div class="user_details">
         <h1>Hi, {{ user.first_name }}</h1>
         <div class="user-icon">
