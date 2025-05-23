@@ -20,6 +20,7 @@ class UsersMilestones(models.Model):
 class chat_memories(models.Model):
     user_id = models.CharField(max_length=100)
     user_message = models.TextField()
+    user_message_sentiment = models.CharField(max_length=20, blank=True, null=True) 
     chat_message = models.TextField()
     date_time = models.DateTimeField(auto_now_add=True)
 

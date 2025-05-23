@@ -1,4 +1,4 @@
-from .utils import get_short_term_memory
+from .utils import get_short_term_memory, classify_sentiment
 from .forms import *
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
@@ -15,6 +15,7 @@ import json
 import markdown
 from django.db.models.functions import TruncDate
 from django.db.models import Count
+
 
 # Create your views here.
 @login_required
@@ -89,14 +90,17 @@ def view_lulu(request):
         recent_memory = get_short_term_memory(user_id)
 
         messages = [
-            {"role": "system", "content": "Lulu is a friendly, empathetic assistant designed to help students improve their language skills in Luxembourgish, German, and French."},
-            {"role": "user", "content": "What's your name?"},
-            {"role": "assistant", "content": "Hey there! I'm Lulu, your language-learning buddy! How can I help you today?", "weight": 1},
-            {"role": "system", "content": "Your name is Lulu, you're a friend who will help children and teenagers on their academic journeys, aiming to show the positivity of life with sweetness and sensitivity."}
+            {
+                "role": "system",
+                "content": (
+                    "You are Lulu, a friendly, empathetic assistant designed to help children and teenagers improve "
+                    "their language skills in Luxembourgish, German, and French. You are positive, sensitive, supportive, "
+                    "and always encourage students to learn and be confident."
+                )
+            }
         ]
 
-        for msg in recent_memory:
-            messages.append({"role": "user", "content": msg})
+        messages.extend(recent_memory)
 
         messages.append({"role": "user", "content": question})
 
@@ -114,11 +118,14 @@ def view_lulu(request):
                 if chunk.choices and chunk.choices[0].delta.content:
                     response_text += chunk.choices[0].delta.content
 
-            response_text_html = markdown.markdown(text=response_text,output_format='html')
+            response_text_html = markdown.markdown(text=response_text, output_format='html')
+
+            sentiment = classify_sentiment(question)
 
             models.chat_memories.objects.create(
                 user_id=request.user.id,
                 user_message=question,
+                user_message_sentiment=sentiment,
                 chat_message=response_text
             )
 
@@ -669,3 +676,67 @@ def dashboard_view(request):
         'unique_user_counts_json': json.dumps(unique_user_counts),
     })
 
+
+##### Dahsboard Sentimentos
+
+@login_required
+def sentiment_over_time(request):
+
+    data = (
+        models.chat_memories.objects
+        .exclude(user_message_sentiment__isnull=True)
+        .exclude(user_message_sentiment__exact="")
+        .annotate(date=TruncDate('date_time'))
+        .values('date', 'user_message_sentiment')
+        .annotate(count=Count('id'))
+        .order_by('date')
+    )
+
+    result = {}
+    for row in data:
+        date = row['date'].strftime("%Y-%m-%d")
+        sentiment = row['user_message_sentiment']
+        count = row['count']
+        if date not in result:
+            result[date] = {}
+        result[date][sentiment] = count
+
+    sentiments = ["Anger", "Fear", "Sadness", "Joy", "Disgust", "Surprise"]
+    response = {
+        "labels": sorted(result.keys()),
+        "datasets": []
+    }
+    for sentiment in sentiments:
+        dataset = {
+            "name": sentiment,
+            "x": response["labels"],
+            "y": [result.get(date, {}).get(sentiment, 0) for date in response["labels"]],
+            "mode": "lines+markers",
+            "type": "scatter"
+        }
+        response["datasets"].append(dataset)
+
+    return JsonResponse(response)
+
+@login_required
+def sentiment_ranking(request):
+    
+    ranking = (
+        models.chat_memories.objects
+        .exclude(user_message_sentiment__isnull=True)
+        .exclude(user_message_sentiment__exact="")
+        .values('user_message_sentiment')
+        .annotate(count=Count('id'))
+        .order_by('-count')
+    )
+    sentiments = ["Anger", "Fear", "Sadness", "Joy", "Disgust", "Surprise"]
+
+    counts = {s: 0 for s in sentiments}
+    for row in ranking:
+        if row['user_message_sentiment'] in sentiments:
+            counts[row['user_message_sentiment']] = row['count']
+
+    return JsonResponse({
+        "sentiments": sentiments,
+        "counts": [counts[s] for s in sentiments]
+    })
