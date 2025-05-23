@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.contrib.postgres.fields import ArrayField
 
 class historicalSessions(models.Model):
     sessionDate = models.DateTimeField("session date", default="")
@@ -20,8 +21,10 @@ class UsersMilestones(models.Model):
 class chat_memories(models.Model):
     user_id = models.CharField(max_length=100)
     user_message = models.TextField()
+    user_message_sentiment = models.CharField(max_length=20, blank=True, null=True) 
     chat_message = models.TextField()
     date_time = models.DateTimeField(auto_now_add=True)
+    embedding = ArrayField(models.FloatField(), blank=True, null=True) 
 
 class dim_question_type(models.Model):
     question_type = models.TextField(unique=True)
