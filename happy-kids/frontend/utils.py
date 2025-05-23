@@ -5,6 +5,7 @@ from django.utils import timezone
 from datetime import timedelta
 from api import models
 import openai
+import numpy as np
 
 def get_short_term_memory(user_id):
     """Recupera a memória de curto prazo do banco de dados"""
@@ -61,3 +62,32 @@ def classify_sentiment(text):
     except Exception as e:
         print(f"Error during sentiment analysis: {e}")
         return None
+
+
+client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
+def get_embedding(text):
+    response = client.embeddings.create(
+        model="text-embedding-3-small",
+        input=text,
+    )
+    return response.data[0].embedding
+
+
+
+def cosine_similarity(a, b):
+    a = np.array(a)
+    b = np.array(b)
+    return np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b))
+
+def get_relevant_memories(user_id, question, top_k=3):
+    question_emb = get_embedding(question)
+
+    history = models.chat_memories.objects.filter(user_id=user_id).exclude(embedding=None)
+    scored = []
+    for h in history:
+        sim = cosine_similarity(question_emb, h.embedding)
+        scored.append((sim, h))
+    scored.sort(reverse=True, key=lambda x: x[0])
+    top_memories = [x[1] for x in scored[:top_k]]
+    return top_memories

@@ -1,4 +1,4 @@
-from .utils import get_short_term_memory, classify_sentiment
+from .utils import get_short_term_memory, classify_sentiment, get_embedding, get_relevant_memories
 from .forms import *
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
@@ -15,7 +15,6 @@ import json
 import markdown
 from django.db.models.functions import TruncDate
 from django.db.models import Count
-
 
 # Create your views here.
 @login_required
@@ -89,6 +88,8 @@ def view_lulu(request):
         
         recent_memory = get_short_term_memory(user_id)
 
+        relevant_memories = get_relevant_memories(user_id, question, top_k=3)
+
         messages = [
             {
                 "role": "system",
@@ -99,6 +100,12 @@ def view_lulu(request):
                 )
             }
         ]
+
+        for mem in relevant_memories:
+            messages.append({"role": "user", "content": f"(Previously) {mem.user_message}"})
+            if mem.chat_message:
+                messages.append({"role": "assistant", "content": f"(Previously) {mem.chat_message}"})
+        
 
         messages.extend(recent_memory)
 
@@ -121,12 +128,14 @@ def view_lulu(request):
             response_text_html = markdown.markdown(text=response_text, output_format='html')
 
             sentiment = classify_sentiment(question)
+            embedding = get_embedding(question)
 
             models.chat_memories.objects.create(
                 user_id=request.user.id,
                 user_message=question,
                 user_message_sentiment=sentiment,
-                chat_message=response_text
+                chat_message=response_text,
+                embedding=embedding
             )
 
             yield response_text_html 
@@ -136,7 +145,6 @@ def view_lulu(request):
         response_server['X-Accel-Buffering'] = 'no'
         
         return response_server
-
 
 ######################### Memos and Feedback #########################
 @login_required
@@ -186,7 +194,6 @@ def view_save_feedback(request):
         if not user_prompt or not bot_message or not feedback_type:
             return JsonResponse({"error": "Dados inválidos."}, status=400)
 
-        # Verifica se já existe feedback desse usuário para esse par prompt/resposta
         existing_feedback = models.chat_facts_feedback.objects.filter(
             user=request.user,
             user_prompt=user_prompt,
@@ -202,7 +209,6 @@ def view_save_feedback(request):
                 existing_feedback.save()
                 return JsonResponse({"status": "updated"})
 
-        # Nenhum feedback anterior → criar novo
         models.chat_facts_feedback.objects.create(
             user=request.user,
             user_prompt=user_prompt,
