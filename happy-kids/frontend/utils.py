@@ -28,6 +28,7 @@ def get_short_term_memory(user_id):
 
     return memory
 
+## Sentiment Analysis
 
 def classify_sentiment(text):
     system_prompt = (
@@ -64,9 +65,10 @@ def classify_sentiment(text):
         return None
 
 
-client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+### RAG
 
 def get_embedding(text):
+    client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
     response = client.embeddings.create(
         model="text-embedding-3-small",
         input=text,
@@ -91,3 +93,78 @@ def get_relevant_memories(user_id, question, top_k=3):
     scored.sort(reverse=True, key=lambda x: x[0])
     top_memories = [x[1] for x in scored[:top_k]]
     return top_memories
+
+
+
+### Speech-to-text
+
+from google.cloud import speech_v1p1beta1 as speech
+from pydub.utils import mediainfo
+import mimetypes
+
+def recognize_speech(audio_path):
+    # Detecta o mime/type pelo nome
+    mime_type, _ = mimetypes.guess_type(audio_path)
+    info = mediainfo(audio_path)
+
+    # Detecta sample_rate
+    sample_rate = int(info['sample_rate'])
+
+    # Detecta encoding (Google espera estes valores específicos)
+    # .wav => LINEAR16
+    # .webm ou .ogg com codec OPUS => WEBM_OPUS ou OGG_OPUS
+    # .flac => FLAC
+    if mime_type:
+        if 'wav' in mime_type:
+            encoding = speech.RecognitionConfig.AudioEncoding.LINEAR16
+        elif 'webm' in mime_type:
+            encoding = speech.RecognitionConfig.AudioEncoding.WEBM_OPUS
+        elif 'ogg' in mime_type:
+            encoding = speech.RecognitionConfig.AudioEncoding.OGG_OPUS
+        elif 'flac' in mime_type:
+            encoding = speech.RecognitionConfig.AudioEncoding.FLAC
+        else:
+            # fallback genérico (funciona para MP3, mas a precisão pode ser menor)
+            encoding = speech.RecognitionConfig.AudioEncoding.ENCODING_UNSPECIFIED
+    else:
+        # Se não conseguir identificar, tente pelo codec do mediainfo
+        codec = info.get('codec_name', '')
+        if codec == 'pcm_s16le':
+            encoding = speech.RecognitionConfig.AudioEncoding.LINEAR16
+        elif codec == 'opus':
+            encoding = speech.RecognitionConfig.AudioEncoding.WEBM_OPUS
+        elif codec == 'flac':
+            encoding = speech.RecognitionConfig.AudioEncoding.FLAC
+        else:
+            encoding = speech.RecognitionConfig.AudioEncoding.ENCODING_UNSPECIFIED
+
+    client = speech.SpeechClient()
+    with open(audio_path, "rb") as audio_file:
+        content = audio_file.read()
+
+    audio = speech.RecognitionAudio(content=content)
+    config = speech.RecognitionConfig(
+        encoding=encoding,
+        sample_rate_hertz=sample_rate,
+        language_code="en-US",
+        enable_automatic_punctuation=True
+    )
+
+    response = client.recognize(config=config, audio=audio)
+    text = ""
+    for result in response.results:
+        text += result.alternatives[0].transcript
+    return text
+
+from django.conf import settings
+
+def transcribe_with_whisper(audio_path, language_code="lb"):  # "lb" para luxemburguês
+    client = openai.OpenAI(api_key=settings.OPENAI_API_KEY)
+
+    with open(audio_path, "rb") as audio_file:
+        response = client.audio.transcriptions.create(
+            model="whisper-1",
+            file=audio_file
+        )
+    return response.text
+

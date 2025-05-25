@@ -70,10 +70,18 @@
                 </div>
             
                 <div class="input-container">
+                    <div id="stt-loading" style="display:none; margin-top:5px; color: #888; font-size: 14px;">
+                        <i class="fa-solid fa-spinner fa-spin"></i> Transcribing your speech, please wait...
+                    </div>
                     <form id="ai-form" method="POST" onsubmit="hideSuggestions()">
                         <textarea id="question" name="question" placeholder="Type your message..." rows="1" required></textarea>
-                        <button id="send-button">
-                            <span>&#8594;</span> 
+                        
+                        <button id="mic-button" type="button" class="circle-btn" style="margin-right:10px;">
+                            <i class="fa-solid fa-microphone"></i>
+                        </button>
+                        
+                        <button id="send-button" type="submit" class="circle-btn">
+                            <i class="fa-solid fa-arrow-right"></i>
                         </button>
                     </form>
                 </div>
@@ -490,6 +498,74 @@
             }
         }
 
+    </script>
+
+    <script>
+    let mediaRecorder;
+    let audioChunks = [];
+    let isRecording = false;
+
+    document.addEventListener("DOMContentLoaded", function() {
+        const micButton = document.getElementById('mic-button');
+        const questionInput = document.getElementById('question');
+        const aiForm = document.getElementById('ai-form');
+        const loadingDiv = document.getElementById('stt-loading');
+
+        micButton.addEventListener('click', async function(e) {
+            e.preventDefault();
+            if (!isRecording) {
+                // Começa a gravar
+                audioChunks = [];
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(stream);
+
+                mediaRecorder.start();
+                isRecording = true;
+                micButton.classList.add("recording");
+                micButton.innerHTML = '<i class="fa-solid fa-stop"></i>';
+
+                mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+
+                mediaRecorder.onstop = async () => {
+                    isRecording = false;
+                    micButton.classList.remove("recording");
+                    micButton.innerHTML = '<i class="fa-solid fa-microphone"></i>';
+
+                    // Mostra o loading
+                    loadingDiv.style.display = "block";
+
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                    const formData = new FormData();
+                    formData.append("audio", audioBlob, "audio.webm");
+                    
+                    
+
+                    try {
+                        const response = await fetch("/app/speech-to-text/", {
+                            method: "POST",
+                            body: formData
+                        });
+                        const data = await response.json();
+                        if (data.text) {
+                            questionInput.value = data.text;
+                            questionInput.focus();
+                            // Envia automaticamente o texto para o chat
+                            aiForm.dispatchEvent(new Event("submit", { bubbles: true, cancelable: true }));
+                        } else {
+                            alert("Não foi possível transcrever o áudio.");
+                        }
+                    } catch (err) {
+                        alert("Erro ao transcrever o áudio.");
+                    }
+                    // Esconde o loading
+                    loadingDiv.style.display = "none";
+                };
+            } else {
+                // Para a gravação
+                mediaRecorder.stop();
+            }
+        });
+    });
     </script>
 
     

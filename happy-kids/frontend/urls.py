@@ -38,4 +38,6 @@ urlpatterns = [
     path('sentiment-over-time/', views.sentiment_over_time, name='sentiment_over_time'),
     path('sentiment-ranking/', views.sentiment_ranking, name='sentiment_ranking'),
 
+    path('speech-to-text/', views.speech_to_text_view, name='speech_to_text'),
+
 ]

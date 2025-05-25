@@ -34,11 +34,9 @@ def classify_emotions(text):
     # Update history with new probabilities
     for emotion, prob in zip(emotions_order, probs):
         classify_emotions.history[emotion].append(prob)
-        
     
     # Convert logits to probabilities
     probs = softmax(outputs.logits, dim=1)[0].tolist()
-
     
     # Return emotions with probabilities in the fixed order
     return {emotion: probs[i] for i, emotion in enumerate(emotions_order)}

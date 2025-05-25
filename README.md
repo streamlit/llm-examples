@@ -78,7 +78,8 @@ DATABASES = {
 ```
 
 Once the above changes have been made, the database must be started locally. To do this, run the command below:
-`./cloud-sql-proxy --port 5050 lulu-mvp:europe-west3:db-lulu`
+`./cloud-sql-proxy --credentials-file="all_path_to_file/lulu-mvp-service-account-key.json" --port 5050 lulu-mvp:europe-west3:db-lulu`
+
 
 With the database running locally and the settings.py adjusted, we now just have to request the migration
 `python manage.py migrate`
@@ -103,3 +104,10 @@ without redis
 - https://hbr.org/2022/11/how-generative-ai-is-changing-creative-work
 - https://cloud.google.com/artifact-registry/docs?hl=pt-br
 - https://cloud.google.com/build/docs?hl=pt-br
+- Chan, W., Park, D., Lee, C., Zhang, Y., Le, Q., and Norouzi, M. SpeechStew: Simply mix all available speech recogni- tion data to train one large neural network. arXiv preprint arXiv:2104.02133, 2021. 
+- Galvez, D., Diamos, G., Torres, J. M. C., Achorn, K., Gopi, A., Kanter, D., Lam, M., Mazumder, M., and Reddi, V. J. The people’s speech: A large-scale diverse english speech recognition dataset for commercial usage. arXiv preprint arXiv:2111.09344, 2021. 
+- Chen, G., Chai, S., Wang, G., Du, J., Zhang, W.-Q., Weng, C., Su, D., Povey, D., Trmal, J., Zhang, J., et al. Gigaspeech: An evolving, multi-domain asr corpus with 10,000 hours of transcribed audio. arXiv preprint arXiv:2106.06909, 2021. 
+- Baevski, A., Zhou, H., Mohamed, A., and Auli, M. wav2vec 2.0: A framework for self-supervised learning of speech representations. arXiv preprint arXiv:2006.11477, 2020. 
+- Baevski, A., Hsu, W.N., Conneau, A., and Auli, M. Unsu pervised speech recognition. Advances in Neural Information Processing Systems, 34:27826–27839, 2021. 
+- Zhang, Y., Park, D. S., Han, W., Qin, J., Gulati, A., Shor, J., Jansen, A., Xu, Y., Huang, Y., Wang, S., et al. BigSSL: Exploring the frontier of large-scale semi-supervised learning for automatic speech recognition. arXiv preprint arXiv:2109.13226, 2021⁠. 
+
