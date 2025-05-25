@@ -125,31 +125,6 @@ form {
     box-shadow: 0 0 5px rgba(135, 97, 252, 0.4);
 }
 
-#send-button {
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    transform: translateX(0%);
-    padding: 10px;
-    width: 35px;
-    height: 35px;
-    background-color: #8d53ff;
-    border-radius: 50%;
-    border: none;
-    color: white;
-    font-size: 16px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    margin-left: 10px; 
-    box-shadow: 0 0 5px rgba(135, 97, 252, 0.4); 
-}
-
-#send-button:hover {
-    background-color: #5ddee6; 
-}
-
 .quick-suggestions {
     display: flex;
     flex-wrap: wrap;
@@ -704,6 +679,43 @@ button.selected.dislike i {
     background: linear-gradient(to right, #8d53ff, #5ddee6);  /* gradiente opcional no título */
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+}
+
+#mic-button.recording {
+    background: #f04c4c;
+    color: #fff;
+}
+#mic-button i {
+    font-size: 18px;
+}
+
+.circle-btn {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #A259FF 0%, #6A87F8 100%);
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 6px;
+    box-shadow: 0 2px 8px rgba(162, 89, 255, 0.08);
+    color: #fff;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background 0.2s, box-shadow 0.2s, transform 0.1s;
+}
+
+.circle-btn:active,
+.circle-btn.recording {
+    background: linear-gradient(135deg, #6A87F8 0%, #A259FF 100%);
+    box-shadow: 0 2px 12px rgba(162, 89, 255, 0.22);
+    transform: scale(1.06);
+}
+
+.circle-btn:hover {
+    background: linear-gradient(135deg, #A259FF 10%, #6A87F8 90%);
+    box-shadow: 0 2px 12px rgba(162, 89, 255, 0.14);
 }
 
 @media (max-width: 1024px) {

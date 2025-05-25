@@ -1,4 +1,4 @@
-from .utils import get_short_term_memory, classify_sentiment, get_embedding, get_relevant_memories
+from .utils import get_short_term_memory, classify_sentiment, get_embedding, get_relevant_memories, recognize_speech, transcribe_with_whisper
 from .forms import *
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
@@ -746,3 +746,23 @@ def sentiment_ranking(request):
         "sentiments": sentiments,
         "counts": [counts[s] for s in sentiments]
     })
+
+### Speech-to-text
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+import tempfile
+
+@csrf_exempt
+def speech_to_text_view(request):
+    if request.method == "POST":
+        audio_file = request.FILES['audio']
+        # Use a extensão correta do arquivo original
+        ext = audio_file.name.split('.')[-1]
+        with tempfile.NamedTemporaryFile(suffix=f'.{ext}', delete=False) as tmp:
+            for chunk in audio_file.chunks():
+                tmp.write(chunk)
+            tmp_path = tmp.name
+
+        recognized_text = transcribe_with_whisper(tmp_path, language_code="lb")
+        return JsonResponse({"text": recognized_text})
+    return JsonResponse({"error": "Only POST supported"}, status=405)
