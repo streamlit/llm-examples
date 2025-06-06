@@ -3,6 +3,11 @@ from . import views
 
 urlpatterns = [
     path('', views.view_home, name='home'),
+
+    path('chat/start/', views.start_new_session, name='start_new_session'),
+    path('chat/sessao/<int:session_id>/', views.view_chat_session, name='chat_session'),
+    path('chat/sessoes/', views.list_chat_sessions, name='list_chat_sessions'),
+
     path('lulu', views.view_lulu, name='lulu'),
     path('adm/users_page', views.view_users, name='users_page'),
     path('adm/trainingFiles', views.training_list, name='training_list'),

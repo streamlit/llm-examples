@@ -14,10 +14,10 @@ import os
 import json
 import markdown
 from django.db.models.functions import TruncDate
-from django.db.models import Count
+from django.db.models import Count, Q
 
 # Create your views here.
-@login_required
+
 @staff_member_required
 def view_users(request):
     if request.method == 'POST':
@@ -33,36 +33,10 @@ def view_users(request):
     users = User.objects.all() 
     return render(request, 'users_page.html', {'form': form, 'users': users})
 
-@login_required
+
 @staff_member_required
 def view_training_files(request):
     return render(request, 'trainingFiles.html')
-
-@login_required
-def view_profile(request):
-    return render(request, 'profile.html')
-
-@login_required
-def view_surprise_me(request):
-    return render(request, 'surprise_me.html')
-
-@login_required
-@staff_member_required
-def training_list(request):
-    if request.method == 'POST':
-        form = LuluTrainningForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            return redirect('training_list') 
-    else:
-        form = LuluTrainningForm()
-
-    trainings = models.luluTrainning.objects.all()
-    return render(request, 'trainingFiles.html', {'form': form, 'trainings': trainings})
-
-@login_required
-def view_home(request):
-    return render(request, 'home.html')
 
 @login_required
 def view_profile(request):
@@ -76,7 +50,69 @@ def view_profile(request):
     
     return render(request, 'profile.html', {'form': form})
 
+def view_surprise_me(request):
+    return render(request, 'surprise_me.html')
+
+
+@staff_member_required
+def training_list(request):
+    if request.method == 'POST':
+        form = LuluTrainningForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('training_list') 
+    else:
+        form = LuluTrainningForm()
+
+    trainings = models.luluTrainning.objects.all()
+    return render(request, 'trainingFiles.html', {'form': form, 'trainings': trainings})
+
+
+def view_home(request):
+    return render(request, 'home.html')
+
+##################################################################
+######################### lulu sessions ##########################
+##################################################################
+
+def start_new_session(request):
+    if request.user.is_authenticated:
+        session = models.chat_Session.objects.create(user=request.user)
+    else:
+        session = models.chat_Session.objects.create(user=None)
+        request.session['anon_session_id'] = session.id
+
+    return redirect('chat_session', session_id=session.id)
+
 @login_required
+def list_chat_sessions(request):
+    sessions = models.chat_Session.objects.filter(user=request.user).order_by('-updated_at')
+    return render(request, 'list_sessions.html', {'sessions': sessions})
+
+def view_chat_session(request, session_id):
+    session = models.chat_Session.objects.get(id=session_id)
+    
+    if session.user and request.user.is_authenticated:
+        if session.user != request.user:
+            return redirect('home')  
+    elif not session.user:
+        
+        if request.session.get('anon_session_id') != session.id:
+            return redirect('home')  
+
+    messages = session.memories.all().order_by('date_time')
+    return render(request, 'lulu.html', {'session': session, 'messages': messages})
+
+
+
+def can_anonymous_continue(session):
+    MAX_MESSAGES_ANON = 30
+    return session.memories.count() < MAX_MESSAGES_ANON
+
+##################################################################
+######################### lulu chat bot ##########################
+##################################################################
+
 @csrf_exempt
 def view_lulu(request):
     if request.method == 'GET':
@@ -106,7 +142,6 @@ def view_lulu(request):
             if mem.chat_message:
                 messages.append({"role": "assistant", "content": f"(Previously) {mem.chat_message}"})
         
-
         messages.extend(recent_memory)
 
         messages.append({"role": "user", "content": question})
@@ -147,7 +182,7 @@ def view_lulu(request):
         return response_server
 
 ######################### Memos and Feedback #########################
-@login_required
+
 def view_save_memo(request):
     if request.method == "POST":
         texto = request.POST.get("message")
@@ -157,7 +192,7 @@ def view_save_memo(request):
         return JsonResponse({"status": "error", "message": "Mensagem vazia"}, status=400)
     return JsonResponse({"status": "error", "message": "Método não permitido"}, status=405)
 
-@login_required
+
 @csrf_exempt
 def view_delete_memo(request, memo_id):
     if request.method == "POST":
@@ -166,12 +201,12 @@ def view_delete_memo(request, memo_id):
         return JsonResponse({"status": "ok"})
     return JsonResponse({"status": "error"}, status=405)
 
-@login_required
+
 def view_chat_memos(request):
     memos = models.facts_memos.objects.filter(user=request.user).order_by("-datetime")
     return render(request, "chat_memos.html", {"memos": memos})
 
-@login_required
+
 def view_chat_memory(request):
     if request.user.is_authenticated:
         conversas = models.chat_memories.objects.filter(user_id=str(request.user.id))
@@ -183,7 +218,7 @@ def view_chat_memory(request):
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 
-@login_required
+
 def view_save_feedback(request):
     if request.method == "POST":
         data = json.loads(request.body)
@@ -221,15 +256,15 @@ def view_save_feedback(request):
 
 ######################### Other pages #########################
 
-@login_required
+
 def view_emotions_atlas(request):
     return render(request, 'emotions_atlas.html')
 
-@login_required
+
 def view_ideas_box(request):
     return render(request, 'ideas_box.html')
 
-@login_required
+
 def view_diary(request):
     entries = models.diary_facts.objects.filter(user=request.user).order_by('-date')  
     return render(request, 'diary.html', {'entries': entries})
@@ -252,7 +287,7 @@ def diary_view(request):
 
 
 ######################### Onboarding #########################
-@login_required
+
 @staff_member_required
 def view_chat_management_onboarding_questions(request):
      
@@ -269,7 +304,7 @@ def view_chat_management_onboarding_questions(request):
     questions = models.chat_dim_onboarding_questions.objects.all().order_by('order')
     return render(request,'adm_onboarding.html',{'questions': questions, 'form':form})
 
-@login_required
+
 @staff_member_required
 def update_question_active(request, id):
     if request.method == 'POST':
@@ -288,7 +323,7 @@ def view_chat_dim_onboarding_questions(request):
     questions = models.chat_dim_onboarding_questions.objects.all().prefetch_related("options")
     return render(request, "adm_onboarding.html", {"questions": questions})
 
-@login_required
+
 @staff_member_required
 @csrf_exempt
 def add_option(request):
@@ -318,7 +353,7 @@ def delete_option(request, option_id):
     return JsonResponse({"success": False}, status=400)
 
 
-@login_required
+
 def onboarding_data(request):
     """Retorna as perguntas de onboarding não respondidas em JSON com opções associadas."""
     
@@ -346,7 +381,7 @@ def onboarding_data(request):
 
     return JsonResponse(data)
 
-@login_required
+
 @csrf_exempt 
 def save_onboarding_answer(request):
     if request.method == 'POST':
@@ -378,7 +413,7 @@ def save_onboarding_answer(request):
 
     return JsonResponse({'status': 'error', 'message': 'Método não permitido.'}, status=405)
 
-@login_required
+
 def check_onboarding_completed(request):
     unanswered_questions = models.chat_dim_onboarding_questions.objects.filter(
         active=True
@@ -391,7 +426,7 @@ def check_onboarding_completed(request):
     return JsonResponse({'onboarding_completed': onboarding_completed})
 
 ######################### Question suggestion based on chat context #########################
-@login_required
+
 def generate_suggestions(request):
     user_id = request.user.id
 
@@ -443,7 +478,7 @@ def generate_suggestions(request):
     return JsonResponse({"suggestions": suggestions})
 
 ######################### Am I Boring Foms #########################
-@login_required
+
 @staff_member_required
 def view_management_am_i_boring_questions(request):
      
@@ -460,7 +495,7 @@ def view_management_am_i_boring_questions(request):
     questions = models.dim_am_i_boring_questions.objects.prefetch_related("boring_options").order_by("order")
     return render(request,'adm_am_i_boring.html',{'questions': questions, 'form':form})
 
-@login_required
+
 @staff_member_required
 @csrf_exempt
 def add_option_am_i_boring(request):
@@ -489,7 +524,7 @@ def delete_option_am_i_boring(request, option_id):
 
     return JsonResponse({"success": False}, status=400)
 
-@login_required
+
 def am_i_boring_data(request):
     """Retorna todas as perguntas ativas em JSON com opções associadas, mesmo que já tenham sido respondidas."""
     
@@ -518,7 +553,7 @@ def am_i_boring_data(request):
 
     return JsonResponse(data)
 
-@login_required
+
 @staff_member_required
 def update_question_active_am_i_boring(request, id):
     if request.method == 'POST':
@@ -537,7 +572,7 @@ def view_dim_am_i_boring_questions(request):
     questions = models.dim_am_i_boring_questions.objects.all().prefetch_related("options")
     return render(request, "adm_am_i_boring.html", {"questions": questions})
 
-@login_required
+
 @csrf_exempt 
 def save_am_i_boring_answer(request):
     if request.method == 'POST':
@@ -572,12 +607,9 @@ def save_am_i_boring_answer(request):
 
 ###### Dashboards #####
 
-from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
-from django.db.models import Count, Q
-from django.db.models.functions import TruncDate
 
-@login_required
+
+
 def dashboard_view(request):
     
     # --- CHAT ---
@@ -684,8 +716,6 @@ def dashboard_view(request):
 
 
 ##### Dahsboard Sentimentos
-
-@login_required
 def sentiment_over_time(request):
 
     data = (
@@ -724,7 +754,7 @@ def sentiment_over_time(request):
 
     return JsonResponse(response)
 
-@login_required
+
 def sentiment_ranking(request):
     
     ranking = (

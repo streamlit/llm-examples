@@ -4,252 +4,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
     <link rel="icon" href="{% static 'frontend/img/logo_happy_kids.png' %}">
     <title>Happy Kids | Lulu</title>
     <link rel="stylesheet" href="{% static 'frontend/css/lulu_styles.css' %}">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto&display=swap">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-
-
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-
-
 </head>
-
 <body>
     <div class="container">
         {% include 'sidebar.html' %}
-
         <main class="content">
             {% include 'header.html' %}
-            
 
-            <div id="button-container" style= "display:none">
-                <img src="{% static 'frontend/img/lulu_bot_novo.png' %}" class="img-lulu-onboarding" alt="Lulu">
-                <div class="start-onboarding-message">
-                    <h3>{{user.username}}</h3>
-                    <h4>🤩 I am so excited to meet you!!!</h4>
-                    <p>There are so many things I want to learn about you...</p>
-                    <p>Can I make some questions?</p>
-                </div>
-                <button id="start-onboarding">Lëtz Start!</button>
-            </div>
-
-            <div id="onboarding-container" class="onboarding-container" style="display: none">
-                <h1 id="step-title"></h1>
-                <p id="question-text"></p>
-                
-                <div id="answer-options" class="answer-options"></div>
-            
-                <div class="onboarding-buttons">
-                    <button class="skip" onclick="hideOnboarding()">Skip</button>
-                    <button class="next" onclick="nextQuestion()">Next</button>
-                    
-                </div>
-            </div>
-            
-            <div id="chat-container" class="chat-container" style="display: none">
+            <div id="chat-container" class="chat-container" style="display: flex">
                 <h1>Hi, {{ user.first_name }}</h1>
-            
-                
 
-                <!-- Adicionado chat-history -->
                 <div class="chat-history" id="chat-history"></div>
 
                 <div class="quick-suggestions" id="quick-suggestions">
-                    <span ID = 'suggestion_highligh_1' class="suggestion">Show me Top French vocabulary for my Science classes</span>
-                    <span ID = 'suggestion_highligh_2' class="suggestion">Practice with me small talk in Luxembourgish</span>
-                    <span ID = 'suggestion_highligh_3' class="suggestion">Tell me a secret about Luxembourg</span>
-                    <span ID = 'suggestion_highligh_4' class="suggestion">Help me develop superpowers</span>
+                    <span id="suggestion_highligh_1" class="suggestion">Show me Top French vocabulary for my Science classes</span>
+                    <span id="suggestion_highligh_2" class="suggestion">Practice with me small talk in Luxembourgish</span>
+                    <span id="suggestion_highligh_3" class="suggestion">Tell me a secret about Luxembourg</span>
+                    <span id="suggestion_highligh_4" class="suggestion">Help me develop superpowers</span>
                     <span class="suggestion">Teach me something cool in 1 minute!</span>
                     <span class="suggestion">Give me a quick tip to be more confident!</span>
                     <span class="suggestion">Help me focus for 10 minutes!</span>
                     <span class="suggestion">Cheer me up with something positive!</span>
                 </div>
-            
+
                 <div class="input-container">
                     <div id="stt-loading" style="display:none; margin-top:5px; color: #888; font-size: 14px;">
                         <i class="fa-solid fa-spinner fa-spin"></i> Transcribing your speech, please wait...
                     </div>
                     <form id="ai-form" method="POST" onsubmit="hideSuggestions()">
                         <textarea id="question" name="question" placeholder="Type your message..." rows="1" required></textarea>
-                        
                         <button id="mic-button" type="button" class="circle-btn" style="margin-right:10px;">
                             <i class="fa-solid fa-microphone"></i>
                         </button>
-                        
                         <button id="send-button" type="submit" class="circle-btn">
                             <i class="fa-solid fa-arrow-right"></i>
                         </button>
                     </form>
                 </div>
             </div>
-  
         </main>
     </div>
 
-    <!-- Funções para Onboarding-->
-    <script>
-        fetch("/app/check-onboarding-completed/")
-            .then(response => response.json())
-            .then(data => {
-                if (data.onboarding_completed) {
-                    document.getElementById("button-container").style.display = "none";
-                    document.getElementById("chat-container").style.display = "flex";
-                } else {
-                    document.getElementById("button-container").style.display = "flex"
-                }
-            })
-            .catch(error => console.error("Erro ao verificar onboarding:", error));
-
-        document.getElementById("start-onboarding").addEventListener("click", function() {
-            document.getElementById("onboarding-container").style.display = "block";
-            document.getElementById("button-container").style.display = "none";
-        });
-    
-        function hideOnboarding() {
-            document.getElementById("onboarding-container").style.display = "none";
-            document.getElementById("chat-container").style.display = "flex";
-        }
-    
-        let questions = [];
-        let currentQuestionIndex = 0;
-    
-        document.getElementById("start-onboarding").addEventListener("click", function() {
-            fetch("/app/onboarding-data/")
-                .then(response => response.json())
-                .then(data => {
-                    questions = data.questions;
-                    if (questions.length > 0) {
-                        currentQuestionIndex = 0;
-                        showQuestion();
-                        document.getElementById("onboarding-container").style.display = "block";
-                    } else {
-                        hideOnboarding();
-                    }
-                })
-                .catch(error => console.error("Erro ao carregar onboarding:", error));
-        });
-    
-        function showQuestion() {
-            if (currentQuestionIndex < questions.length) {
-                const question = questions[currentQuestionIndex];
-                document.getElementById("step-title").textContent = `Step ${currentQuestionIndex + 1} of ${questions.length}`;
-                document.getElementById("question-text").textContent = question.question;
-    
-                const answerOptionsContainer = document.getElementById("answer-options");
-                answerOptionsContainer.innerHTML = '';
-    
-                if (question.options.length > 0) {
-                    question.options.forEach(option => {
-                        const optionButton = document.createElement('button');
-                        optionButton.textContent = option;
-                        optionButton.classList.add('option-button');
-                        optionButton.onclick = () => handleOptionClick(option, question.id);
-                        answerOptionsContainer.appendChild(optionButton);
-                    });
-                } else {
-
-                    const textInput = document.createElement('input');
-                    textInput.type = 'text';
-                    textInput.placeholder = 'Enter your answer...';
-                    textInput.id = `text-answer-${question.id}`;
-                    textInput.addEventListener('keydown', function(event) {
-                        if (event.key === 'Enter') { 
-                            handleTextAnswer(question.id);
-                        }
-                    });
-                    answerOptionsContainer.appendChild(textInput);
-                }
-            } else {
-                hideOnboarding(); 
-            }
-        }
-    
-        function nextQuestion() {
-            const currentQuestion = questions[currentQuestionIndex];
-        
-            if (currentQuestion.options.length === 0) {
-                const textAnswer = document.getElementById(`text-answer-${currentQuestion.id}`);
-                if (textAnswer && textAnswer.value.trim() !== "") {
-                    handleTextAnswer(currentQuestion.id);
-                } else {
-                    console.warn("No answer has been entered!");
-                    return;
-                }
-            } else {
-                currentQuestionIndex++;
-                showQuestion();
-            }
-        }
-    
-        function handleOptionClick(option, questionId) {
-            console.log('Opção escolhida:', option);
-            console.log('ID da Pergunta:', questionId);
-    
-            const data = {
-                question_id: questionId,
-                answer: option
-            };
-    
-            fetch("/app/save-onboarding-answer/", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRFToken": '{{ csrf_token }}'
-                },
-                body: JSON.stringify(data)
-            })
-            .then(response => response.json())
-            .then(result => {
-                console.log("Resposta salva com sucesso:", result);
-
-                nextQuestion();
-            })
-            .catch(error => {
-                console.error("Erro ao salvar a resposta:", error);
-            });
-        }
-    
-        function handleTextAnswer(questionId) {
-            const textAnswer = document.getElementById(`text-answer-${questionId}`).value.trim();
-            
-            if (textAnswer === "") {
-                console.warn("The text reply is empty. It will not be sent.");
-                return;
-            }
-        
-            console.log('Text Answer:', textAnswer);
-            console.log('Question ID:', questionId);
-        
-            const data = {
-                question_id: questionId,
-                answer: textAnswer
-            };
-        
-            fetch("/app/save-onboarding-answer/", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRFToken": '{{ csrf_token }}'
-                },
-                body: JSON.stringify(data)
-            })
-            .then(response => response.json())
-            .then(result => {
-                console.log("Resposta salva com sucesso:", result);
-                currentQuestionIndex++;
-                showQuestion();
-            })
-            .catch(error => {
-                console.error("Erro ao salvar a resposta:", error);
-            });
-        }
-    </script>
-
-    <!--Funções para Suggestions-->
+    <!-- JS de sugestões rápidas -->
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             const form = document.getElementById("ai-form");
@@ -258,8 +61,8 @@
             const textarea = document.getElementById("question");
 
             textarea.addEventListener("input", () => {
-                textarea.style.height = "auto"; // reset altura
-                textarea.style.height = (textarea.scrollHeight) + "px"; // ajusta à nova altura
+                textarea.style.height = "auto";
+                textarea.style.height = (textarea.scrollHeight) + "px";
             });
 
             textarea.addEventListener("keydown", function (event) {
@@ -268,14 +71,14 @@
                     document.getElementById("ai-form").dispatchEvent(new Event("submit", { bubbles: true, cancelable: true }));
                 }
             });
-        
+
             input.addEventListener("keydown", function (event) {
                 if (event.key === "Enter") {
                     event.preventDefault();
                     form.dispatchEvent(new Event("submit", { bubbles: true, cancelable: true }));
                 }
             });
-        
+
             suggestions.forEach(suggestion => {
                 suggestion.addEventListener("click", function () {
                     input.value = this.innerText;
@@ -284,37 +87,32 @@
             });
         });
 
-    </script>
-
-    <script>
         function hideSuggestions() {
             fetch("{% url 'generate_suggestions' %}")
                 .then(response => response.json())
                 .then(data => {
                     let suggestionsContainer = document.getElementById('quick-suggestions');
                     suggestionsContainer.innerHTML = '';
-    
+
                     data.suggestions.forEach(suggestion => {
                         let suggestionSpan = document.createElement("span");
                         suggestionSpan.className = "new-suggestion";
                         suggestionSpan.innerText = suggestion;
-    
+
                         suggestionSpan.addEventListener("click", function () {
                             const input = document.getElementById("question");
                             input.value = this.innerText;
                             document.getElementById("ai-form").dispatchEvent(new Event("submit", { bubbles: true, cancelable: true }));
                         });
-    
+
                         suggestionsContainer.appendChild(suggestionSpan);
                     });
                 })
                 .catch(error => console.error("Erro ao obter sugestões:", error));
         }
-    
-        
     </script>
 
-    <!--Funções para Chat-History-->
+    <!-- JS do chat/stream, feedback, memos -->
     <script>
         document.getElementById('ai-form').addEventListener('submit', async function(event) {
             event.preventDefault();
@@ -345,29 +143,29 @@
 
                 const reader = response.body.getReader();
                 const decoder = new TextDecoder("utf-8");
-                
+
                 let botMessage = document.createElement("div");
                 botMessage.classList.add("message", "bot-message");
 
-                // Cria a div de opções do bot
+                // Bot options (memo, like, dislike)
                 let optionsDiv = document.createElement("div");
                 optionsDiv.classList.add("bot-message-options");
-                
-                // Botão de salvar com ícone de coração
+
+                // Memo
                 let saveButton = document.createElement("button");
                 saveButton.classList.add("save-memo-btn");
                 saveButton.title = "Save as Memo";
                 saveButton.innerHTML = '<i class="fa-regular fa-heart"></i>'; 
                 optionsDiv.appendChild(saveButton);
 
-                // Botão de Like com ícone
+                // Like
                 let likeButton = document.createElement("button");
                 likeButton.classList.add("save-memo-btn");
                 likeButton.title = "Positive Feedback";
                 likeButton.innerHTML = '<i class="fa-regular fa-thumbs-up"></i>'; 
                 optionsDiv.appendChild(likeButton);
-                
-                // Botão de disLike com ícone
+
+                // Dislike
                 let dislikeButton = document.createElement("button");
                 dislikeButton.classList.add("save-memo-btn");
                 dislikeButton.title = "Negative Feedback";
@@ -377,10 +175,9 @@
                 let messageContent = document.createElement("div");
                 messageContent.classList.add("bot-message-content");
 
-                // Evento de clique que captura o conteúdo da resposta
+                // Memo
                 saveButton.addEventListener("click", () => {
                     const contentToSave = messageContent.innerText.trim();
-                
                     if (saveButton.classList.contains("liked")) {
                         removerMemo(saveButton.dataset.memoId, saveButton);
                     } else {
@@ -388,11 +185,11 @@
                     }
                 });
 
+                // Like
                 likeButton.addEventListener("click", () => {
                     const userPrompt = question;
-                    const botMessage = messageContent.innerText.trim();
-                    sendFeedback(userPrompt, botMessage, "like");
-                
+                    const botMsg = messageContent.innerText.trim();
+                    sendFeedback(userPrompt, botMsg, "like");
                     if (likeButton.classList.contains("selected")) {
                         updateFeedbackVisual(null, likeButton, dislikeButton);
                     } else {
@@ -400,11 +197,11 @@
                     }
                 });
 
+                // Dislike
                 dislikeButton.addEventListener("click", () => {
                     const userPrompt = question;
-                    const botMessage = messageContent.innerText.trim();
-                    sendFeedback(userPrompt, botMessage, "dislike");
-                
+                    const botMsg = messageContent.innerText.trim();
+                    sendFeedback(userPrompt, botMsg, "dislike");
                     if (dislikeButton.classList.contains("selected")) {
                         updateFeedbackVisual(null, likeButton, dislikeButton);
                     } else {
@@ -412,19 +209,17 @@
                     }
                 });
 
-                // Anexa as partes na ordem correta
+                // Anexa partes
                 botMessage.appendChild(messageContent);
                 botMessage.appendChild(optionsDiv);
-                chatHistory.appendChild(botMessage);    
+                chatHistory.appendChild(botMessage);
 
-                // Processamento do streaming de resposta
+                // Streaming resposta
                 function processStream({ done, value }) {
                     if (done) return;
-                
                     messageContent.innerHTML = marked.parse(messageContent.innerHTML + decoder.decode(value));
                     reader.read().then(processStream);
                 }
-
                 reader.read().then(processStream);
             } catch (error) {
                 console.error("Error fetching response:", error);
@@ -490,16 +285,15 @@
         function updateFeedbackVisual(type, likeBtn, dislikeBtn) {
             likeBtn.classList.remove("selected", "like");
             dislikeBtn.classList.remove("selected", "dislike");
-        
             if (type === "like") {
                 likeBtn.classList.add("selected", "like");
             } else if (type === "dislike") {
                 dislikeBtn.classList.add("selected", "dislike");
             }
         }
-
     </script>
 
+    <!-- JS do speech-to-text -->
     <script>
     let mediaRecorder;
     let audioChunks = [];
@@ -531,14 +325,10 @@
                     micButton.classList.remove("recording");
                     micButton.innerHTML = '<i class="fa-solid fa-microphone"></i>';
 
-                    // Mostra o loading
                     loadingDiv.style.display = "block";
-
                     const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
                     const formData = new FormData();
                     formData.append("audio", audioBlob, "audio.webm");
-                    
-                    
 
                     try {
                         const response = await fetch("/app/speech-to-text/", {
@@ -549,7 +339,6 @@
                         if (data.text) {
                             questionInput.value = data.text;
                             questionInput.focus();
-                            // Envia automaticamente o texto para o chat
                             aiForm.dispatchEvent(new Event("submit", { bubbles: true, cancelable: true }));
                         } else {
                             alert("Não foi possível transcrever o áudio.");
@@ -557,18 +346,13 @@
                     } catch (err) {
                         alert("Erro ao transcrever o áudio.");
                     }
-                    // Esconde o loading
                     loadingDiv.style.display = "none";
                 };
             } else {
-                // Para a gravação
                 mediaRecorder.stop();
             }
         });
     });
     </script>
-
-    
-
-</body> 
+</body>
 </html>
