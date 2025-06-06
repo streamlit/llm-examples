@@ -18,8 +18,22 @@ class UsersMilestones(models.Model):
     completed = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
+class chat_Session(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='chat_sessions', null=True, blank=True)
+    title = models.CharField(max_length=255, blank=True, default="Nova Sessão")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    is_active = models.BooleanField(default=True)
+
+    def __str__(self):
+        if self.user:
+            return f"{self.title} ({self.user.username})"
+        else:
+            return f"{self.title} (Anônimo)"
+    
 class chat_memories(models.Model):
-    user_id = models.CharField(max_length=100)
+    session = models.ForeignKey(chat_Session, on_delete=models.CASCADE, related_name='memories', null=True, blank=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     user_message = models.TextField()
     user_message_sentiment = models.CharField(max_length=20, blank=True, null=True) 
     chat_message = models.TextField()

@@ -135,8 +135,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/app/'
-LOGOUT_REDIRECT_URL = '/accounts/login/'
-ACCOUNT_SIGNUP_REDIRECT_URL = '/app/'
+# LOGOUT_REDIRECT_URL = '/accounts/login/' (Retornar quando voltar login)
+# ACCOUNT_SIGNUP_REDIRECT_URL = '/app/' (Retornar quando voltar login)
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/

@@ -9,63 +9,57 @@
 </head>
 
 <aside class="sidebar">
-            
     <div class="menu-icon" onclick="toggleMenu()">
         <a><i class="fas fa-bars"></i> <span>Menu</span></a>
     </div>
-    
     <ul id="menu">
         <li class="{% if request.path == '/app/' %}selected{% endif %}">
             <a href="/app/"><i class="fas fa-home"></i> <span>Home</span></a>
         </li>
-        
-        <li class="{% if request.path == '/app/memory' %}selected{% endif %}">
-            <a href="/app/memory"><img src="{% static 'frontend/img/menu-icons/icon_chat_history.png' %}" alt="Chat History Icon"> <span>Chat History</span></a>
-        </li>
-
-        <li class="{% if request.path == '/app/memos' %}selected{% endif %}">
-            <a href="/app/memos"><img src="{% static 'frontend/img/menu-icons/icon_memos.png' %}" alt="Favorited Memos Icon"> <span>Favorited Memos</span></a>
-        </li>
-
-        <li class="{% if request.path == '/app/diary' %}selected{% endif %}">
-            <a href="/app/diary"><img src="{% static 'frontend/img/menu-icons/icon_my_life_journal.png' %}" alt="My Life journal Icon"> <span>My Life - Journal</span></a>
-        </li>
-        
-        <li class="{% if request.path == '/app/emotions_atlas' %}selected{% endif %}">
-            <a href="/app/emotions_atlas"><img src="{% static 'frontend/img/menu-icons/icon_atlas_emotions.png' %}" alt="My Atlas of Emotions Icon"> <span>My Atlas of Emotions</span></a>
-        </li>
-
-        <li class="{% if request.path == '/app/ideas_box' %}selected{% endif %}">
-            <a href="https://docs.google.com/forms/d/e/1FAIpQLSeeV_O5Jw9o338PRQsazVu1pEL9ekd2JjWTVj9O5B0y-AGg8Q/viewform"><img src="{% static 'frontend/img/menu-icons/icon_idea_box.png' %}" alt="Idea Box Icon"> <span>Idea Box</span></a>
-        </li>
-
-        <li id="btn-surprise-me" class="{% if request.path == '/app/surprise_me' %}selected{% endif %}">
-            <a href="/app/surprise_me"> <span>Surprise Me</span></a>
-        </li>
-        
-        {% if request.user.is_staff %}
-            <li class="{% if '/app/adm/' in request.path %}selected{% endif %}">
-                <a href="/app/adm/users_page"><i class="fas fa-user-shield"></i> <span>Adm</span></a>
-            </li>
-        
-            <li class="{% if request.path == '/app/dashboard' %}selected{% endif %}">
-                <a href="/app/dashboard"><i class="fa-regular fa-chart-bar"></i></i> <span>Dashboard</span></a>
+        {% if not request.user.is_authenticated %}
+            <li class="{% if request.path == '/accounts/login/' %}selected{% endif %}">
+                <a href="/accounts/login/"><i class="fas fa-sign-in-alt"></i> <span>Login</span></a>
             </li>
         {% endif %}
-
-        <li class="{% if request.path == '/accounts/logout/' %}selected{% endif %}">
-            <a href="/accounts/logout/"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a>
-        </li>
+        {% if request.user.is_authenticated %}
+            <li class="{% if request.path == '/app/memory' %}selected{% endif %}">
+                <a href="/app/memory"><img src="{% static 'frontend/img/menu-icons/icon_chat_history.png' %}" alt="Chat History Icon"> <span>Chat History</span></a>
+            </li>
+            <li class="{% if request.path == '/app/memos' %}selected{% endif %}">
+                <a href="/app/memos"><img src="{% static 'frontend/img/menu-icons/icon_memos.png' %}" alt="Favorited Memos Icon"> <span>Favorited Memos</span></a>
+            </li>
+            <li class="{% if request.path == '/app/diary' %}selected{% endif %}">
+                <a href="/app/diary"><img src="{% static 'frontend/img/menu-icons/icon_my_life_journal.png' %}" alt="My Life journal Icon"> <span>My Life - Journal</span></a>
+            </li>
+            <li class="{% if request.path == '/app/emotions_atlas' %}selected{% endif %}">
+                <a href="/app/emotions_atlas"><img src="{% static 'frontend/img/menu-icons/icon_atlas_emotions.png' %}" alt="My Atlas of Emotions Icon"> <span>My Atlas of Emotions</span></a>
+            </li>
+            <li class="{% if request.path == '/app/ideas_box' %}selected{% endif %}">
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLSeeV_O5Jw9o338PRQsazVu1pEL9ekd2JjWTVj9O5B0y-AGg8Q/viewform"><img src="{% static 'frontend/img/menu-icons/icon_idea_box.png' %}" alt="Idea Box Icon"> <span>Idea Box</span></a>
+            </li>
+            <li id="btn-surprise-me" class="{% if request.path == '/app/surprise_me' %}selected{% endif %}">
+                <a href="/app/surprise_me"> <span>Surprise Me</span></a>
+            </li>
+            {% if request.user.is_staff %}
+                <li class="{% if '/app/adm/' in request.path %}selected{% endif %}">
+                    <a href="/app/adm/users_page"><i class="fas fa-user-shield"></i> <span>Adm</span></a>
+                </li>
+                <li class="{% if request.path == '/app/dashboard' %}selected{% endif %}">
+                    <a href="/app/dashboard"><i class="fa-regular fa-chart-bar"></i> <span>Dashboard</span></a>
+                </li>
+            {% endif %}
+            <li class="{% if request.path == '/accounts/logout/' %}selected{% endif %}">
+                <a href="/accounts/logout/"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a>
+            </li>
+        {% endif %}
     </ul>
-    
-
     <div class="lulu_icon">
         <img src="{% static 'frontend/img/logo_happy_kids.png' %}" alt="Image Description" class="starters-image" />
     </div>
-
     <script src="{% static 'frontend/js/scripts_sidebar.js' %}"></script>
-
 </aside>
+
+
 
 
 
