@@ -6,3 +6,15 @@ anthropic>=0.3.0
 trubrics>=1.4.3
 streamlit-feedback
 langchain-community
+python-dotenv
+pika
+langchain_anthropic
+pymongo
+typing
+pydantic_ai
+py2neo
+jsonlite
+python-dotenv
+boto3
+streamlit_quill
+streamlit-product-card

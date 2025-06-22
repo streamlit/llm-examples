@@ -48,3 +48,12 @@ source .venv/bin/activate
 pip install -r requirements.txt
 streamlit run Chatbot.py
 ```
+
+
+O chanceler do governo Lula, Mauro Vieira, afirmou nesta quarta-feira que o interesse nacional está sempre em primeiro lugar nas relações com outros países. Vieira deu essa declaração ao ser perguntado por alguns parlamentares sobre as ameaças do governo do presidente americano, Donald Trump, ao ministro do Supremo Tribunal Federal (STF), Alexandre de Moraes.
+
+— Queria relembrar as palavras que disse, em que fiz referência ao Barão do Rio Branco, dizendo que o Brasil não tem alianças, não tem parcerias incondicionais. O principal é o interesse nacional, que está sempre em primeiro lugar — afirmou, em audiência pública na Comissão de Relações Exteriores e Defesa Nacional da Câmara dos Deputados, Mauro Vieira também foi questionado sobre o anúncio feito pelo secretário de Estado dos EUA, Marco Rubio, de que haverá restrição na concessão de vistos para autoridades estrangeiras. Rubio não citou alvos, mas bolsonaristas acreditam que entre os alvos estão ministros do STF.
+
+— A política de visto é de cada Estrado, cada um toma as decisões de conceder ou não conceder. É uma decisão soberana de cada país — disse ele, sem citar nomes que poderiam ser afetados com a medida.
+
+Na semana passada, Marco Rubio declarou que há possibilidade de Moraes sofrer sanções dos EUA, como ser proibido de entrar no país. O chefe da diplomacia americana causou preocupação ao governo brasileiro, que afirmou a Washington que as relações bilaterais serão negativamente afetadas.
