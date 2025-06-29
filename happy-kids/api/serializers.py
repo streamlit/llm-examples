@@ -16,6 +16,18 @@ class UsersMilestonesSerializer(serializers.ModelSerializer):
         model = UsersMilestones
         fields = ('id','user','milestone','completed','created_at')
 
+class chat_SessionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = chat_Session
+        fields = ('id','user','title','created_at','updated_at','is_active')
+
+
+class chat_memoriesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = chat_memories
+        fields = ('id','session','user','user_message','user_message_sentiment','chat_message','date_time','embedding')
+
+
 class chat_dim_onboarding_questionsSerializer(serializers.ModelSerializer):
     class Meta:
         model = chat_dim_onboarding_questions
@@ -29,19 +41,17 @@ class chat_dim_onboarding_options_answersSerializer(serializers.ModelSerializer)
 class chat_facts_onboarding_answersSerializer(serializers.ModelSerializer):
     class Meta:
         model = chat_facts_onboarding_answers
-        fields = ('user','question', 'answer','order','datetime')
+        fields = ('user','question', 'answer','order','date_time')
 
 class dim_question_typeSerializer(serializers.ModelSerializer):
     class Meta:
         model = dim_question_type
-        field = ('question_type')
+        fields = ('id','question_type')
 
 class diary_factsSerializer(serializers.ModelSerializer):
     class Meta:
         model = diary_facts
         fields = ('date','title', 'body','user')
-
-
 
 class dim_am_i_boring_questionsSerializer(serializers.ModelSerializer):
     class Meta:
@@ -56,7 +66,7 @@ class dim_am_i_boring_options_answersSerializer(serializers.ModelSerializer):
 class facts_am_i_boring_answersSerializer(serializers.ModelSerializer):
     class Meta:
         model = facts_am_i_boring_answers
-        fields = ('user','question', 'answer','order','datetime')
+        fields = ('user','question', 'answer','order','date_time')
 
 class facts_memosSerializer(serializers.ModelSerializer):
     class Meta:
