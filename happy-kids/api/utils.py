@@ -353,7 +353,7 @@ def classify_sentiment_model(text):
         print(f"Error during tag model : {e}")
         return None
 
-def intensity_level_sentiment_model(text, api_key):
+def intensity_level_sentiment_model(text):
     """
     Classifies the sentiment of a conversation using OpenAI GPT API.
     """

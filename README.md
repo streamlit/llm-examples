@@ -37,8 +37,6 @@ README.md                   # This file
 
 ---
 
----
-
 ## API Reference
 
 The backend provides a RESTful API for accessing all key data entities and utility functions for the project.  
@@ -46,8 +44,8 @@ All endpoints require authentication (`IsAuthenticated`), unless otherwise noted
 
 A fully interactive API documentation is available at:
 
-- [Swagger UI](/api/swagger/)
-- [ReDoc](/api/redoc/)
+- [Swagger UI](https://lulu-teaches-988538575854.europe-west3.run.app/api/swagger/)
+- [ReDoc](https://lulu-teaches-988538575854.europe-west3.run.app/api/redoc/)
 
 ---
 
@@ -55,7 +53,7 @@ A fully interactive API documentation is available at:
 ```
 http://localhost:8000/api/
 
-https://lulu-teaches-988538575854.europe-west3.run.app//api/
+https://lulu-teaches-988538575854.europe-west3.run.app/api/
 ```
 
 ### Available Endpoints
@@ -83,6 +81,7 @@ https://lulu-teaches-988538575854.europe-west3.run.app//api/
 
 ```bash
 curl -H "Authorization: Token <your-token>" http://localhost:8000/api/historical-sessions/
+```
 
 ---
 
@@ -252,7 +251,7 @@ docker push gcr.io/lulu-mvp/lulu-teaches
 
 **Future Ideas**
 
-* [ ] API for third-party integration
+* [x] API for third-party integration
 * [ ] AI-powered recommendation engine
 * [ ] Offline mode support
 

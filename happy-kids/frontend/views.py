@@ -375,7 +375,9 @@ def delete_option(request, option_id):
 
 
 def onboarding_data(request):
-    """Retorna as perguntas de onboarding não respondidas em JSON com opções associadas."""
+    """
+    Retorna as perguntas de onboarding não respondidas em JSON com opções associadas.
+    """
     
     user = request.user
     questions = models.chat_dim_onboarding_questions.objects.filter(active=True).order_by("order")
