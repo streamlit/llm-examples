@@ -37,6 +37,55 @@ README.md                   # This file
 
 ---
 
+---
+
+## API Reference
+
+The backend provides a RESTful API for accessing all key data entities and utility functions for the project.  
+All endpoints require authentication (`IsAuthenticated`), unless otherwise noted.
+
+A fully interactive API documentation is available at:
+
+- [Swagger UI](/api/swagger/)
+- [ReDoc](/api/redoc/)
+
+---
+
+### Base URL
+```
+http://localhost:8000/api/
+
+https://lulu-teaches-988538575854.europe-west3.run.app//api/
+```
+
+### Available Endpoints
+
+| Resource                               | Method | Endpoint                                                | Description                                      | Supports Filtering |
+|-----------------------------------------|--------|---------------------------------------------------------|--------------------------------------------------|-------------------|
+| Historical Sessions                    | GET    | /api/historical-sessions/                               | List all historical sessions                     | Yes               |
+| Lulu Training Data                      | GET    | /api/lulu-training/                                     | List all training data for Lulu                  | Yes               |
+| Onboarding Questions                    | GET    | /api/chat-dim-onboarding-questions/                     | List onboarding questions                        | Yes               |
+| Onboarding Options & Answers            | GET    | /api/chat-dim-onboarding-options-answers/               | List onboarding options/answers                  | Yes               |
+| Onboarding Answers                      | GET    | /api/chat-facts-onboarding-answers/                     | List onboarding factual answers                  | Yes               |
+| Question Types                          | GET    | /api/dim-question-type/                                 | List all question types                          | Yes               |
+| Diary Facts                             | GET    | /api/diary-facts/                                       | List all diary facts                             | Yes               |
+| "Am I Boring?" Questions                | GET    | /api/dim-am-i-boring-questions/                         | List all "Am I Boring?" questions                | Yes               |
+| "Am I Boring?" Options & Answers        | GET    | /api/dim-am-i-boring-options-answers/                   | List all options/answers for "Am I Boring?"      | Yes               |
+| "Am I Boring?" Answers                  | GET    | /api/facts-am-i-boring-answers/                         | List all factual answers for "Am I Boring?"      | Yes               |
+| Memos                                   | GET    | /api/facts-memos/                                       | List all memos                                   | Yes               |
+| Chat Feedback                           | GET    | /api/chat-facts-feedback/                               | List all chat feedback entries                   | Yes               |
+
+> **Note:** All list endpoints support filtering via query parameters (see [DjangoFilterBackend docs](https://django-filter.readthedocs.io/en/latest/)).
+
+---
+
+### Example: Querying the API
+
+```bash
+curl -H "Authorization: Token <your-token>" http://localhost:8000/api/historical-sessions/
+
+---
+
 ## Getting Started
 
 ### 1. Set up the Virtual Environment
