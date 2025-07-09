@@ -127,13 +127,11 @@ form {
 
 .quick-suggestions {
     display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-    justify-content: center;
+    flex-direction: column;
+    gap: 30px;
     align-items: center;
-    width: 60vw;
-    max-width: 900px;
-    text-align: center;
+    margin: 0 auto;
+    text-align: center ;
 }
 
 .suggestion {
@@ -143,6 +141,12 @@ form {
     cursor: pointer;
     font-size: 14px;
     transition: background 0.3s;
+    text-align: center;
+    min-width: 160px;
+    max-width: 250px;
+    flex: 1 1 180px;
+    white-space: normal;
+    word-break: break-word;
 }
 
 .new-suggestion {

@@ -1,4 +1,5 @@
-from .utils import get_short_term_memory, classify_sentiment, get_embedding, get_relevant_memories, recognize_speech, transcribe_with_whisper
+from api.utils import get_short_term_memory, classify_sentiment, get_embedding, get_relevant_memories, recognize_speech, transcribe_with_whisper
+from api import models
 from .forms import *
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
@@ -8,7 +9,6 @@ from django.http import StreamingHttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt 
 from django.utils.safestring import mark_safe
-from api import models
 import openai
 import os
 import json
@@ -138,9 +138,9 @@ def view_lulu(request):
         ]
 
         for mem in relevant_memories:
-            messages.append({"role": "user", "content": f"(Previously) {mem.user_message}"})
+            messages.append({"role": "user", "content": f" {mem.user_message}"})
             if mem.chat_message:
-                messages.append({"role": "assistant", "content": f"(Previously) {mem.chat_message}"})
+                messages.append({"role": "assistant", "content": f" {mem.chat_message}"})
         
         messages.extend(recent_memory)
 
@@ -187,26 +187,44 @@ def view_save_memo(request):
     if request.method == "POST":
         texto = request.POST.get("message")
         if texto:
-            memo = models.facts_memos.objects.create(user=request.user, message=texto)
+            user_instance = request.user if request.user.is_authenticated else None
+            session_key = request.session.session_key
+
+            if not session_key:
+                request.session.save()
+                session_key = request.session.session_key
+            memo = models.facts_memos.objects.create(
+                user=user_instance,
+                message=texto,
+                session_key=None if user_instance else session_key
+            )
             return JsonResponse({"status": "ok", "memo_id": memo.id})
-        return JsonResponse({"status": "error", "message": "Mensagem vazia"}, status=400)
+        return JsonResponse({"status": "error", "message": "Empty Message"}, status=400)
     return JsonResponse({"status": "error", "message": "Método não permitido"}, status=405)
 
 
 @csrf_exempt
 def view_delete_memo(request, memo_id):
     if request.method == "POST":
-        memo = models.facts_memos.objects.get(id=memo_id, user=request.user)
+        user_instance = request.user if request.user.is_authenticated else None
+        if user_instance:
+            memo = models.facts_memos.objects.get(id=memo_id, user=user_instance)
+        else:
+            session_key = request.session.session_key
+            if not session_key:
+                return JsonResponse({"status": "error", "message": "Sessão não encontrada"}, status=403)
+            memo = models.facts_memos.objects.get(id=memo_id, user__isnull=True, session_key=session_key)
         memo.delete()
         return JsonResponse({"status": "ok"})
     return JsonResponse({"status": "error"}, status=405)
 
 
+@login_required
 def view_chat_memos(request):
     memos = models.facts_memos.objects.filter(user=request.user).order_by("-datetime")
     return render(request, "chat_memos.html", {"memos": memos})
 
-
+@login_required
 def view_chat_memory(request):
     if request.user.is_authenticated:
         conversas = models.chat_memories.objects.filter(user_id=str(request.user.id))
@@ -228,9 +246,11 @@ def view_save_feedback(request):
 
         if not user_prompt or not bot_message or not feedback_type:
             return JsonResponse({"error": "Dados inválidos."}, status=400)
+        
+        user_instance = request.user if request.user.is_authenticated else None
 
         existing_feedback = models.chat_facts_feedback.objects.filter(
-            user=request.user,
+            user=user_instance,
             user_prompt=user_prompt,
             bot_message=bot_message
         ).first()
@@ -245,7 +265,7 @@ def view_save_feedback(request):
                 return JsonResponse({"status": "updated"})
 
         models.chat_facts_feedback.objects.create(
-            user=request.user,
+            user=user_instance,
             user_prompt=user_prompt,
             bot_message=bot_message,
             feedback_type=feedback_type
@@ -355,7 +375,9 @@ def delete_option(request, option_id):
 
 
 def onboarding_data(request):
-    """Retorna as perguntas de onboarding não respondidas em JSON com opções associadas."""
+    """
+    Retorna as perguntas de onboarding não respondidas em JSON com opções associadas.
+    """
     
     user = request.user
     questions = models.chat_dim_onboarding_questions.objects.filter(active=True).order_by("order")
@@ -609,7 +631,7 @@ def save_am_i_boring_answer(request):
 
 
 
-
+@login_required
 def dashboard_view(request):
     
     # --- CHAT ---
@@ -624,14 +646,14 @@ def dashboard_view(request):
     chat_counts = [r['count'] for r in chat_per_day]
 
     top_users_chat = (
-        models.chat_memories.objects
+        models.chat_memories.objects.filter(user_id__isnull = False)
         .values('user_id')
         .annotate(count=Count('id'))
         .order_by('-count')[:5]
     )
     top_usernames = []
     top_user_counts = []
-    from django.contrib.auth.models import User
+    
     for u in top_users_chat:
         user = User.objects.get(id=u['user_id'])
         top_usernames.append(user.username)

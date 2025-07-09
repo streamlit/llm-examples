@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'drf_yasg',
 
     'allauth',
     'allauth.account',
@@ -118,6 +119,12 @@ DATABASES = {
          'HOST': os.getenv('DATABASE_HOST', '127.0.0.1'),
          'PORT': os.getenv('DATABASE_PORT', 5432),
     }
+}
+
+REST_FRAMEWORK = {
+    "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"],
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    "PAGE_SIZE": 20
 }
 
 
