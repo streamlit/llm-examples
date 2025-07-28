@@ -32,13 +32,17 @@ name: 'Build and Deploy to Cloud Run'
 on:
   push:
     branches:
-      - '"main"'
+      - main
 
 env:
-  PROJECT_ID: 'my-project' # TODO: update to your Google Cloud project ID
-  REGION: 'us-central1' # TODO: update to your region
-  SERVICE: 'my-service' # TODO: update to your service name
-  WORKLOAD_IDENTITY_PROVIDER: 'projects/123456789/locations/global/workloadIdentityPools/my-pool/providers/my-provider' # TODO: update to your workload identity provider
+  PROJECT_ID: 'lulu-mvp' # TODO: update to your Google Cloud project ID
+  REGION: 'europe-west3' # TODO: update to your region
+  SERVICE: 'lulu-teaches'  # nome do serviço no Cloud Run
+  REPOSITORY: 'gcr.io'  # nome do repositório no Artifact Registry 
+  WORKLOAD_IDENTITY_PROVIDER: 'projects/988538575854/locations/global/workloadIdentityPools/happy-kids-pool/providers/happy-kids-provider' # TODO: update to your workload identity provider
+  SERVICE_ACCOUNT_EMAIL: 'lulu-auth-service@lulu-mvp.iam.gserviceaccount.com'
+  GITHUB_AUDIENCE: 'https://github.com/MVP-Psicologia-Positiva/lulu-teaches-mvp'
+
 
 jobs:
   deploy:
@@ -50,31 +54,50 @@ jobs:
 
     steps:
       - name: 'Checkout'
-        uses: 'actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332' # actions/checkout@v4
+        uses: actions/checkout@v4 # actions/checkout@v4
 
       # Configure Workload Identity Federation and generate an access token.
       #
       # See https://github.com/google-github-actions/auth for more options,
       # including authenticating via a JSON credentials file.
-      - id: 'auth'
-        name: 'Authenticate to Google Cloud'
-        uses: 'google-github-actions/auth@f112390a2df9932162083945e46d439060d66ec2' # google-github-actions/auth@v2
+      - id: auth
+        name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2 #google-github-actions/auth@f112390a2df9932162083945e46d439060d66ec2' # google-github-actions/auth@v2
         with:
           workload_identity_provider: '${{ env.WORKLOAD_IDENTITY_PROVIDER }}'
+          service_account:            '${{ env.SERVICE_ACCOUNT_EMAIL }}'
+          audience:                   '${{ env.GITHUB_AUDIENCE }}'
+          project_id:                 '${{ env.PROJECT_ID }}'
+          token_format:               'access_token'
+          scopes:                     'https://www.googleapis.com/auth/cloud-platform'
+          export_default_credentials: true
+      
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: 🔍 Debug GCP Auth
+        run: |
+          echo "**Conta ativa:**"
+          gcloud auth list
 
       # BEGIN - Docker auth and build
       #
       # If you already have a container image, you can omit these steps.
-      - name: 'Docker Auth'
-        uses: 'docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567' # docker/login-action@v3
-        with:
-          username: 'oauth2accesstoken'
-          password: '${{ steps.auth.outputs.auth_token }}'
-          registry: '${{ env.REGION }}-docker.pkg.dev'
+
+      - name: Configure Docker to use gcloud credential helper
+        run: |
+          gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev --quiet
+      
+      - name: 🔍 Check Artifact Registry IAM
+        run: |
+          gcloud artifacts repositories get-iam-policy ${{ env.REPOSITORY }} \
+            --location=${{ env.REGION }} \
+            --project=${{ env.PROJECT_ID }} \
+            --format="table(bindings.role, bindings.members)"
 
       - name: 'Build and Push Container'
         run: |-
-          DOCKER_TAG="$${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{ github.sha }}"
+          DOCKER_TAG="${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.SERVICE }}:${{ github.sha }}"
           docker build --tag "${DOCKER_TAG}" .
           docker push "${DOCKER_TAG}"
       - name: 'Deploy to Cloud Run'
@@ -87,7 +110,7 @@ jobs:
           region: '${{ env.REGION }}'
           # NOTE: If using a pre-built image, update the image name below:
 
-          image: '${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{ github.sha }}'
+          image: '${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.SERVICE }}:${{ github.sha }}'
       # If required, use the Cloud Run URL output in later steps
       - name: 'Show output'
         run: |2-
