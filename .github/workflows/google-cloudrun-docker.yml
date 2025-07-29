@@ -38,7 +38,7 @@ env:
   PROJECT_ID: 'lulu-mvp' # TODO: update to your Google Cloud project ID
   REGION: 'europe-west3' # TODO: update to your region
   SERVICE: 'lulu-teaches'  # nome do serviço no Cloud Run
-  REPOSITORY: 'gcr.io'  # nome do repositório no Artifact Registry 
+  REPOSITORY: 'happy-kids-backend'  # nome do repositório no Artifact Registry 
   WORKLOAD_IDENTITY_PROVIDER: 'projects/988538575854/locations/global/workloadIdentityPools/happy-kids-pool/providers/happy-kids-provider' # TODO: update to your workload identity provider
   SERVICE_ACCOUNT_EMAIL: 'lulu-auth-service@lulu-mvp.iam.gserviceaccount.com'
   GITHUB_AUDIENCE: 'https://github.com/MVP-Psicologia-Positiva/lulu-teaches-mvp'
