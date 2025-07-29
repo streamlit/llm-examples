@@ -96,10 +96,11 @@ jobs:
             --format="table(bindings.role, bindings.members)"
 
       - name: 'Build and Push Container'
-        run: |-
+        run: |
           DOCKER_TAG="${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.SERVICE }}:${{ github.sha }}"
-          docker build --tag "${DOCKER_TAG}" .
+          docker build -f happy-kids/Dockerfile -t "${DOCKER_TAG}" happy-kids/
           docker push "${DOCKER_TAG}"
+        
       - name: 'Deploy to Cloud Run'
 
         # END - Docker auth and build
