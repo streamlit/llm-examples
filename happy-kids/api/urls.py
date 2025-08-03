@@ -1,3 +1,5 @@
+app_name = "api"
+
 from django.urls import path
 from .views import *
 from django.urls import path, re_path
@@ -36,6 +38,8 @@ urlpatterns = [
    path('classify-intensity-level-sentiment', intensityLevelSentimentClassificationView.as_view(), name='classify-intensity-level-sentiment'),    
    path('classify-life-pillars', lifePillarsClassificationView.as_view(), name='classify-life-pillars'),    
    path('classify-primary-topic', primaryTopicClassificationView.as_view(), name='classify-primary-topic'),    
+  
+   path('generate-suggestions/', GenerateSuggestionsView.as_view(), name='generate_suggestions'),
 
    re_path(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),

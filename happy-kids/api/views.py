@@ -9,6 +9,12 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
+from . import utils
 
 class historicalSessionsView(generics.ListAPIView):
     queryset = historicalSessions.objects.all()
@@ -179,3 +185,30 @@ class primaryTopicClassificationView(APIView):
             return Response({"error": "Missing text"}, status=status.HTTP_400_BAD_REQUEST)
         primary_topic = primary_topics_model(text)
         return Response({"Primary Topic": primary_topic}, status=status.HTTP_200_OK)
+    
+class GenerateSuggestionsView(APIView):
+    """
+    Generate quick, context-aware question suggestions for the Lulu chatbot, based on recent chat history.
+    """
+    permission_classes = [IsAuthenticated]
+
+    @swagger_auto_schema(
+        operation_description="Generate a short question suggestions to continue the conversation based on recent chat context.",
+        responses={200: openapi.Response(
+            description="List of suggestion strings",
+            examples={
+                "application/json": {
+                    "suggestions": [
+                        "What should I do next?",
+                        "How can I explain this to my parents?",
+                        "Can you help me understand this better?"
+                    ]
+                }
+            }
+        )},
+        tags=["Lulu Chat"]
+    )
+    def get(self, request):
+        user_id = request.user.id
+        suggestions = utils.generate_suggestions_from_memory(user_id)
+        return Response({"suggestions": suggestions})

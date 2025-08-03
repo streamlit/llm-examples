@@ -127,10 +127,9 @@ form {
 
 .quick-suggestions {
     display: flex;
-    flex-direction: column;
+    margin: 20px;
     gap: 30px;
     align-items: center;
-    margin: 0 auto;
     text-align: center ;
 }
 
@@ -736,9 +735,7 @@ button.selected.dislike i {
     }
 
     .quick-suggestions {
-        width: 90vw;
         max-width: 90vw;
-        
     }
 
     .timeline {

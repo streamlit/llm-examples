@@ -1,11 +1,10 @@
-import json
 import os
-from google.cloud import storage
 from django.utils import timezone
 from datetime import timedelta
 from .models import *
 import openai
 import numpy as np
+from rest_framework.response import Response
 
 def get_short_term_memory(user_id):
     """Recupera a memória de curto prazo do banco de dados"""
@@ -390,3 +389,48 @@ def intensity_level_sentiment_model(text):
     except Exception as e:
         print(f"Error during tag model : {e}")
         return None
+    
+######################### Question suggestion based on chat context #########################
+
+def generate_suggestions_from_memory(user_id):
+    """
+    Gera sugestões com base nas últimas mensagens salvas de um usuário.
+    """
+    recent_messages = chat_memories.objects.filter(user_id=user_id).order_by('-id')[:3]
+
+    system_prompt = (
+        "You are a smart assistant responsible for generating follow-up short question suggestions, max 12 tokens."
+        "based on the conversation between the user and an AI assistant named Lulu.\n\n"
+        "Your goal is to suggest a natural, context-aware question the user might ask Lulu about himself next. These questions should:\n"
+        "- Be written **from the user's perspective**, as if the user is talking about their own life, needs, problems, or interests.\n"
+        "- Focus on the user's goals, doubts, and context — **not about Lulu or her experiences**.\n"
+        "- Use natural, informal, curious phrasing (e.g. 'How can I...', 'What should I do if...', 'Can you help me with...').\n"
+        "- Be relevant to the conversation history provided.\n"
+        "- Be safe and appropriate for a general-purpose assistant.\n\n"
+        "IMPORTANT: Do NOT generate questions that are:\n"
+        "- Sexual, explicit, flirtatious, discriminatory, or offensive\n"
+        "- About politics, religion, or medical advice\n\n"
+        "Use the conversation history to generate your suggestions."
+    )
+
+    messages = [{"role": "system", "content": system_prompt}]
+    for msg in reversed(recent_messages):
+        messages.append({"role": "user", "content": msg.user_message})
+        messages.append({"role": "assistant", "content": msg.chat_message})
+
+    client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=messages + [
+            {
+                "role": "user",
+                "content": "Generate a short question suggestion to continue this conversation, maintaining the context of the dialogue and the just use english language. Just return the question."
+            }
+        ],
+        max_tokens=12,
+        temperature=1.4,
+        n=3
+    )
+
+    return [choice.message.content.strip() for choice in response.choices]

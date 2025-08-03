@@ -26,16 +26,10 @@
                 <div class="quick-suggestions" id="quick-suggestions">
 
                     <div class="highlighted-suggestions">
-                        <span id="suggestion_highligh_2" class="suggestion">Practice with me small talk in Luxembourgish</span>
                         <span id="suggestion_highligh_3" class="suggestion">Tell me a secret about Luxembourg</span>
                         <span id="suggestion_highligh_4" class="suggestion">Help me develop superpowers</span>
                     </div>
 
-                    <div class="neutral-suggestions">
-                        <span class="suggestion">Give me a quick tip to be more confident!</span>
-                        <span class="suggestion">Help me focus for 10 minutes!</span>
-                        <span class="suggestion">Cheer me up with something positive!</span>
-                    </div>
 
                 </div>
 
@@ -93,13 +87,13 @@
         });
 
         function hideSuggestions() {
-            fetch("{% url 'generate_suggestions' %}")
+            fetch("{% url 'api:generate_suggestions' %}", { credentials: 'include' })
                 .then(response => response.json())
                 .then(data => {
                     let suggestionsContainer = document.getElementById('quick-suggestions');
                     suggestionsContainer.innerHTML = '';
 
-                    /*data.suggestions.forEach(suggestion => {
+                    data.suggestions.forEach(suggestion => {
                         let suggestionSpan = document.createElement("span");
                         suggestionSpan.className = "new-suggestion";
                         suggestionSpan.innerText = suggestion;
@@ -111,7 +105,7 @@
                         });
 
                         suggestionsContainer.appendChild(suggestionSpan);
-                    });    <-- Automatic suggestions removed as requested by Luanna.*/
+                    }); 
                 })
                 .catch(error => console.error("Error to obtain suggestions:", error));
         }
