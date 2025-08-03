@@ -21,8 +21,6 @@ urlpatterns = [
     path("save_feedback/", views.view_save_feedback, name="save_feedback"),
 
     path('create_diary/', views.create_diary, name='create_diary'),
-    path("generate_suggestions/", views.generate_suggestions, name="generate_suggestions"),
 
     path('speech-to-text/', views.speech_to_text_view, name='speech_to_text'),
-
 ]

@@ -87,7 +87,7 @@
         });
 
         function hideSuggestions() {
-            fetch("{% url 'api:generate_suggestions' %}", { credentials: 'include' })
+            fetch("/api/generate-suggestions/", { credentials: 'include' })
                 .then(response => response.json())
                 .then(data => {
                     let suggestionsContainer = document.getElementById('quick-suggestions');
