@@ -1,12 +1,23 @@
+:root{
+  --blue:     #105CAF;  /* Blue */
+  --orange:   #FEBF51;  /* Orange */
+  --red:      #E03865;  /* Reddish */
+  --baby:     #57D7E2;  /* Baby Blue */
+}
+
 .sidebar {
-    width: 80px; 
-    background: linear-gradient(to bottom, #8d53ff, #5ddee6);
-    color: white; 
+    width: 80px;
+    height: 100vh;              
+    position: sticky;          
+    top: 0;
+    left: 0;
+    background: linear-gradient(185deg, var(--blue) 0%, var(--red) 55%, var(--orange) 100%);
+    color: white;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    transition: width 0.3s ease; 
-    z-index: 1;
+    justify-content: flex-start; 
+    transition: width 0.3s ease;
+    z-index: 1000;
     overflow: hidden;
 }
 
@@ -15,10 +26,13 @@
 }
 
 #menu {
-    list-style-type: none;
-    justify-items: center;
-    padding: 0;
-    padding: 10px;
+    list-style: none;
+    padding: 10px 10px 0 10px;
+    margin: 0;
+}
+
+.sidebar .sidebar-footer {
+    margin-top: auto; 
 }
 
 .sidebar.expanded #menu {
@@ -56,8 +70,6 @@
     align-items: center;
     padding: 10px;
 }
-
-
 
 .sidebar ul li a {
     color: white;

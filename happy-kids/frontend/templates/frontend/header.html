@@ -7,13 +7,13 @@
 </head>
 <div class="header">
     <div class="class-page-title">
-                        
-        {% if '/app/adm/' in request.path %}<h1>Painel Administrativo</h1>
-        {% elif '/app/dashboard' in request.path %}<h1>Dashboard</h1>
-        {% elif '/app/memos' in request.path %}<h1>My Memos</h1>
-        {% elif '/app/memory' in request.path %}<h1>Chat Memory</h1>
-        {% elif '/app/diary' in request.path %}<h1>My Diary</h1>
-        {% elif '/app/profile' in request.path %}<h1>My Profile</h1>
+
+        {% if '/app/profile' in request.path %}<h1>My Profile</h1>
+        {% elif '/app/chat/' in request.path %}<h1 class="h1-aqua">Vamos Conversar?</h1>
+        {% elif '/app/' in request.path %}<h1 class="title">
+            <span >Oi, eu sou a </span>
+            <span class="gradient-candy">Didi!</span>
+        </h1>
         {% endif %}
     
     </div>
@@ -22,7 +22,7 @@
         <h1>Hi, {{ user.first_name }}</h1>
         <div class="user-icon">
             <a href="{% url 'profile' %}">
-                <img src="{% static 'frontend/img/logo_happy_kids_2.png' %}">
+                <img src="{% static 'frontend/img/Hilow.png' %}">
             </a>
         </div>
         

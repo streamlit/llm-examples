@@ -9,6 +9,8 @@
 }
 
 
+
+
 .adm_navigation {
     text-decoration: none;
     background-color: #8d53ff;
@@ -62,11 +64,33 @@ a {
 }
 
 .class-page-title h1{
-    margin: 20px;
-    font-size: 38px;
-    font-weight: bold;
-    background: linear-gradient(to right, #8d53ff, #5ddee6); 
-    -webkit-background-clip: text;
-    color: transparent;
-    font-family: 'Poppins', sans-serif;
+  margin: 20px;
+  font-size: 38px;
+  font-weight: 800;
+  line-height: 1.1;
+  color: #c13d6f; /* cor padrão */
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Gradiente só no nome "Didi!" */
+.gradient-candy{
+  background: linear-gradient(90deg,#E03865 0%,#FEBF51 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent; /* Safari */
+}
+
+.h1-aqua{
+  background: linear-gradient(90deg,#105CAF,#57D7E2);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent; /* Safari */
+}
+
+.neutral{
+  background: none !important;
+  color: #1F2A37 !important;
+  -webkit-text-fill-color: #1F2A37 !important;
 }

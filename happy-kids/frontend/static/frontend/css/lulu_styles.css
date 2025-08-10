@@ -1,3 +1,8 @@
+:root{
+  --blue:#105CAF; --baby:#57D7E2; --red:#E03865; --orange:#FEBF51;
+  --text:#1F2A37;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -48,7 +53,6 @@ body{
     margin: 20px;
     font-size: 38px;
     font-weight: bold;
-    background: linear-gradient(to right, #8d53ff, #5ddee6); 
     -webkit-background-clip: text;
     color: transparent;
     font-family: 'Poppins', sans-serif;
@@ -827,4 +831,145 @@ button.selected.dislike i {
     #diary-form {
         width: 90%;
     }
+}
+
+
+/* ================================
+   AQUA THEME — PRIMARY OVERRIDES
+   Cole no FINAL do arquivo
+   ================================ */
+
+:root{
+  --blue:#105CAF; 
+  --baby:#57D7E2; 
+  --red:#E03865; 
+  --orange:#FEBF51;
+  --text:#1F2A37;
+}
+
+/* TÍTULOS (gradiente aqua) */
+.chat-container h1,
+.diary-container h1,
+.dashboard-card h3{
+  background: linear-gradient(90deg, var(--blue), var(--baby));
+  -webkit-background-clip:text;
+  background-clip:text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+/* SCROLLBARS */
+.chat-history{
+  scrollbar-color: var(--blue) transparent;
+}
+.chat-history::-webkit-scrollbar-thumb{
+  background-color: var(--blue);
+}
+
+/* INPUT PRINCIPAL */
+#question{
+  border: 2px solid rgba(16,92,175,.35);
+  border-radius: 18px;
+}
+#question:focus{
+  border-color: var(--baby);
+  box-shadow: 0 0 0 3px rgba(87,215,226,.25);
+}
+
+/* CHIPS / SUGESTÕES RÁPIDAS */
+.suggestion{
+  background: #fff;
+  color: var(--blue);
+  border: 2px solid rgba(87,215,226,.35);
+}
+.new-suggestion{
+  background:#fff;
+  color: var(--blue);
+  border: 2px solid rgba(87,215,226,.6);
+}
+
+/* Destaques agora seguem a primária Aqua */
+#suggestion_highligh_1,
+#suggestion_highligh_2,
+#suggestion_highligh_3,
+#suggestion_highligh_4{
+  background: linear-gradient(135deg, var(--blue), var(--baby));
+  color:#fff;
+  border: none;
+}
+.suggestion:hover,
+.new-suggestion:hover, 
+#suggestion_highligh_1:hover, 
+#suggestion_highligh_2:hover,
+#suggestion_highligh_3:hover,
+#suggestion_highligh_4:hover{
+  filter: brightness(1.05);
+}
+
+/* BOTÕES CIRCULARES (enviar/mic) */
+.circle-btn{
+  background: linear-gradient(135deg, var(--blue), var(--baby));
+  color:#fff;
+  box-shadow: 0 6px 20px rgba(16,92,175,.18);
+}
+.circle-btn:hover{
+  filter: brightness(1.05);
+}
+.circle-btn:active,
+.circle-btn.recording{
+  transform: scale(1.06);
+}
+
+/* MIC gravando mantém vermelho */
+#mic-button.recording{
+  background:#f04c4c;
+  color:#fff;
+}
+
+/* ONBOARDING / AÇÕES */
+#start-onboarding,
+.option-button,
+.new-entry button{
+  background: linear-gradient(135deg, var(--blue), var(--baby));
+  color:#fff;
+  border:none;
+}
+#start-onboarding:hover,
+.option-button:hover,
+.new-entry button:hover{
+  filter: brightness(1.05);
+  color:#fff;
+}
+
+/* INPUTS DE FORM (diário, etc.) */
+#diary-form-id textarea,
+#diary-form-id input,
+.answer-options input{
+  border: 2px solid rgba(16,92,175,.35);
+}
+#diary-form-id textarea:focus,
+#diary-form-id input:focus,
+.answer-options input:focus{
+  outline: none;
+  border-color: var(--baby);
+  box-shadow: 0 0 0 3px rgba(87,215,226,.20);
+}
+
+/* DIÁRIO / LINKS / TIMELINE */
+.timeline,
+.diary-entry::before{
+  background: var(--blue);
+}
+.diary-entry h3 a,
+.diary-entry-detail h2{
+  color: var(--blue);
+}
+
+/* DASHBOARD CARDS TITLE (já herdado acima, mas reforço caso precise) */
+.dashboard-card h3{
+  background: linear-gradient(90deg, var(--blue), var(--baby));
+  -webkit-background-clip:text;
+  background-clip:text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
 }

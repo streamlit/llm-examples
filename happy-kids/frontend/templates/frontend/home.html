@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="{% static 'frontend/img/logo_happy_kids.png' %}">
+    <link rel="icon" href="{% static 'frontend/img/Hilow.png' %}">
     <title>Happy Kids | Home Page</title>
     <link rel="stylesheet" href="{% static 'frontend/css/home_styles.css' %}">
 </head>
@@ -16,13 +16,11 @@
 
             <!-- Conteúdo principal da Home -->
             <div class="div_models">
-                <h1>Moien, {{ user.first_name }}</h1>
-                <h4>Choose your assistant today</h4>
                 <div class="div_carrosel_models">
                     <div class="carousel-container">
                         <div class="carousel-item">
                             <a href="{% url 'start_new_session' %}">
-                                <img src="{% static 'frontend/img/lulu_bot.png' %}" class="carousel-img" alt="Lulu">
+                                <img src="{% static 'frontend/img/initial-design.png' %}" class="carousel-img" alt="Lulu">
                             </a>
                         </div>
                     </div>
