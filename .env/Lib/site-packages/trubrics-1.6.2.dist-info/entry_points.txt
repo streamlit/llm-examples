@@ -1,0 +1,5 @@
+[console_scripts]
+trubrics = trubrics.cli.main:app
+
+[mlflow.model_evaluator]
+trubrics = trubrics.integrations.mlflow.trubrics_validator:TrubricsValidator

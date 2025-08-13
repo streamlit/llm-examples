@@ -1,0 +1,77 @@
+Metadata-Version: 2.1
+Name: win32-setctime
+Version: 1.1.0
+Summary: A small Python utility to set file creation time on Windows
+Home-page: https://github.com/Delgan/win32-setctime
+Author: Delgan
+Author-email: delgan.py@gmail.com
+License: MIT license
+Download-URL: https://github.com/Delgan/win32-setctime/archive/1.1.0.tar.gz
+Keywords: win32,windows,filesystem,filetime
+Platform: UNKNOWN
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Topic :: System :: Filesystems
+Classifier: Intended Audience :: Developers
+Classifier: Environment :: Win32 (MS Windows)
+Classifier: Natural Language :: English
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: Microsoft
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.5
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Programming Language :: Python :: Implementation :: CPython
+Requires-Python: >=3.5
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Provides-Extra: dev
+Requires-Dist: pytest (>=4.6.2) ; extra == 'dev'
+Requires-Dist: black (>=19.3b0) ; (python_version >= "3.6") and extra == 'dev'
+
+# win32-setctime
+
+
+
+[![Pypi version](https://img.shields.io/pypi/v/win32-setctime.svg)](https://pypi.python.org/pypi/win32-setctime) [![Python version](https://img.shields.io/badge/python-3.5%2B-blue.svg)](https://pypi.python.org/pypi/win32-setctime) [![Build status](https://img.shields.io/github/workflow/status/Delgan/win32-setctime/Tests/master)](https://github.com/Delgan/win32-setctime/actions/workflows/tests.yml?query=branch:master) [![License](https://img.shields.io/github/license/delgan/win32-setctime.svg)](https://github.com/Delgan/win32-setctime/blob/master/LICENSE)
+
+
+
+A small Python utility to set file creation time on Windows.
+
+
+
+
+
+## Installation
+
+
+
+```shell
+
+pip install win32-setctime
+
+```
+
+
+
+## Usage
+
+
+
+```python
+
+from win32_setctime import setctime
+
+
+
+setctime("my_file.txt", 1561675987.509, follow_symlinks=True)
+
+```
+
+
+

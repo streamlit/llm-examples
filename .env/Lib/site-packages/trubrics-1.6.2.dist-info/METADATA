@@ -1,0 +1,14 @@
+Metadata-Version: 2.1
+Name: trubrics
+Version: 1.6.2
+Summary: The first user analytics platform for AI models.
+License-File: LICENSE
+Requires-Dist: requests >=2.28.0
+Requires-Dist: pydantic >=1.5
+Requires-Dist: typer >=0.6.1
+Requires-Dist: loguru >=0.6.0
+Provides-Extra: streamlit
+Requires-Dist: streamlit >=1.20.0 ; extra == 'streamlit'
+Requires-Dist: streamlit-feedback ==0.1.2 ; extra == 'streamlit'
+
+Full documentation available at https://trubrics.github.io/trubrics-sdk/.
