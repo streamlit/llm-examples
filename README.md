@@ -48,3 +48,20 @@ source .venv/bin/activate
 pip install -r requirements.txt
 streamlit run Chatbot.py
 ```
+
+
+## Karla's part
+
+```bash
+cd "/Users/karla/Desktop/Soft Eng/llm-examples" && rm -rf .venv && /opt/homebrew/bin/python3.11 -m venv .venv && "./.venv/bin/python" -m pip install --upgrade pip setuptools wheel && "./.venv/bin/python" -m pip install streamlit cryptography pytest -q
+```
+
+```bash
+cd "/Users/karla/Desktop/Soft Eng/llm-examples" && "./.venv/bin/python" -m pip install streamlit cryptography pytest -q
+```
+
+```bash
+cd "/Users/karla/Desktop/Soft Eng/llm-examples" && "./.venv/bin/python" -m pytest tests/test_auth_encrypt.py -vv
+```
+
+### or instead of -vv use -q
