@@ -1,1 +1,8 @@
-{}
+{
+  "alice": {
+    "salt": "hSt0WBARDoVPVNBnOKc6xw==",
+    "kdf_iterations": 200000,
+    "pw_verifier": "9vP6YOXKzFWrhCgFVqfk7crFKbbAtx4+UeN6Iu1emPs=",
+    "enc_filename": "alice.enc"
+  }
+}
