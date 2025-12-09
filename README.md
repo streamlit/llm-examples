@@ -1,50 +1,53 @@
-# 🎈 Streamlit + LLM Examples App
+import streamlit as st
+import pandas as pd
 
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/streamlit/llm-examples?quickstart=1)
+# Initialize empty dataframes
+students = pd.DataFrame(columns=['ID', 'Name', 'Class'])
+teachers = pd.DataFrame(columns=['ID', 'Name', 'Subject'])
+messages = pd.DataFrame(columns=['ID', 'Sender', 'Message'])
 
-Starter examples for building LLM apps with Streamlit.
+def main():
+    st.title("JPSP School Management System")
+    
+menu = ["Home", "Students", "Teachers", "Messages"]
+    choice = st.sidebar.selectbox("Menu", menu)
+    
+if choice == "Home":
+        st.subheader("Home")
+        st.write("Welcome to the JPSP School Management System!")
+    
+ elif choice == "Students":
+        st.subheader("Students")
+        st.dataframe(students)
+        st.write("Add a new student:")
+        new_id = st.text_input("ID")
+        new_name = st.text_input("Name")
+        new_class = st.text_input("Class")
+        if st.button("Add Student"):
+            students.loc[len(students)] = [new_id, new_name, new_class]
+            st.success(f"Added student {new_name}")
+    
+elif choice == "Teachers":
+        st.subheader("Teachers")
+        st.dataframe(teachers)
+        st.write("Add a new teacher:")
+        new_id = st.text_input("ID")
+        new_name = st.text_input("Name")
+        new_subject = st.text_input("Subject")
+        if st.button("Add Teacher"):
+            teachers.loc[len(teachers)] = [new_id, new_name, new_subject]
+            st.success(f"Added teacher {new_name}")
+    
+elif choice == "Messages":
+        st.subheader("Messages")
+        st.dataframe(messages)
+        st.write("Add a new message:")
+        new_id = st.text_input("ID")
+        new_sender = st.text_input("Sender")
+        new_message = st.text_area("Message")
+        if st.button("Add Message"):
+            messages.loc[len(messages)] = [new_id, new_sender, new_message]
+            st.success(f"Added message from {new_sender}")
 
-## Overview of the App
-
-This app showcases a growing collection of LLM minimum working examples.
-
-Current examples include:
-
-- Chatbot
-- File Q&A
-- Chat with Internet search
-- LangChain Quickstart
-- LangChain PromptTemplate
-- Chat with user feedback
-
-## Demo App
-
-[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://llm-examples.streamlit.app/)
-
-### Get an OpenAI API key
-
-You can get your own OpenAI API key by following the following instructions:
-
-1. Go to https://platform.openai.com/account/api-keys.
-2. Click on the `+ Create new secret key` button.
-3. Next, enter an identifier name (optional) and click on the `Create secret key` button.
-
-### Enter the OpenAI API key in Streamlit Community Cloud
-
-To set the OpenAI API key as an environment variable in Streamlit apps, do the following:
-
-1. At the lower right corner, click on `< Manage app` then click on the vertical "..." followed by clicking on `Settings`.
-2. This brings the **App settings**, next click on the `Secrets` tab and paste the API key into the text box as follows:
-
-```sh
-OPENAI_API_KEY='xxxxxxxxxx'
-```
-
-## Run it locally
-
-```sh
-virtualenv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-streamlit run Chatbot.py
-```
+if __name__ == "__main__":
+    main()
