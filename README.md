@@ -16,7 +16,8 @@ Current examples include:
 - LangChain Quickstart
 - LangChain PromptTemplate
 - Chat with user feedback
-
+- local-LLm (Firstly download the model from HuggingFace, dont need API key)
+   https://huggingface.co/BashitAli/llama-2-7b-chat.ggmlv3.q5_K_M
 ## Demo App
 
 [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://llm-examples.streamlit.app/)
