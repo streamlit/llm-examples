@@ -9,7 +9,7 @@ from openai.types.chat.chat_completion import ChatCompletion, Choice
 def create_chat_completion(response: str, role: str = "assistant") -> ChatCompletion:
     return ChatCompletion(
         id="foo",
-        model="gpt-3.5-turbo",
+        model="gpt-5.6-terra",
         object="chat.completion",
         choices=[
             Choice(
@@ -36,7 +36,7 @@ def test_Chatbot(openai_create):
     openai_create.return_value = create_chat_completion(JOKE)
     at.text_input(key="chatbot_api_key").set_value("sk-...")
     at.chat_input[0].set_value("Do you know any jokes?").run()
-    print(at)
+    assert openai_create.call_args.kwargs["model"] == "gpt-5.6-terra"
     assert at.chat_message[1].markdown[0].value == "Do you know any jokes?"
     assert at.chat_message[2].markdown[0].value == JOKE
     assert at.chat_message[2].avatar == "assistant"

@@ -35,7 +35,7 @@ if prompt := st.chat_input(placeholder="Tell me a joke about sharks"):
         st.info("Please add your OpenAI API key to continue.")
         st.stop()
     client = OpenAI(api_key=openai_api_key)
-    response = client.chat.completions.create(model="gpt-3.5-turbo", messages=messages)
+    response = client.chat.completions.create(model="gpt-5.6-terra", messages=messages)
     st.session_state["response"] = response.choices[0].message.content
     with st.chat_message("assistant"):
         messages.append({"role": "assistant", "content": st.session_state["response"]})
